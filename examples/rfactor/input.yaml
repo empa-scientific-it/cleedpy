@@ -1,0 +1,7 @@
+ef:
+  - index: "0, 1"
+    weight: 1.0
+    filename: "ef_0_1"
+  - index: "0, 2"
+    weight: 1.0
+    filename: "ef_0_2"
