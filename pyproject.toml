@@ -20,7 +20,7 @@ classifiers = [
 ]
 
 
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 dependencies = [
     "click",
     "numpy",
@@ -29,8 +29,6 @@ dependencies = [
 
 [project.scripts]
 cleedpy-rfactor = "cleedpy.cli.rfactor:cli"
-cleedpy-search = "cleedpy.cli.search:cli"
-cleedpy-leed = "cleedpy.cli.leed:cli"
 
 [tool.setuptools]
 include-package-data = true
