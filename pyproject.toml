@@ -6,7 +6,6 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "cleedpy"
 dynamic = ["version"]
-version = "0.0.1"
 readme = "README.md"
 license = {file = "LICENSE"}
 classifiers = [
@@ -21,10 +20,15 @@ classifiers = [
 ]
 
 
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 dependencies = [
+    "click",
     "numpy",
+    "pyyaml",
 ]
+
+[project.scripts]
+cleedpy-rfactor = "cleedpy.cli.rfactor:cli"
 
 [tool.setuptools]
 include-package-data = true
@@ -35,4 +39,4 @@ license-files = ["LICENSE"]
 find = {namespaces = false}
 
 [tool.setuptools.dynamic]
-version = {attr = "ppafm.version.__version__"}
+version = {attr = "cleedpy.version.__version__"}
