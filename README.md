@@ -1,6 +1,6 @@
 # cleedpy
 
-Python port of the CLEED code written by [Georg Held](@GeorgHeld).
+Python port of the CLEED code written by [Georg Held](https://github.com/GeorgHeld).
 
 ## Installation
 
