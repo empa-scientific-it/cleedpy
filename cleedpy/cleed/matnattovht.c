@@ -1,5 +1,5 @@
 /*********************************************************************
-  GH/17.07.95 
+  GH/17.07.95
   file contains functions:
 
   matnattovht
@@ -23,11 +23,11 @@
 /*======================================================================*/
 /*======================================================================*/
 
-int matnattovht (mat Mbg, int l_max, int n_atoms ) 
+int matnattovht (mat Mbg, int l_max, int n_atoms )
 
 /************************************************************************
 
-  Print a matrix in the same order as VHT 
+  Print a matrix in the same order as VHT
 
 *************************************************************************/
 {
@@ -38,7 +38,7 @@ int l1, m1, off, i1, n1;
 
 l_max_2 = (l_max + 1)*(l_max + 1);
 
- for (i_atoms = 0, off = 1, n1 = 0; i_atoms < n_atoms; 
+ for (i_atoms = 0, off = 1, n1 = 0; i_atoms < n_atoms;
       i_atoms++, off += l_max_2)
  {
    for(l1 = 0; l1 <= l_max; l1 += 2)
@@ -98,7 +98,7 @@ int matline( mat Mbg, int i1, int l_max, int l_max_2, int n_atoms)
 {
 int i2, n2, l2, m2, off2, i_atoms2;
 
- for (i_atoms2 = 0, n2 = 0, off2 = 1; i_atoms2 < n_atoms; 
+ for (i_atoms2 = 0, n2 = 0, off2 = 1; i_atoms2 < n_atoms;
              i_atoms2 ++, off2 += l_max_2)
  {
    for(l2 = 0; l2 <= l_max; l2 += 2)

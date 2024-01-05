@@ -1,5 +1,5 @@
 /*********************************************************************
-  GH/03.05.00 
+  GH/03.05.00
   file contains function:
 
   inp_ovl_layer
@@ -44,11 +44,11 @@ int inp_ovl_layer(struct cryst_str *par, struct atom_str * atom_list)
  - group atoms to composite layers if necessary;
  - determine inter layer vectors;
 
- 
+
  input parameters:
 
  struct cryst_str *par (input, output)
-     structure that contains all geometrical and nongeometrical 
+     structure that contains all geometrical and nongeometrical
      parameters of the bulk except atom positions and types.
      Output will be written to structure element layers.
 
@@ -64,15 +64,15 @@ int inp_ovl_layer(struct cryst_str *par, struct atom_str * atom_list)
 
  DESIGN:
 
- 
+
  NOTE:
  The function cannot handle the case when all layer distances are smaller
- than MIN_DIST. In this case the bulk must be modelled as one composite 
+ than MIN_DIST. In this case the bulk must be modelled as one composite
  layer.
- 
+
 *************************************************************************/
 {
-int i,j; 
+int i,j;
 int i_c, i_d;
 int n_atoms, i_atoms;
 int i_layer;
@@ -90,7 +90,7 @@ real vaux[4];
 
 #ifdef CONTROL
  fprintf(STDCTR,
-  "(inp_ovl_layer): entering inp_ovl_layer MIN_DIST= %.3f, n_atoms = %d\n", 
+  "(inp_ovl_layer): entering inp_ovl_layer MIN_DIST= %.3f, n_atoms = %d\n",
   MIN_DIST*BOHR, par->natoms);
 #endif
 /************************************************************************
@@ -101,17 +101,17 @@ real vaux[4];
  b1[1] = par->b[1]; b1[2] = par->b[3];
  b2[1] = par->b[2]; b2[2] = par->b[4];
 
-/* 
+/*
   Allocate memory for intermediate storage vectors vec and no_of_atoms:
-  max. number of layers = number of atoms 
+  max. number of layers = number of atoms
 */
  vec = (real *) malloc( (3*(n_atoms+1) + 1) * sizeof(real) );
  no_of_atoms = (int *) malloc(n_atoms * sizeof(int) );
- 
+
 /************************************************************************
-  i_layer indicates the layer which an atom belongs to; it will eventually 
+  i_layer indicates the layer which an atom belongs to; it will eventually
           be the total number of layers.
-  orig  keeps track of the position of the first atom with respect 
+  orig  keeps track of the position of the first atom with respect
           to the overall coordinate system.
   vaux    is used to store the z-position of the topmost atom in the layer.
 *************************************************************************/
@@ -126,42 +126,42 @@ real vaux[4];
  vaux[3] = atom_list[0].pos[3];
  vaux[1] = vaux[2] = 0.;
 
- for(i_c=1; i_c<=3; i_c++) 
+ for(i_c=1; i_c<=3; i_c++)
    *(vec + 3*i_layer + i_c) = 0.;
 
  atom_list[0].pos[3] = 0.;
- 
+
  for(i_atoms=1; i_atoms<n_atoms; i_atoms++)
  {
 
 #ifdef CONTROL
-   fprintf(STDCTR,"(inp_ovl_layer): pos: %.4f %.4f %.4f dist: %.4f\n", 
-   atom_list[i_atoms].pos[1]*BOHR, atom_list[i_atoms].pos[2]*BOHR, 
+   fprintf(STDCTR,"(inp_ovl_layer): pos: %.4f %.4f %.4f dist: %.4f\n",
+   atom_list[i_atoms].pos[1]*BOHR, atom_list[i_atoms].pos[2]*BOHR,
    atom_list[i_atoms].pos[3]*BOHR,
    R_fabs(atom_list[i_atoms-1].pos[3]+vaux[3]-atom_list[i_atoms].pos[3])*BOHR);
 #endif
 
-   if( R_fabs(atom_list[i_atoms-1].pos[3]+vaux[3] - atom_list[i_atoms].pos[3]) 
+   if( R_fabs(atom_list[i_atoms-1].pos[3]+vaux[3] - atom_list[i_atoms].pos[3])
         > MIN_DIST )
    {
 /*********************************************************************
    New layer:
-   - check, whether the previous layer contains only one atom 
-     (no_of_atoms[i_layer] == 1). 
+   - check, whether the previous layer contains only one atom
+     (no_of_atoms[i_layer] == 1).
      If so, reset vec and atom_list[i_atoms-1].pos.
    - set up new inter layer vector (vec[3*i_layer + i_c]);
    - set up new origin of the layer (vaux);
    - increase i_layer;
 **********************************************************************/
 #ifdef CONTROL
-     fprintf(STDCTR,"(inp_ovl_layer): new layer, no_of_atoms[%d] = %d\n", 
+     fprintf(STDCTR,"(inp_ovl_layer): new layer, no_of_atoms[%d] = %d\n",
                      i_layer, no_of_atoms[i_layer]);
 #endif
 
 /* set up new inter layer vector (vec) */
      *(vec + 3*i_layer + 1) = 0.;
      *(vec + 3*i_layer + 2) = 0.;
-     *(vec + 3*i_layer + 3) = 
+     *(vec + 3*i_layer + 3) =
         atom_list[i_atoms].pos[3] - atom_list[i_atoms-1].pos[3] - vaux[3];
 
 /* set up new origin of the layer (vaux) */
@@ -180,7 +180,7 @@ real vaux[4];
          *(vec + 3*(i_layer-1) + 1) += atom_list[i_atoms-1].pos[1];
          *(vec + 3*(i_layer-1) + 2) += atom_list[i_atoms-1].pos[2];
        }
-       
+
        *(vec + 3*i_layer + 1) = - (atom_list[i_atoms-1].pos[1]);
        *(vec + 3*i_layer + 2) = - (atom_list[i_atoms-1].pos[2]);
 
@@ -188,7 +188,7 @@ real vaux[4];
        atom_list[i_atoms-1].pos[2] = 0.;
      }
 
-     i_layer ++; 
+     i_layer ++;
      no_of_atoms[i_layer] = 0;
    }  /* if R_fabs ... */
 
@@ -201,12 +201,12 @@ real vaux[4];
 
 /*********************************************************************
  Check the last layer
- weather it contains only one atom (no_of_atoms[i_layer] == 1). 
- - If so, reset vec and atom_list[n_atoms-1].pos. 
+ weather it contains only one atom (no_of_atoms[i_layer] == 1).
+ - If so, reset vec and atom_list[n_atoms-1].pos.
 **********************************************************************/
 
 #ifdef CONTROL_X
- fprintf(STDCTR,"(inp_ovl_layer): no_of_atoms[%d] = %d\n", 
+ fprintf(STDCTR,"(inp_ovl_layer): no_of_atoms[%d] = %d\n",
                      i_layer, no_of_atoms[i_layer]);
 #endif
  if(no_of_atoms[i_layer] == 1)
@@ -243,9 +243,9 @@ real vaux[4];
 
 #ifdef CONTROL_X
  for(i=0; i< i_layer; i++)
- fprintf(STDCTR,"(inp_ovl_layer): vec_org: %.4f %.4f %.4f \n", 
-                 *(vec+3*i+1) *BOHR, 
-                 *(vec+3*i+2) *BOHR, 
+ fprintf(STDCTR,"(inp_ovl_layer): vec_org: %.4f %.4f %.4f \n",
+                 *(vec+3*i+1) *BOHR,
+                 *(vec+3*i+2) *BOHR,
                  *(vec+3*i+3) *BOHR);
 #endif
 
@@ -256,7 +256,7 @@ real vaux[4];
    faux = SQUARE(vaux[1]) + SQUARE(vaux[2]);
 
    for(i_c = -1; i_c <= 1; i_c ++)
-   for(i_d = -1; i_d <= 1; i_d ++) 
+   for(i_d = -1; i_d <= 1; i_d ++)
    {
      if( ( SQUARE(vaux[1] + i_c*b1[1] + i_d*b2[1]) +
            SQUARE(vaux[2] + i_c*b1[2] + i_d*b2[2]) ) < faux )
@@ -269,9 +269,9 @@ real vaux[4];
 
 #ifdef CONTROL_X
  for(i=0; i< i_layer; i++)
- fprintf(STDCTR,"(inp_ovl_layer): vec_mod: %.4f %.4f %.4f \n", 
-                 *(vec+3*i+1) *BOHR, 
-                 *(vec+3*i+2) *BOHR, 
+ fprintf(STDCTR,"(inp_ovl_layer): vec_mod: %.4f %.4f %.4f \n",
+                 *(vec+3*i+1) *BOHR,
+                 *(vec+3*i+2) *BOHR,
                  *(vec+3*i+3) *BOHR);
 #endif
 
@@ -284,13 +284,13 @@ real vaux[4];
 *************************************************************************/
 
 /* Allocate */
- 
+
 #ifdef CONTROL
- fprintf(STDCTR,"(inp_ovl_layer): overlayer atoms split up into %d layers\n", 
+ fprintf(STDCTR,"(inp_ovl_layer): overlayer atoms split up into %d layers\n",
          i_layer);
 #endif
 
- if( (par->layers = (struct layer_str *) 
+ if( (par->layers = (struct layer_str *)
       malloc( i_layer * sizeof(struct layer_str) ) ) == NULL)
  {
 #ifdef ERROR
@@ -308,13 +308,13 @@ real vaux[4];
 
  for(i=0; i< i_layer; i++)
  {
-/* 
+/*
    i refers to index in vec, no_of_atoms, and atom_list
 */
 
-/* 
+/*
    Write to par->layers[i]:
-   - number of atoms (from no_of_atoms), 
+   - number of atoms (from no_of_atoms),
    - periodicity indicator (always zero for overlayer)
    - lattice vectors (from par->b) and area of unit cell (superstructure)
 */
@@ -338,7 +338,7 @@ real vaux[4];
 
 /*
    vec_from_last points from the last layer (i-1) to the current layer
-   except for the bottom-most layer (0) where it points from the origin 
+   except for the bottom-most layer (0) where it points from the origin
    of the coordinate system to the layer (= orig[i_c])
 */
    if(i == 0)
@@ -348,13 +348,13 @@ real vaux[4];
      for(i_c = 1; i_c <= 3; i_c ++)
        par->layers[i].vec_from_last[i_c] = vec[3*(i-1) + i_c];
 
-/* 
-   Allocate structure element atoms in layer and copy the appropriate 
+/*
+   Allocate structure element atoms in layer and copy the appropriate
    entries from list atom_list into par->layers[i].atoms
 */
 #ifdef CONTROL_X
    fprintf(STDCTR,"(inp_ovl_layer): no_of_atoms[%d] = %d\n", i, no_of_atoms[i]);
-   fprintf(STDCTR,"(inp_ovl_layer): par->layers[%d].natoms = %d\n", 
+   fprintf(STDCTR,"(inp_ovl_layer): par->layers[%d].natoms = %d\n",
                   i, par->layers[i].natoms);
 #endif
 
@@ -366,13 +366,13 @@ real vaux[4];
      if(atom_list[i_atoms].layer == i)
      {
 #ifdef CONTROL_X
-       fprintf(STDCTR,"(inp_ovl_layer): i_d = %d, i_atoms = %d\n", 
+       fprintf(STDCTR,"(inp_ovl_layer): i_d = %d, i_atoms = %d\n",
        i_d, i_atoms);
 #endif
        par->layers[i].atoms[i_d].layer = i;
        par->layers[i].atoms[i_d].type = atom_list[i_atoms].type;
        par->layers[i].atoms[i_d].t_type = atom_list[i_atoms].t_type;
-       
+
        par->layers[i].atoms[i_d].pos[1] = atom_list[i_atoms].pos[1];
        par->layers[i].atoms[i_d].pos[2] = atom_list[i_atoms].pos[2];
        par->layers[i].atoms[i_d].pos[3] = atom_list[i_atoms].pos[3];

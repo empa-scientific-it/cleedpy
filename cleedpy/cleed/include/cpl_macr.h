@@ -15,6 +15,6 @@ Macros for complex operations
                  f__x1_r = fac1_r; f__x1_i = fac1_i;                 \
                  f__x2_r = fac2_r; f__x2_i = fac2_i;                 \
                  *(p_res_r) = f__x1_r * f__x2_r - f__x1_i * f__x2_i; \
-                 *(p_res_r) = f__x1_r * f__x2_i + f__x1_i * f__x2_r; }                                                     
+                 *(p_res_r) = f__x1_r * f__x2_i + f__x1_i * f__x2_r; }
 */
 #endif /* CPL_MACRO_H */

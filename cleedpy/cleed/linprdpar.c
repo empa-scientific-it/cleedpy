@@ -1,9 +1,9 @@
 /*********************************************************************
-  GH/28.07.95 
+  GH/28.07.95
   file contains function:
 
   inp_rdpar
- 
+
 CHANGES:
 
   GH/26.01.95 - Creation: copy from inp_rdbul
@@ -41,16 +41,16 @@ CHANGES:
 /********************************************************************/
 
 int inp_rdpar(struct var_str ** p_var_par,
-              struct eng_str ** p_eng_par, 
+              struct eng_str ** p_eng_par,
               struct cryst_str * bulk_par,
               char *in_file)
 /*********************************************************************
   Read most of the parameters necessary to control the program.
 
   INPUT:
- 
-  struct var_str ** p_var_par 
-  struct eng_str ** p_eng_list 
+
+  struct var_str ** p_var_par
+  struct eng_str ** p_eng_list
   struct cryst_str * bulk_par  bulk crystal parameters (must contain
             valid values for vr and vi). Function inp_rdbul must be
             called before inp_rdpar.
@@ -58,7 +58,7 @@ int inp_rdpar(struct var_str ** p_var_par,
 
   DESIGN:
 
-  Letters 'e' - 'l' ans 've' are reserved as identifiers for parameter input 
+  Letters 'e' - 'l' ans 've' are reserved as identifiers for parameter input
   through function inp_rdpar.
 
   This function currently reads from input file:
@@ -79,7 +79,7 @@ int inp_rdpar(struct var_str ** p_var_par,
   ve: var_par->vi_exp = exponent for the imag. part of opt. potential.
 
   The other values of the structure var_par are preset as follows:
- 
+
     real eng_r;   ->  0.
     real eng_i;   ->  0.
     real eng_v;   ->  0.
@@ -112,20 +112,20 @@ char linebuffer[STRSZ];         /* input buffer */
   If *p_var_par or *p_eng_par are NULL: allocate memory.
 *********************************************************************/
 
- if (*p_var_par == NULL) 
+ if (*p_var_par == NULL)
  {
 #ifdef CONTROL_X
    fprintf(STDCTR,"(inp_rdpar): allocate var_par\n");
 #endif
-   var_par = *p_var_par = 
+   var_par = *p_var_par =
                 (struct var_str *)malloc( sizeof(struct var_str) );
  }
  else
    var_par = *p_var_par;
 
- if (*p_eng_par == NULL) 
+ if (*p_eng_par == NULL)
  {
-   eng_par = *p_eng_par = 
+   eng_par = *p_eng_par =
                 (struct eng_str *)malloc( sizeof(struct eng_str) );
  }
  else
@@ -156,12 +156,12 @@ char linebuffer[STRSZ];         /* input buffer */
 
   eng_par->ini = eng_par->fin = 0.;
   eng_par->stp = 4./HART;
-  
+
 /********************************************************************
   START INPUT
   Open and Read input file
 ********************************************************************/
- if( (inp_stream = fopen(in_file, "r")) == NULL) 
+ if( (inp_stream = fopen(in_file, "r")) == NULL)
  {
 #ifdef ERROR
    fprintf(STDERR,
@@ -172,15 +172,15 @@ char linebuffer[STRSZ];         /* input buffer */
 #else
    return(0);
 #endif
- } 
+ }
 
 #ifdef CONTROL
  fprintf(STDCTR,"(inp_rdpar): Reading file \"%s\"\n",in_file);
 #endif
 
 
- 
- while ( fgets(linebuffer, STRSZ, inp_stream) != NULL) 
+
+ while ( fgets(linebuffer, STRSZ, inp_stream) != NULL)
  {
 #ifdef CONTROL_X
    fprintf(STDCTR,"%s", linebuffer);
@@ -191,7 +191,7 @@ char linebuffer[STRSZ];         /* input buffer */
    switch( *(linebuffer+i_str) )
    {
      case ('e'): case ('E'):
-   /*********************************** 
+   /***********************************
      ei, ef, es: input of energy parameters
                  initial, final energy and energy step
      ep: epsilon
@@ -244,7 +244,7 @@ char linebuffer[STRSZ];         /* input buffer */
 
      case ('i'): case ('I'):
    /***********************************
-     input of angles of incidence 
+     input of angles of incidence
      (theta, phi)
    ***********************************/
      {
@@ -288,7 +288,7 @@ char linebuffer[STRSZ];         /* input buffer */
 
      case ('v'): case ('V'):
    /***********************************
-     input of exponent for imag. 
+     input of exponent for imag.
      part of opt. potential
    ***********************************/
      {
@@ -302,7 +302,7 @@ char linebuffer[STRSZ];         /* input buffer */
            sscanf(linebuffer+i_str+3 ,"%f", &(var_par->vi_exp));
 #endif
            break; }
-           
+
        }
 
      } /* case 'l' */
@@ -325,7 +325,7 @@ char linebuffer[STRSZ];         /* input buffer */
      case ('p'): case ('P'):
      case ('s'): case ('S'):
    /***********************************
-     identifiers for inp_rdbul and 
+     identifiers for inp_rdbul and
      inp_rdovl
    ***********************************/
      { break; }
@@ -364,7 +364,7 @@ char linebuffer[STRSZ];         /* input buffer */
  {
 #ifdef ERROR
    fprintf(STDERR,
-     "*** error (inp_rdpar): no initial energy available (Eini = %.1f)\n", 
+     "*** error (inp_rdpar): no initial energy available (Eini = %.1f)\n",
      eng_par->ini * HART);
 #endif
 #ifdef EXIT_ON_ERROR
@@ -377,10 +377,10 @@ char linebuffer[STRSZ];         /* input buffer */
  if (eng_par->fin <= eng_par->ini)
  {
 #ifdef WARNING
-   fprintf(STDWAR, 
+   fprintf(STDWAR,
      "* warning (inp_rdpar): final energy (%.1f) <= initial energy (%.1f)\n",
      eng_par->fin * HART, eng_par->ini * HART);
-   fprintf(STDWAR, 
+   fprintf(STDWAR,
      "*         only one energy step will be performed.\n");
 #endif
    eng_par->fin = eng_par->ini;
@@ -389,9 +389,9 @@ char linebuffer[STRSZ];         /* input buffer */
  if (eng_par->stp <= 0.)
  {
 #ifdef WARNING
-   fprintf(STDWAR, 
+   fprintf(STDWAR,
      "* warning (inp_rdpar): energy <= 0. (%.1f)\n", eng_par->stp * HART);
-   fprintf(STDWAR, 
+   fprintf(STDWAR,
      "*         only one energy step will be performed.\n");
 #endif
    eng_par->stp = eng_par->fin - eng_par->ini;
@@ -432,7 +432,7 @@ fprintf(STDCTR,
 
 #ifdef CONTROL
    fprintf(STDCTR,"\nparameter structure:\n");
-   fprintf(STDCTR,"\tvr:\t%.2f eV,\tvi:\t%.2f eV (pref), (expt: %.2f)\n", 
+   fprintf(STDCTR,"\tvr:\t%.2f eV,\tvi:\t%.2f eV (pref), (expt: %.2f)\n",
            var_par->vr*HART, var_par->vi_pre*HART, var_par->vi_exp);
    fprintf(STDCTR,"\ttheta:\t%.1f deg,\tphi:\t%.1f deg\n",
            var_par->theta*RAD_TO_DEG, var_par->phi*RAD_TO_DEG);

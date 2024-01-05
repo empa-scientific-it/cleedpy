@@ -1,10 +1,10 @@
 /*********************************************************************
-  GH/15.03.95 
+  GH/15.03.95
   file contains functions:
 
   ld_potstep0        (15.03.95)
      Calculate only the first column of the reflection matrix R+- (i.e. the
-     amplitudes of the backscattered beams) for a (super) layer "a" vec_ab 
+     amplitudes of the backscattered beams) for a (super) layer "a" vec_ab
      away from a square potential step by layer doubling.
 
      Reflection at the potential step is ignored!
@@ -37,13 +37,13 @@ mat ld_potstep0 ( mat Rpm1_ab, mat Rpm_a,
 /************************************************************************
 
    Calculate only the first column of the reflection matrix R+- (i.e. the
-   amplitudes of the backscattered beams) for a (super) layer "a" (can be 
-   the complete bulk) vec_ab away from a square potential step 
+   amplitudes of the backscattered beams) for a (super) layer "a" (can be
+   the complete bulk) vec_ab away from a square potential step
    (z(a) < z(pot. step)) - Reflection at the potential step is ignored!
 
    This will produce output like in the VHT package.
 
-   
+
 
  INPUT:
 
@@ -55,7 +55,7 @@ mat ld_potstep0 ( mat Rpm1_ab, mat Rpm_a,
                   used: k_r, k_i, k_par.
    real eng_vac - vacuum energy (just for compatibility with ld_potstep).
    real *vec_ab - (input) vector pointing from the origin of layer a to
-                  the potential step. The usual convention for vectors is 
+                  the potential step. The usual convention for vectors is
                   used (x = 1, y = 2, z = 3).
 
    z(a) < z(b) => vec_ab[3] > 0 (otherwise no convergence!)
@@ -68,7 +68,7 @@ mat ld_potstep0 ( mat Rpm1_ab, mat Rpm_a,
 
  RETURN VALUES:
 
-   mat Rpm1 - fist column of the reflection matrix (+-) (not necessarily 
+   mat Rpm1 - fist column of the reflection matrix (+-) (not necessarily
               equal to the first argument).
 
 *************************************************************************/
@@ -89,7 +89,7 @@ mat Maux;                          /* temp. storage space */
 *************************************************************************/
 
 /*************************************************************************
- - Allocate memory and set up propagator Maux. 
+ - Allocate memory and set up propagator Maux.
 
    Maux(k) = P-(00) * P+(k)
 
@@ -109,14 +109,14 @@ mat Maux;                          /* temp. storage space */
  {
 
    faux_r = ((beams+k-1)->k_r[1] - beams->k_r[1]) * vec_ab[1] +
-            ((beams+k-1)->k_r[2] - beams->k_r[2]) * vec_ab[2] + 
+            ((beams+k-1)->k_r[2] - beams->k_r[2]) * vec_ab[2] +
             ((beams+k-1)->k_r[3] + beams->k_r[3]) * vec_ab[3];
    faux_i = ((beams+k-1)->k_i[3] + beams->k_i[3]) * vec_ab[3];
-   
+
    cri_expi(Maux->rel+k, Maux->iel+k, faux_r, faux_i);
 
 /* sqrt(cos(out)/cos(in)): */
-   faux_r = 2 * eng_vac - 
+   faux_r = 2 * eng_vac -
             SQUARE((beams+k-1)->k_r[1]) - SQUARE((beams+k-1)->k_r[2]);
    faux_i = 2 * eng_vac - SQUARE(beams->k_r[1]) - SQUARE(beams->k_r[2]);
    faux_r = R_sqrt(faux_r/faux_i);
@@ -127,7 +127,7 @@ mat Maux;                          /* temp. storage space */
            Rpm_a->rel[l], Rpm_a->iel[l], Maux->rel[k], Maux->iel[k]);
 
  }
- 
+
 /*************************************************************************
  - Write the result to the output pointer
  - Free temporary storage space Maux
@@ -139,6 +139,6 @@ mat Maux;                          /* temp. storage space */
 
  return(Rpm1_ab);
 }
- 
+
 /*======================================================================*/
 /*======================================================================*/

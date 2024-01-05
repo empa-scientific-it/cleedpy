@@ -2,7 +2,7 @@
 GH/05.10.00
   file contains functions:
 
-  main 
+  main
      Main program for LEED calculations (only for bravaislayer)
 
 Changes:
@@ -40,11 +40,11 @@ main(int argc, char *argv[])
 
 /*********************************************************************
  Perform a LEED calculation for anisotropic vibrations a general case
- 
+
  INPUT:
 
  DESIGN:
- 
+
 *********************************************************************/
 {
 struct cryst_str *bulk;
@@ -111,9 +111,9 @@ FILE *res_stream;
 /*********************************************************************
   Decode arguments:
 
-    -b <bul_file> - (optional input file) bulk and non-geometrical 
+    -b <bul_file> - (optional input file) bulk and non-geometrical
                     parameters.
-    -i <par_file> - (mandatory input file) overlayer parameters of all 
+    -i <par_file> - (mandatory input file) overlayer parameters of all
                     parameters (if bul_file does not exist).
     -o <res_file> - (output file) IV output.
 *********************************************************************/
@@ -209,7 +209,7 @@ FILE *res_stream;
       res_file);
 #endif
      exit(1);
-    } 
+    }
   }
 
 /*********************************************************************
@@ -220,7 +220,7 @@ FILE *res_stream;
   inp_rdpar(&v_par, &eng, bulk, bul_file);
   inp_rdovl_nd(&over, &phs_shifts, bulk, par_file);
   n_set = bm_gen(&beams_all, bulk, v_par, eng->fin);
-   
+
   inp_showbop(bulk, over, phs_shifts);
 
   if( ctr_flag == CTR_EARLY_RETURN )
@@ -240,7 +240,7 @@ FILE *res_stream;
   mk_ylm_coef(2*v_par->l_max);
 
 #ifdef CONTROL
-  fprintf(STDCTR, "(LEED_TEMP): E_ini = %.1f, E_fin = %.1f, E_stp %.1f\n", 
+  fprintf(STDCTR, "(LEED_TEMP): E_ini = %.1f, E_fin = %.1f, E_stp %.1f\n",
           eng->ini*HART, eng->fin*HART, eng->stp*HART);
 
   fprintf(STDCTR, "(LEED_TEMP): n_set = %d\n", n_set);
@@ -260,14 +260,14 @@ FILE *res_stream;
     fprintf(STDCTR, "(LEED_TEMP):\n\t => E = %.1f eV (%d beams used) <=\n\n",
               v_par->eng_v*HART, n_beams_now);
 #endif
-  
+
 
 /*********************************************************************
   BULK:
   Loop over beam sets
 
-  Create matrix R_bulk that will eventually contain the bulk 
-  reflection matrix 
+  Create matrix R_bulk that will eventually contain the bulk
+  reflection matrix
 *********************************************************************/
 
     R_bulk = matalloc(R_bulk, n_beams_now, n_beams_now, NUM_COMPLEX);
@@ -285,10 +285,10 @@ FILE *res_stream;
     **********************************************************/
 
 #ifdef CONTROL_FLOW
-      fprintf(STDCTR, "(LEED_TEMP periodic): bulk layer %d/%d, set %d/%d\n", 
+      fprintf(STDCTR, "(LEED_TEMP periodic): bulk layer %d/%d, set %d/%d\n",
                         0, bulk->nlayers - 1, i_set, n_set - 1);
 #endif
-        
+
       if( (bulk->layers + 0)->natoms == 1)
       {
         ms_bravl_nd( &Tpp, &Tmm, &Rpm, &Rmp,
@@ -310,23 +310,23 @@ FILE *res_stream;
       fprintf(STDCTR, "(LEED_TEMP): after ms_bravl_nd: Rmp:");
       matshow(Rmp);
 #endif
-       
+
     /**********************************************************
-      Loop over the other bulk layers 
+      Loop over the other bulk layers
     **********************************************************/
 
-      for(i_layer = 1; 
-          ( (bulk->layers+i_layer)->periodic == 1) && 
-          (i_layer < bulk->nlayers); 
+      for(i_layer = 1;
+          ( (bulk->layers+i_layer)->periodic == 1) &&
+          (i_layer < bulk->nlayers);
           i_layer ++)
       {
 #ifdef CONTROL_FLOW
-        fprintf(STDCTR, "(LEED_TEMP periodic): bulk layer %d/%d, set %d/%d\n", 
+        fprintf(STDCTR, "(LEED_TEMP periodic): bulk layer %d/%d, set %d/%d\n",
                         i_layer, bulk->nlayers - 1, i_set, n_set - 1);
 #endif
 
-    /************************************************************** 
-      Compute scattering matrices R/T_s for a single bulk layer 
+    /**************************************************************
+      Compute scattering matrices R/T_s for a single bulk layer
        - single Bravais layer or composite layer
     ***************************************************************/
 
@@ -341,18 +341,18 @@ FILE *res_stream;
                        v_par, (bulk->layers + i_layer), beams_set);
         }
 
-    /*************************************************************************** 
-       Add the single layer matrices to the rest by layer doubling 
+    /***************************************************************************
+       Add the single layer matrices to the rest by layer doubling
        - inter layer vector is the vector between layers
-         (i_layer - 1) and (i_layer): 
+         (i_layer - 1) and (i_layer):
          (bulk->layers + i_layer)->vec_from_last
-    ****************************************************************************/ 
+    ****************************************************************************/
 #ifdef CONTROL_FLOW
-        fprintf(STDCTR, 
+        fprintf(STDCTR,
                 "(LEED_TEMP): before ld_2lay vec_from...(%.2f %.2f %.2f)\n",
                        (bulk->layers + i_layer)->vec_from_last[1] * BOHR,
                        (bulk->layers + i_layer)->vec_from_last[2] * BOHR,
-                       (bulk->layers + i_layer)->vec_from_last[3] * BOHR); 
+                       (bulk->layers + i_layer)->vec_from_last[3] * BOHR);
 #endif
 
         ld_2lay( &Tpp,  &Tmm,  &Rpm,  &Rmp,
@@ -362,8 +362,8 @@ FILE *res_stream;
 
       } /* for i_layer (bulk) */
 
-   /********************************************************************* 
-      Layer doubling for all periodic bulk layers until convergence is 
+   /*********************************************************************
+      Layer doubling for all periodic bulk layers until convergence is
       reached:
        - inter layer vector is (bulk->layers + 0)->vec_from_last
    **********************************************************************/
@@ -374,7 +374,7 @@ FILE *res_stream;
                       (bulk->layers + 0)->vec_from_last[3] * BOHR);
 #endif
 
-      Rpm = ld_2n( Rpm, Tpp, Tmm, Rpm, Rmp, 
+      Rpm = ld_2n( Rpm, Tpp, Tmm, Rpm, Rmp,
                    beams_set, (bulk->layers + 0)->vec_from_last);
 
    /*******************************************************************
@@ -386,11 +386,11 @@ FILE *res_stream;
       if( i_layer == bulk->nlayers - 1 )
       {
 #ifdef CONTROL_FLOW
-        fprintf(STDCTR, 
-                "(LEED_TEMP not periodic): bulk layer %d/%d, set %d/%d\n", 
+        fprintf(STDCTR,
+                "(LEED_TEMP not periodic): bulk layer %d/%d, set %d/%d\n",
                 i_layer, bulk->nlayers - 1, i_set, n_set - 1);
 #endif
-    
+
         if( (bulk->layers + i_layer)->natoms == 1)
         {
           ms_bravl_nd( &Tpp_s, &Tmm_s, &Rpm_s, &Rmp_s,
@@ -401,12 +401,12 @@ FILE *res_stream;
           ms_compl_nd( &Tpp_s, &Tmm_s, &Rpm_s, &Rmp_s,
                        v_par, (bulk->layers + i_layer), beams_set);
         }
-   
+
     /**************************************************************************
-       Add the single layer matrices of the top-most layer to the rest 
+       Add the single layer matrices of the top-most layer to the rest
        by layer doubling:
        - inter layer vector is the vector between layers
-         (i_layer - 1) and (i_layer): 
+         (i_layer - 1) and (i_layer):
          (bulk->layers + i_layer)->vec_from_last
     ***************************************************************************/
 
@@ -426,11 +426,11 @@ FILE *res_stream;
      Write cpu time to output
    **************************/
 
-      sprintf(linebuffer,"(LEED_TEMP): bulk layers set %d, E = %.1f", 
+      sprintf(linebuffer,"(LEED_TEMP): bulk layers set %d, E = %.1f",
               i_set, energy*HART);
       cpu_time(STDCPU,linebuffer);
     }  /* for i_set */
-      
+
 /*********************************************************************
   OVERLAYER
   Loop over all overlayer layers
@@ -443,9 +443,9 @@ FILE *res_stream;
 #endif
    /***********************************************************
      Calculate scattering matrices for a single overlayer layer
-      - only single Bravais layer 
+      - only single Bravais layer
    ************************************************************/
-      
+
       if( (over->layers + i_layer)->natoms == 1)
       {
         ms_bravl_nd( &Tpp_s, &Tmm_s, &Rpm_s, &Rmp_s,
@@ -473,7 +473,7 @@ FILE *res_stream;
      Add the single layer matrices to the rest by layer doubling:
      - if the current layer is the bottom-most (i_layer == 0),
        the inter layer vector is calculated from the vectors between
-       top-most bulk layer and origin 
+       top-most bulk layer and origin
        ( (bulk->layers + nlayers)->vec_to_next )
        and origin and bottom-most overlayer
        (over->layers + 0)->vec_from_last.
@@ -491,7 +491,7 @@ FILE *res_stream;
         }
 
 #ifdef CONTROL_FLOW
-        fprintf(STDCTR, 
+        fprintf(STDCTR,
                 "(LEED):over0 before ld_2lay_rpm vec..(%.2f %.2f %.2f)\n",
                 vec[1] * BOHR,vec[2] * BOHR, vec[3] * BOHR);
 #endif
@@ -502,11 +502,11 @@ FILE *res_stream;
       else
       {
 #ifdef CONTROL_FLOW
-        fprintf(STDCTR, 
+        fprintf(STDCTR,
                 "(LEED):over%d  before ld_2lay_rpm vec..(%.2f %.2f %.2f)\n",
                 i_layer,(over->layers + i_layer)->vec_from_last[1] * BOHR,
                         (over->layers + i_layer)->vec_from_last[2] * BOHR,
-                        (over->layers + i_layer)->vec_from_last[3] * BOHR); 
+                        (over->layers + i_layer)->vec_from_last[3] * BOHR);
 #endif
 
         R_tot = ld_2lay_rpm(R_tot, R_tot, Tpp_s, Tmm_s, Rpm_s, Rmp_s,
@@ -517,7 +517,7 @@ FILE *res_stream;
      Write cpu time to output
    **************************/
 
-      sprintf(linebuffer,"(LEED): overlayer %d, E = %.1f", 
+      sprintf(linebuffer,"(LEED): overlayer %d, E = %.1f",
               i_layer, energy * HART);
       cpu_time(STDCPU,linebuffer);
 
@@ -531,14 +531,14 @@ FILE *res_stream;
     vec[3] = 1.25 / BOHR;
 
 /********************************************
-    No scattering at pot. step 
+    No scattering at pot. step
 ********************************************/
 
     Amp = ld_potstep0(Amp, R_tot, beams_now, v_par->eng_v, vec);
     out_int(Amp, beams_now, beams_out, v_par, res_stream);
 
 /********************************************
-    Write cpu time to output 
+    Write cpu time to output
 ********************************************/
 
     sprintf(linebuffer,"  %.1f   %d  ",energy * HART,n_beams_now);
@@ -559,13 +559,13 @@ FILE *res_stream;
 #endif
 
 /********************************************
-    Write cpu time to output 
+    Write cpu time to output
 ********************************************/
 
   cpu_time(STDCPU,"");
 
 /********************************************
-    set exit status explicitly 
+    set exit status explicitly
 ********************************************/
 
   exit(0);

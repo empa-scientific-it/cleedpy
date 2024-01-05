@@ -4,13 +4,13 @@
     Show the elements of a matrix:
 
   Changes:
-  
+
   GH/11.08.94 - Diagonal matrices
   GH/23.01.95 - Does not display 1x1 matrices! (Don't know why)
   GH/19.09.00 - Change CFORM to CFORM_2 (no more abs. value)
-  
+
 *********************************************************************/
-#include <math.h>  
+#include <math.h>
 #include <stdio.h>
 
 #include "mat.h"
@@ -41,7 +41,7 @@ int matshow(mat M)
 
  Show the elements of a matrix (STDOUT).
 
- RETURN VALUES: 
+ RETURN VALUES:
    1, if o.k.
    0, if failed.
 
@@ -49,7 +49,7 @@ int matshow(mat M)
 {
 int i_r, i_c;
 int max_c;
-  
+
  if (matcheck(M) < 1)
  {
 #ifdef ERROR
@@ -75,7 +75,7 @@ int max_c;
            fprintf(STDOUT,RFORM, RMATEL(i_r,i_c,M));
          }
          fprintf(STDOUT,"\n");
-        } 
+        }
         fprintf(STDOUT,"\n");
         break;
        } /* case REAL */
@@ -91,7 +91,7 @@ int max_c;
            fprintf(STDOUT,CFORM_3,RMATEL(i_r,i_c,M),IMATEL(i_r,i_c,M),
                                 cri_abs(RMATEL(i_r,i_c,M),IMATEL(i_r,i_c,M)) );
 */
-           if( (R_fabs(RMATEL(i_r,i_c,M)) < MIN_VALUE) && 
+           if( (R_fabs(RMATEL(i_r,i_c,M)) < MIN_VALUE) &&
                (R_fabs(IMATEL(i_r,i_c,M)) < MIN_VALUE) )
              fprintf(STDOUT,CFORM_ZERO);
            else
@@ -104,7 +104,7 @@ int max_c;
         fprintf(STDOUT,"\n");
         break;
        } /* case COMPLEX */
-      }  /* switch num_type */ 
+      }  /* switch num_type */
       break;
     }  /* MAT_NORMAL, MAT_SQUARE */
 

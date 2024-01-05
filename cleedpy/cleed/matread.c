@@ -1,13 +1,13 @@
 /*********************************************************************
   GH/09.08.95
-  
+
   matread
      read matrix from a file.
 
   Changes:
 GH/07.08.95 - Creation (copy from matwrite)
 GH/09.08.95 - Allocate mat_str for NULL input
-  
+
 *********************************************************************/
 
 #include <stdio.h>
@@ -30,12 +30,12 @@ mat matread(mat M, FILE *file)
 /*********************************************************************
 
   Read matrix from a file.
-  
+
   INPUT
     mat M  - (input) pointer to matrix (can be NULL).
     FILE * file - (input) pointer to input file.
 
-  RETURN VALUE: 
+  RETURN VALUE:
     M if successful
     NULL if not
 
@@ -60,9 +60,9 @@ int tot_size;
    return(NULL);
 #endif
  }
- else 
+ else
  {
-   if(check == 0) 
+   if(check == 0)
      M = (mat) malloc( sizeof(struct mat_str) );
    else
    {
@@ -85,9 +85,9 @@ int tot_size;
 #else
      return(NULL);
 #endif
-   } 
+   }
    tot_size = sizeof(struct mat_str);
-   
+
    if( M->mag_no != MATRIX )
    {
 #ifdef ERROR
@@ -100,11 +100,11 @@ int tot_size;
      return(NULL);
 #endif
    }
- 
+
 /********************************************************************
  Diagonal Matrix: Not implemented
 ********************************************************************/
- if (M->mat_type == MAT_DIAG) 
+ if (M->mat_type == MAT_DIAG)
  {
 #ifdef ERROR
    fprintf(STDERR,

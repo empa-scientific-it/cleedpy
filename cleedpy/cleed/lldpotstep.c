@@ -1,5 +1,5 @@
 /*********************************************************************
-  GH/27.01.95 
+  GH/27.01.95
   file contains functions:
 
   ld_potstep        (27.01.95)
@@ -35,8 +35,8 @@ mat ld_potstep ( mat Rpm1_ab, mat Rpm_a,
 /************************************************************************
 
    Calculate only the first column of the reflection matrix R+- (i.e. the
-   amplitudes of the backscattered beams) for a stack of one (super) layer 
-   "a" (can be the complete bulk) and a square potential step  
+   amplitudes of the backscattered beams) for a stack of one (super) layer
+   "a" (can be the complete bulk) and a square potential step
    (z(a) < z(pot. step)) by layer doubling:
 
  INPUT:
@@ -49,7 +49,7 @@ mat ld_potstep ( mat Rpm1_ab, mat Rpm_a,
                   used: k_r, k_i, k_par.
    real eng_vac - vacuum energy.
    real *vec_ab - (input) vector pointing from the origin of layer a to
-                  the origin of layer b. The usual convention for vectors is 
+                  the origin of layer b. The usual convention for vectors is
                   used (x = 1, y = 2, z = 3).
 
  DESIGN:
@@ -59,7 +59,7 @@ mat ld_potstep ( mat Rpm1_ab, mat Rpm_a,
    Rab+- = Rb+- + (Tb++ P+ Ra+- P-) * (I - Rb-+ P+ Ra+- P-)^(-1) * Tb--
 
    whereby Tb and Rb are diagonal with:
-   
+
    R  = (kc - kv) / (kc + kv)
    T+ = 2*kc / (kc + kv)
    T- = 2*kv / (kc + kv)
@@ -69,7 +69,7 @@ mat ld_potstep ( mat Rpm1_ab, mat Rpm_a,
 
  RETURN VALUES:
 
-   mat Rpm1 - fist column of the reflection matrix (+-) (not necessarily 
+   mat Rpm1 - fist column of the reflection matrix (+-) (not necessarily
                 equal to the first argument).
 
 *************************************************************************/
@@ -91,7 +91,7 @@ mat Res;                           /* result will be copied to Rpm_ab */
 *************************************************************************/
 
 /*************************************************************************
-  Allocate memory and set up propagators Pp and Pm. 
+  Allocate memory and set up propagators Pp and Pm.
 
   Pp = exp[ i *( k_x*v_ab_x + k_y*v_ab_y + k_z*v_ab_z) ]
   Pm = exp[-i *( k_x*v_ab_x + k_y*v_ab_y - k_z*v_ab_z) ]
@@ -108,10 +108,10 @@ mat Res;                           /* result will be copied to Rpm_ab */
  {
 
    faux_r = (beams+k)->k_r[1] * vec_ab[1] +
-            (beams+k)->k_r[2] * vec_ab[2] + 
+            (beams+k)->k_r[2] * vec_ab[2] +
             (beams+k)->k_r[3] * vec_ab[3];
    faux_i = (beams+k)->k_i[3] * vec_ab[3];
-   
+
    cri_expi(Pp->rel+k+1, Pp->iel+k+1, faux_r, faux_i);
 
    faux_r -= 2 * (beams+k)->k_r[3] * vec_ab[3];
@@ -138,7 +138,7 @@ mat Res;                           /* result will be copied to Rpm_ab */
      kv->iel[k+1] = sqrt(-faux_r);
    }
  }
- 
+
 /*************************************************************************
   Prepare (Ra+- P-) (-> Maux_a):
   Multiply the k-th column of Ra+- with the k-th element of P-.
@@ -168,13 +168,13 @@ mat Res;                           /* result will be copied to Rpm_ab */
 
  for(k = 1; k <= n_beams; k ++)
  {
-   cri_div(&faux_r, &faux_i, 
+   cri_div(&faux_r, &faux_i,
          (beams+k-1)->k_r[3] - kv->rel[k], (beams+k-1)->k_i[3] - kv->iel[k],
          (beams+k-1)->k_r[3] + kv->rel[k], (beams+k-1)->k_i[3] + kv->iel[k]);
    cri_mul(&faux_r, &faux_i, Pp->rel[k], Pp->iel[k], faux_r, faux_i);
 
    ptr_end = Maux_b->rel + k*Maux_b->cols;
-   for (ptr_r = Maux_b->rel + (k-1)*Maux_b->cols + 1, 
+   for (ptr_r = Maux_b->rel + (k-1)*Maux_b->cols + 1,
         ptr_i = Maux_b->iel + (k-1)*Maux_b->cols + 1;
         ptr_r <= ptr_end; ptr_r ++,  ptr_i ++)
      cri_mul(ptr_r, ptr_i, *ptr_r, *ptr_i, faux_r, faux_i);
@@ -206,7 +206,7 @@ mat Res;                           /* result will be copied to Rpm_ab */
 
 /* T-(00) = 2*kv / (kv + kc) */
  cri_div(&faux_r, &faux_i,
-         2*kv->rel[1], 2*kv->iel[1], 
+         2*kv->rel[1], 2*kv->iel[1],
          beams->k_r[3] + kv->rel[1], beams->k_i[3] + kv->iel[1]);
 
 /* Multiply first column with T-(00) */
@@ -222,9 +222,9 @@ mat Res;                           /* result will be copied to Rpm_ab */
 /*************************************************************************
   Complete the computation of the matrix product in R+-:
 
-   (i) Multiply with T++ P+, i.e. multiply the elements of Res with 
+   (i) Multiply with T++ P+, i.e. multiply the elements of Res with
        T++ * P+
-  (ii) Add the reflextion of (00) at the potential step: 
+  (ii) Add the reflextion of (00) at the potential step:
        R+- = (- kc + kv) / (kc + kv)
 *************************************************************************/
 
@@ -240,7 +240,7 @@ mat Res;                           /* result will be copied to Rpm_ab */
  }
 
 /* (ii) */
- 
+
  cri_div(&faux_r, &faux_i,
       - beams->k_r[3] + kv->rel[1], - beams->k_i[3] + kv->iel[1],
       beams->k_r[3] + kv->rel[1], beams->k_i[3] + kv->iel[1]);
@@ -250,7 +250,7 @@ mat Res;                           /* result will be copied to Rpm_ab */
 
 /*************************************************************************
  - Write the result to the output pointer
- - Free temporary storage space, 
+ - Free temporary storage space,
  - Return.
 *************************************************************************/
 
@@ -265,6 +265,6 @@ mat Res;                           /* result will be copied to Rpm_ab */
 
  return(Rpm1_ab);
 }
- 
+
 /*======================================================================*/
 /*======================================================================*/

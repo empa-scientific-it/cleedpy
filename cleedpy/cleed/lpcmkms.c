@@ -1,9 +1,9 @@
 /*********************************************************************
-GH/16.09.00 
+GH/16.09.00
   file contains function:
 
-  pc_mk_ms(mat *p_Mx, mat *p_My, mat *p_Mz, 
-           mat *p_MxMx, mat *p_MyMy, mat *p_MzMz, int l_max); 
+  pc_mk_ms(mat *p_Mx, mat *p_My, mat *p_Mz,
+           mat *p_MxMx, mat *p_MyMy, mat *p_MzMz, int l_max);
 
  Compute Ms defined in Fritzsche's paper.
 
@@ -33,21 +33,21 @@ GH/18.09.00 - Creation
 #define SQRT_4PI3 2.0466534158929771    /* sqrt(4*PI / 3) */
 #define SQRT_2_1  0.7071067811865475    /* 1 / sqrt(2)    */
 
-int pc_mk_ms(mat *p_Mx,   mat *p_My,   mat *p_Mz, 
+int pc_mk_ms(mat *p_Mx,   mat *p_My,   mat *p_Mz,
              mat *p_MxMx, mat *p_MyMy, mat *p_MzMz, int l_max)
 
 /************************************************************************
 
  Calculate non-diagonal temperature dependent atomic scattering matrix
  according to the cumulants expansion (P. de Andres / V. Fritzsche).
- 
+
  INPUT:
 
-  mat * p_Mx, p_My, p_Mz (input/output) 
+  mat * p_Mx, p_My, p_Mz (input/output)
            The function writes the output matrices into these pointers.
            If tmat is NULL, the mat structure will be created.
 
-  mat * p_Mx, p_My, p_Mz (input/output) 
+  mat * p_Mx, p_My, p_Mz (input/output)
            The function writes the output matrices into these pointers.
            If tmat is NULL, the mat structure will be created.
 
@@ -62,7 +62,7 @@ int pc_mk_ms(mat *p_Mx,   mat *p_My,   mat *p_Mz,
 
  see: P. de Andres, D. A. King, "Anisotropic and Anharmonic effects through
       the t-matrix for Low-Energy Electron Diffraction (TMAT V1.1)",
-      Comp. Phys. Comm., sect. 2.4. the equation numbers (30 - 32) 
+      Comp. Phys. Comm., sect. 2.4. the equation numbers (30 - 32)
       refer to this paper.
 
 *************************************************************************/
@@ -75,7 +75,7 @@ int l_max_2;                   /* matrix dimension */
 
 real trace_r, trace_i;
 
-real faux_r, faux_i, pref; 
+real faux_r, faux_i, pref;
 /* real sq_2_1, sq_4pi3; */
 real Mp_r, Mp_i, Mm_r, Mm_i;
 
@@ -93,14 +93,14 @@ FILE *log_stream;
  sq_4pi3 = R_sqrt(4 * PI / 3.);
  sq_2_1  = 1. / R_sqrt(2.);
 
- fprintf(STDCTR,"(pc_mk_ms):sq_4pi/3 = %f sq_2_1 = %f\n", 
+ fprintf(STDCTR,"(pc_mk_ms):sq_4pi/3 = %f sq_2_1 = %f\n",
          sq_4pi3 * 10000000000000000., sq_2_1 * 10000000000000000.);
 */
 #endif
 
 /*************************************************************************
   call mk_cg_coef to make sure, that all C.G. coefficients are available.
-  preset variables 
+  preset variables
   l_max_2 = matrix dimension
 *************************************************************************/
 
@@ -173,7 +173,7 @@ FILE *log_stream;
 
        } /* m3 */
     } /* m1 */
- 
+
 #ifdef CONTROL_X
  fprintf(STDCTR,"(pc_mk_ms): Mz: \n");
  matshow(Mz);
@@ -219,7 +219,7 @@ FILE *log_stream;
          {
            trace_r += Unity->rel[i_el];
            trace_i += Unity->iel[i_el];
-           
+
            if( (R_cabs(Unity->rel[i_el] -1., Unity->iel[i_el]) > M_TOLERANCE)
                && (l1 != l_max) )
            {

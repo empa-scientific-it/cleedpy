@@ -1,15 +1,15 @@
 /*********************************************************************
   GH/18.01.95
-  
+
   real matdiff(mat M1, mat M2)
-  
+
   Calculate the difference between two matrices
 
   Changes:
   GH/18.01.95 - diagonal matrices are not implemented!
 
 *********************************************************************/
-#include <math.h>  
+#include <math.h>
 #include <stdio.h>
 
 #include "mat.h"
@@ -22,15 +22,15 @@
 
 real matdiff(mat M1, mat M2)
 
-/* 
+/*
   Calculate the difference between two matrices i.e. the sum of the
   moduli of the difference between the matrix elements.
 
   parameters:
   M1,M2 - input matrices (must have the same dimensions)
 
-  RETURN VALUE:  
-  
+  RETURN VALUE:
+
     difference
     -1.         if failed (and EXIT_ON_ERROR is not defined)
 */
@@ -39,8 +39,8 @@ real matdiff(mat M1, mat M2)
 real diff;
 real *ptr_1, *ptr_2, *ptr_end;
 long int nn;
-  
-/********************************************************************* 
+
+/*********************************************************************
   Check input matrix
 *********************************************************************/
 
@@ -69,7 +69,7 @@ long int nn;
 #endif
  }
 
-/********************************************************************* 
+/*********************************************************************
   Calculate difference for valid matrix types
 *********************************************************************/
 
@@ -87,7 +87,7 @@ long int nn;
             ptr_1 <= ptr_end; ptr_1 ++, ptr_2 ++)
        {
          diff += R_fabs(*ptr_1 - *ptr_2);
-       } 
+       }
        break;
      } /* case REAL */
 
@@ -110,11 +110,11 @@ long int nn;
      } /* case COMPLEX */
    }  /* switch */
  }     /* matrix type is not diagonal */
- 
+
  else  /* one matrix is diagonal */
  {
 
-/********************************************************************* 
+/*********************************************************************
   diagonal matrices are not implemented!
 *********************************************************************/
 

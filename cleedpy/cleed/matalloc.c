@@ -1,12 +1,12 @@
 /*********************************************************************
   GH/02.03.95
-  
-  matalloc 
+
+  matalloc
      Allocate memory for a cols x rows matrix.
      all matrix elements are set to zero.
 
   Changes:
-  
+
   GH/11.08.94 - Diagonal matrices
   GH/15.08.94 - set all matrix elements to zero.
   GH/26.08.94 - num_type has a different meaning: num_type + mat_type.
@@ -34,7 +34,7 @@ mat matalloc(mat M, int rows, int cols, int num_type)
 
   Allocate memory for a cols x rows matrix of type num_type. All matrix
   elements are set to zero.
-  
+
   INPUT
     mat M
     int rows     - max first index (i.e. number of rows)
@@ -44,7 +44,7 @@ mat matalloc(mat M, int rows, int cols, int num_type)
                    input as:
                    mat_type | num_type.
 
-  RETURN VALUE: 
+  RETURN VALUE:
     pointer to the matrix (mat) (if successful)
     NULL else.
 
@@ -55,7 +55,7 @@ size_t no_of_elts;
 real *ptr, *ptr_end;
 
 #ifdef CONTROL
- fprintf(STDCTR,"(matalloc): enter function rows: %d cols: %d num_type: %d\n", 
+ fprintf(STDCTR,"(matalloc): enter function rows: %d cols: %d num_type: %d\n",
          rows, cols, num_type);
 #endif
 
@@ -63,7 +63,7 @@ real *ptr, *ptr_end;
   Check the validity of the pointer M and cols/rows first
 *********************************************************************/
 
- if(matcheck(M) < 0) 
+ if(matcheck(M) < 0)
  {
 #ifdef ERROR
    fprintf(STDERR," *** error (matalloc): Invalid pointer \n");
@@ -88,7 +88,7 @@ real *ptr, *ptr_end;
  }
 
 /*********************************************************************
-  Find the correct matrix type (high byte of num_type) and number 
+  Find the correct matrix type (high byte of num_type) and number
   types (low byte of num_type).
 *********************************************************************/
 
@@ -121,12 +121,12 @@ real *ptr, *ptr_end;
 #endif
 
 /*********************************************************************
-  If M points to the right matrix type already, only reset all matrix 
+  If M points to the right matrix type already, only reset all matrix
   elements.
 *********************************************************************/
 
  if( (matcheck(M) > 0) &&
-     (M->cols == cols) && 
+     (M->cols == cols) &&
      (M->rows == rows) &&
      (M->num_type == num_type) &&
      (M->mat_type == mat_type) )
@@ -139,18 +139,18 @@ real *ptr, *ptr_end;
      if(M->mat_type < MAT_DIAG)
      {
        ptr_end = M->rel + M->rows*M->cols;
-       for(ptr = M->rel; ptr <= ptr_end; ptr ++) *ptr = 0.; 
+       for(ptr = M->rel; ptr <= ptr_end; ptr ++) *ptr = 0.;
 
        ptr_end = M->iel + M->rows*M->cols;
-       for(ptr = M->iel; ptr <= ptr_end; ptr ++) *ptr = 0.; 
+       for(ptr = M->iel; ptr <= ptr_end; ptr ++) *ptr = 0.;
      }
      if(M->mat_type == MAT_DIAG)
      {
        ptr_end = M->rel + M->cols;
-       for(ptr = M->rel; ptr <= ptr_end; ptr ++) *ptr = 0.; 
+       for(ptr = M->rel; ptr <= ptr_end; ptr ++) *ptr = 0.;
 
        ptr_end = M->iel + M->cols;
-       for(ptr = M->iel; ptr <= ptr_end; ptr ++) *ptr = 0.; 
+       for(ptr = M->iel; ptr <= ptr_end; ptr ++) *ptr = 0.;
      }
    } /* NUM_COMPLEX */
 
@@ -159,24 +159,24 @@ real *ptr, *ptr_end;
      if(M->mat_type < MAT_DIAG)
      {
        ptr_end = M->rel + M->rows*M->cols;
-       for(ptr = M->rel; ptr <= ptr_end; ptr ++) *ptr = 0.; 
+       for(ptr = M->rel; ptr <= ptr_end; ptr ++) *ptr = 0.;
      }
      if(M->mat_type == MAT_DIAG)
      {
        ptr_end = M->rel + M->cols;
-       for(ptr = M->rel; ptr <= ptr_end; ptr ++) *ptr = 0.; 
+       for(ptr = M->rel; ptr <= ptr_end; ptr ++) *ptr = 0.;
      }
    } /* NUM_REAL */
  /*
    Set magic number and return
  */
-   M->mag_no = MATRIX; 
+   M->mag_no = MATRIX;
    return(M);
  }  /* reset existing matrix */
 
 /*********************************************************************
   If not: allocate new memory
-  
+
   - if M == NULL: allocate a new matrix header, blk_type = BLK_SINGLE
   - if M != NULL: update the old header, use former blk_type.
 *********************************************************************/
@@ -196,7 +196,7 @@ real *ptr, *ptr_end;
 #endif
    if (M->iel != NULL) free(M->iel);
    if (M->rel != NULL) free(M->rel);
- } 
+ }
 
  M->cols = cols;
  M->rows = rows;
@@ -260,7 +260,7 @@ real *ptr, *ptr_end;
   default:   /* unknown number type */
   {
 #ifdef ERROR
-    fprintf(STDERR, 
+    fprintf(STDERR,
             " *** error (matalloc) wrong number type: %d\n", num_type);
 #endif
 #ifdef EXIT_ON_ERROR
@@ -276,6 +276,6 @@ real *ptr, *ptr_end;
 #ifdef CONTROL_X
     fprintf(STDCTR,"(matalloc): set magic number and return\n\n");
 #endif
- M->mag_no = MATRIX; 
+ M->mag_no = MATRIX;
  return(M);
 }  /* end of function matalloc */

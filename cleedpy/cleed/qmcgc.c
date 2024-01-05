@@ -1,5 +1,5 @@
 /*********************************************************************
-  GH/22.09.00 
+  GH/22.09.00
   file contains functions:
 
   mk_cg_coef      (09.08.94)
@@ -68,11 +68,11 @@ int mk_cg_coef(int l_max)
 
  DESCRIPTION:
 
- Calculate all Clebsh Gordan coefficients 
-   C( l1, m1, l2, m2, l3, m3) 
+ Calculate all Clebsh Gordan coefficients
+   C( l1, m1, l2, m2, l3, m3)
  for 0 <= l1 <= 2*l_max, 0 <= l2,l3 <= l_max.
- 
- INPUT: 
+
+ INPUT:
 
    int l_max - max angular momentum for output.
 
@@ -83,19 +83,19 @@ int mk_cg_coef(int l_max)
    The storage scheme is:
 
    C(l1,m1,l2,m2,l3,m3) -> cg_coef + (l1 * (l1 + 1)/2 + m1pm) * st_fac1 +
-                                     (l2 * (l2 + 1)   + m2pm) * st_fac2 + 
+                                     (l2 * (l2 + 1)   + m2pm) * st_fac2 +
                                       l3/2;
 
    Since C(l1,m1,l2,m2,l3,m3) = C(l1,-m1,l2,-m2,l3,-m3) only the coefficients
-   for positive values of m1 are stored (m2 can be positive of negative). 
+   for positive values of m1 are stored (m2 can be positive of negative).
    The coefficients of -m1 and m2 are the same as for m1 and -m2.
 
    Because of the condition
-     l1 + l2 + l3 = even   
+     l1 + l2 + l3 = even
    Only half of the possible values of l3 lead to nonzero C.G.-C's. Only
    these are stored (offset 0: l3 = 0/1, 1: l3 = 2/3 etc.)
-   Because of 
-     m1 = m2 + m3 
+   Because of
+     m1 = m2 + m3
    Only one valid value of m3 exists per (m1,m2)-pair.
 
    The ranges of l1,l2,l3 are:
@@ -105,7 +105,7 @@ int mk_cg_coef(int l_max)
    Memory requirements for the static array cg_coef:
 
    (2*l_max+1)*(2*l_max+2)/2 * (l_max+1)^2 * (l_max/2+1) * sizeof(double)
-  
+
       l_max =  6 :    142,688 bytes
       l_max =  8 :    495,720 bytes
       l_max = 10 :  1,341,648 bytes
@@ -141,7 +141,7 @@ double fac_l, fac_ls;
 double sign;
 
 /*****************************************
- Check if the C.G.C had been 
+ Check if the C.G.C had been
  calculated already:
 *****************************************/
 
@@ -157,7 +157,7 @@ double sign;
  iaux = (2*l_max + 1)*(2*l_max + 2)/2 * (l_max + 1)*(l_max + 1) * (l_max/2 + 1);
 
 #ifdef CONTROL
-       fprintf(STDCTR,"(mk_cg_coef): cg_coef[%d] (%.3f Mb) for l_max = %2d\n", 
+       fprintf(STDCTR,"(mk_cg_coef): cg_coef[%d] (%.3f Mb) for l_max = %2d\n",
                       iaux, (real)iaux*sizeof(double) / MBYTE, l_max );
 #endif
 
@@ -166,7 +166,7 @@ double sign;
  if (cg_coef == NULL)
  {
 #ifdef ERROR
-   fprintf(STDERR,"(mk_cg_coef): allocation error: cg_coef[%d] = %d bytes\n", 
+   fprintf(STDERR,"(mk_cg_coef): allocation error: cg_coef[%d] = %d bytes\n",
                   iaux, iaux*sizeof(double) );
 #endif
 #ifdef EXIT_ON_ERROR
@@ -177,28 +177,28 @@ double sign;
 #endif
  }
 
-/* 
-  Static variables used to retrieve the C.G.C's 
+/*
+  Static variables used to retrieve the C.G.C's
 */
  st_fac1 = (l_max + 1)*(l_max + 1) * (l_max/2 + 1);
  st_fac2 = (l_max/2 + 1);
- l_max_coef = l_max; 
+ l_max_coef = l_max;
 
 
-/* 
-  Produce a list of factorials 
+/*
+  Produce a list of factorials
 */
 
  iaux = 4*l_max + 1;
  fac = (double *) malloc( (iaux + 1) * sizeof(double) );
- 
+
  for (fac[0] = 1. , i = 1; i <= iaux; i ++ )
  {
    fac[i] = fac[i-1] * i;
  }
 
- 
-/***************************************** 
+
+/*****************************************
   Start calculation of C.G. coefficients:
   Loops over l2,l3,l1,m1,m2
 *****************************************/
@@ -216,7 +216,7 @@ double sign;
      */
      {
 /*
-  Calculate fac_l 
+  Calculate fac_l
 */
        lll = (l1+l2+l3)/2;
        fac_l = fac[2*(lll - l3)] * fac[lll] /
@@ -226,7 +226,7 @@ double sign;
        {
          m2_min = MAX((m1pm-l3),-l2);
          m2_max = MIN((m1pm+l3), l2);
- 
+
          for ( m2pm = m2_min ; m2pm <= m2_max; m2pm ++)
          /*
            The condition |m1| >= |m2| >= |m1-m2| is not automatically fulfilled
@@ -247,9 +247,9 @@ double sign;
   Find the address in storage space cp_coef:
   C(l2,m2,l3,m3) and C(l3,m3,l2,m2) are identical:
 */
-           i_st1 = (l1 * (l1 + 1)/2 + m1pm) * st_fac1 + 
+           i_st1 = (l1 * (l1 + 1)/2 + m1pm) * st_fac1 +
                    (l2 * (l2 + 1)   + m2pm) * st_fac2 + l3/2;
-           i_st2 = (l1 * (l1 + 1)/2 + m1pm) * st_fac1 + 
+           i_st2 = (l1 * (l1 + 1)/2 + m1pm) * st_fac1 +
                    (l3 * (l3 + 1)   + m3pm) * st_fac2 + l2/2;
 
 /*
@@ -261,20 +261,20 @@ double sign;
 
            if ((m2 > m1) || (m3 > m1))
            {
-             if (m3 > m2) 
-             { 
-               l1_s = l3; m1 = m3;  
-               l3_s = l1; m3 = abs(m1pm);  
+             if (m3 > m2)
+             {
+               l1_s = l3; m1 = m3;
+               l3_s = l1; m3 = abs(m1pm);
                l2_s = l2;
              }
              else
-             { 
+             {
                l1_s = l2; m1 = m2;
                l2_s = l1; m2 = abs(m1pm);
                l3_s = l3;
              }
 /*
-  Check if l2_s is still bigger than l3_s. If not, exchange l2_s and l3_s. 
+  Check if l2_s is still bigger than l3_s. If not, exchange l2_s and l3_s.
   fac_l needs to be recalculated.
 */
              if(l2_s < l3_s)
@@ -282,7 +282,7 @@ double sign;
                iaux = l2_s; l2_s = l3_s; l3_s = iaux;
                iaux = m2;   m2   = m3;   m3   = iaux;
              }
-  
+
              fac_ls = fac[2*(lll - l3_s)] * fac[lll] /
              (fac[2*lll + 1]*fac[lll -l1_s]*fac[lll -l2_s]*fac[lll -l3_s]);
            }
@@ -294,7 +294,7 @@ double sign;
 #endif
 
 /*
-  Calculate fac_m: 
+  Calculate fac_m:
 
   According to Pendry's book a factor (4*PI)^-1/2 must be multiplied with
   the plain coefficients.
@@ -311,14 +311,14 @@ double sign;
    i_min, i_max are the boundaries for summation over i.
 */
            i_min = MAX(0, (-l2_s + l3_s - m1));
-           i_max = MIN(l1_s - m1, l3_s - m3); 
+           i_max = MIN(l1_s - m1, l3_s - m3);
            i_max = MIN( (l2_s + l3_s - m1), i_max);
            sign = M1P(i_min);
 
            for(i = i_min, sum_m = 0.; i<= i_max; i++, sign = -sign )
            {
              sum_m += sign * fac[l1_s + m1 + i] * fac[l2_s + l3_s - m1 - i] /
-                            (fac[l1_s - m1 - i] * fac[l2_s - l3_s + m1 + i] * 
+                            (fac[l1_s - m1 - i] * fac[l2_s - l3_s + m1 + i] *
                              fac[l3_s - m3 - i] * fac[i]);
            }
 
@@ -330,15 +330,15 @@ double sign;
            sign = M1P(lll - l2_s - m3 + (m1+m2+m3)/2);
    Sign compatible with CA:
            sign = M1P(- l2_s - m3 - m3pm + (m1+m2+m3)/2);
-*/ 
+*/
            sign = M1P(lll - l2_s - m3 + (m1+m2+m3)/2);
            cg_coef[i_st1] = sign * fac_ls * fac_m * sum_m;
            cg_coef[i_st2] = sign * fac_ls * fac_m * sum_m;
 
 #ifdef WARNING
-       if (cg_coef[i_st1] > WARN_LEVEL) 
+       if (cg_coef[i_st1] > WARN_LEVEL)
        {
-         fprintf(STDWAR, 
+         fprintf(STDWAR,
           "* warning (mk_cg_coef): CG-C[%2d %2d %2d %2d %2d %2d] = %9.6f\n",
           l1, m1pm, l2, m2pm, l3, m3pm, cg_coef[i_st1]);
          i_warn ++;
@@ -411,8 +411,8 @@ int i_st;
        for(m2 = -l2; m2 <= l2; m2 ++)
        {
          st_off2 = st_off1 + (l2*(l2+1) + m2) * st_fac2;
-         
-         for(l3 = ODD(l1+l2)?1:0; l3 <= l23_max; l3 += 2) 
+
+         for(l3 = ODD(l1+l2)?1:0; l3 <= l23_max; l3 += 2)
          {
            m3 = m1-m2;
            if (abs(m3) <= l3)
@@ -455,9 +455,9 @@ double cg (int l1, int m1, int l2, int m2, int l3, int m3)
  DESIGN:
 
  Reverse operation to the storage scheme used in mk_cg_coef.
- 
+
  The function does not check if the quantum numbers are within the limits
- given by l_max_coef. This has to be checked outside the function using 
+ given by l_max_coef. This has to be checked outside the function using
  cg_info.
 
 *************************************************************************/
@@ -480,14 +480,14 @@ int i_st;
   Only C.G.C's for m1 >= 0 are stored. If m1 < 0, look for
     C.G.C.[-m1,-m2] = C.G.C.[m1,m2]
 */
- 
+
  if (m1 < 0) { m1 = -m1; m2 = -m2; }
 
 #ifdef CONTROL_CG
  fprintf(STDCTR,"(cg:) l1:%2d, m1:%2d, l2:%2d, m2:%2d, l3:%2d, m3:%2d\n",
          l1,m1,l2,m2,l3,m3 );
 #endif
- 
+
  i_st = (l1 * (l1 + 1)/2 + m1) * st_fac1 +
         (l2 * (l2 + 1)   + m2) * st_fac2 + l3/2;
 
@@ -499,7 +499,7 @@ int i_st;
 /*======================================================================*/
 /*======================================================================*/
 
-double * cg_info (int l1, int m1, int l2, int m2, 
+double * cg_info (int l1, int m1, int l2, int m2,
                   int* l_max, int* inc1, int* inc2)
 
 /************************************************************************
@@ -507,20 +507,20 @@ double * cg_info (int l1, int m1, int l2, int m2,
  Returns relevant storage information about the array cg_coef
 
  input:
- 
+
  l1,m1,l2,m2 - quantum numbers for which the offset will be returned.
                ( C( l1, m1, l2, m2, 0/1, m2) )
- 
+
  Output:
- 
+
  int* l_max - l_max for which C.G. coefficients are stored.
  int* inc1  - increment, when increasing m1 by 1.
  int* inc2  - increment, when increasing m2 by 1.
 
  Return value:
- 
+
  Address of C( l1, m1, l2, m2, 0/1, m2) =
-            cg_coef + (l1 * (l1 + 1)/2 + m1) * st_fac1 + 
+            cg_coef + (l1 * (l1 + 1)/2 + m1) * st_fac1 +
                       (l2 * (l2 + 1) + m2) * st_fac2
 
 *************************************************************************/
@@ -528,8 +528,8 @@ double * cg_info (int l1, int m1, int l2, int m2,
   *l_max = l_max_coef;
   *inc1  = st_fac1;
   *inc2  = st_fac2;
-  
-  return (cg_coef + (l1 * (l1 + 1)/2 + m1) * st_fac1 + 
+
+  return (cg_coef + (l1 * (l1 + 1)/2 + m1) * st_fac1 +
                     (l2 * (l2 + 1)   + m2) * st_fac2   );
 
 }  /* end of function cg_info */
@@ -549,7 +549,7 @@ double blm (int l1, int m1, int l2, int m2, int l3, int m3)
                         = (-1)^m3 S Y(l1,m1) * Y(l2,m2) * Y*(l3,-m3)
 
                         = cg(l2,-m2,l1,m1,l3,m3)
- 
+
  for l2 <= 2* l_max_coef, l1/l3 <= l_max_coef
 
  INPUT:

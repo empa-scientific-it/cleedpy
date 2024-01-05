@@ -15,9 +15,9 @@ include file for type definition "real"
 #endif
 #endif
 
-/* alternatives: 
-#define REAL_IS_DOUBLE     
-#define REAL_IS_FLOAT 
+/* alternatives:
+#define REAL_IS_DOUBLE
+#define REAL_IS_FLOAT
 */
 
 /************************************************
@@ -33,7 +33,7 @@ include file for type definition "real"
 #endif
 
 /*
-  Define macros for math operations of type double 
+  Define macros for math operations of type double
   (standard math library)
 */
 

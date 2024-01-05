@@ -2,7 +2,7 @@
   GH/07.06.94
 
 *********************************************************************/
-#include <math.h>  
+#include <math.h>
 #include <stdio.h>
 
 #include "mat.h"
@@ -14,7 +14,7 @@
 
 int mattrace(mat tra, mat M)
 
-/* 
+/*
   Calculate the trace of a square matrix M
 
   parameters:
@@ -28,7 +28,7 @@ int mattrace(mat tra, mat M)
 {
 real *ptr, *ptr_end;
 int nn;
-  
+
  if ((M == NULL) || (M->mat_type != MAT_SQUARE) )
  {
 #ifdef ERROR
@@ -54,7 +54,7 @@ int nn;
       for (ptr = M->rel + 1, ptr_end = M->rel + nn; ptr <= ptr_end; ptr++ )
       {
         *(tra->rel) += *ptr;
-      } 
+      }
       break;
     } /* case REAL */
 

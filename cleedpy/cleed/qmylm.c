@@ -1,5 +1,5 @@
 /*********************************************************************
-  GH/10.08.95 
+  GH/10.08.95
   file contains functions:
 
   r_ylm      (15.08.94)
@@ -11,15 +11,15 @@
 
        Calculate all spherical harmonics up to l = l_max for complex
        arguments z and phi(real).
-  
+
   mk_ylm_coef (15.08.94)
 
-       Produce the coefficients needed to calculate spherical harmonics 
+       Produce the coefficients needed to calculate spherical harmonics
        in function ylm.
 
 GH/15.08.94 - Creation
 GH/03.04.95 - Calculate Yl-m explicitly in c_ylm.
-GH/05.08.95 - mk_ylm_coef is a global function (not static anymore), i.e. 
+GH/05.08.95 - mk_ylm_coef is a global function (not static anymore), i.e.
               it can be called from outside this file.
 GH/10.08.95 - WARNING output at the end of mk_ylm_coef.
 
@@ -62,8 +62,8 @@ mat r_ylm( mat Ylm, real x, real phi, int l_max )
 
  Calculate all shperical harmonics Ylm up to l = l_max for given real
  arguments x and phi.
- 
- input: 
+
+ input:
 
  mat Ylm   - output: spherical harmonics in natural order (see below).
  real x    - first argument: cos(theta)
@@ -76,23 +76,23 @@ mat r_ylm( mat Ylm, real x, real phi, int l_max )
  prefactors. The coefficients of the power series have to be generated
  once and stored in the array coef (function mk_ylm_coef). It is checked
  within the function r_ylm, if this has been done already.
- 
+
  Variables used within the function:
- 
-  r/i_pre - (dimension: l_max+1) powers of 
+
+  r/i_pre - (dimension: l_max+1) powers of
             sin(x) * exp(i*phi) = sqrt (1- x*x)*(cos(phi) + i sin(phi) )
             which is the m-dependent prefactor of the spherical harmonics.
 
-  r_pre_l, r_pre_m 
+  r_pre_l, r_pre_m
             these variables are either x or 1. The relation holds:
-            if r_pre_l/m  = 1(x) then the next time it is x(1). 
+            if r_pre_l/m  = 1(x) then the next time it is x(1).
             Therefore r_pre_l/m(l/m+1) = 1 + x - r_pre_l/m(l/m).
 
   coef    - coefficients of the power series generated in mk_ylm_coef.
 
  output(return value):
 
- Ylm (may be different from input parameter). The storage scheme for Ylm 
+ Ylm (may be different from input parameter). The storage scheme for Ylm
  is in the natural order:
 
  l      0  1  1  1  2  2  2  2  2  3  3  3  3  3  3  3  4  4 ...
@@ -124,10 +124,10 @@ real x_2, sum;
  Ylm = matalloc( Ylm, 1, iaux, NUM_COMPLEX );
 
 /*
-  Calculate coefficients and allocate memory for prefactors r/i_pre 
+  Calculate coefficients and allocate memory for prefactors r/i_pre
   if not done yet or if l_max has changed since last time.
 */
- if ( l_max > l_max_coef ) 
+ if ( l_max > l_max_coef )
  {
 #ifdef WARNING
    if(l_max_coef != UNUSED)
@@ -166,15 +166,15 @@ real x_2, sum;
  Ylm->rel[1] = coef[0];
  Ylm->iel[1] = 0.;
 
-/* 
- loop over l 
+/*
+ loop over l
 */
  index = 1;
  r_pre_l = 1.;
  for(l = 1; l <= l_max; l++ )
  {
- /* 
-   Determine prefactors, 
+ /*
+   Determine prefactors,
    write next value into r/i_pre;
    determine offset in Ylm -> off
  */
@@ -185,8 +185,8 @@ real x_2, sum;
 
    off = l*(l+1) + 1;
 
- /* 
-    r_pre_m: for odd (l+m), the lowest power of x is x, for even (l+m), 
+ /*
+    r_pre_m: for odd (l+m), the lowest power of x is x, for even (l+m),
     it is 1.
  */
    r_pre_m = r_pre_l;
@@ -201,10 +201,10 @@ real x_2, sum;
 
      Ylm->rel[off + m] = r_pre[m] * r_pre_m * sum;
      Ylm->iel[off + m] = i_pre[m] * r_pre_m * sum;
-    
+
      /* -m: (-1)^m */
-     if(ODD(m)) 
-     { 
+     if(ODD(m))
+     {
        Ylm->rel[off - m] = - Ylm->rel[off + m];
        Ylm->iel[off - m] =   Ylm->iel[off + m];
      }
@@ -232,8 +232,8 @@ mat c_ylm( mat Ylm, real z_r, real z_i, real phi, int l_max )
 
  Calculate all shperical harmonics Ylm up to l = l_max for a given complex
  argument z (z_r, z_i) and real phi.
- 
- input: 
+
+ input:
 
  mat Ylm    - output: spherical harmonics in natural order (see below).
  real z_r/i - real and imaginary part of 1st argument: complex cos(theta)
@@ -249,38 +249,38 @@ mat c_ylm( mat Ylm, real z_r, real z_i, real phi, int l_max )
 
  The definition of the Ylm and Yl-m is according to formula (10,VHT):
 
- Ylm(th, phi) = 
+ Ylm(th, phi) =
         (-1)^m [(2l+1)/4pi * (l+m)!/(l-m)!]^(1/2) Plm(cos th) exp( im phi)
 
- Yl-m(th, phi) = 
+ Yl-m(th, phi) =
                [(2l+1)/4pi * (l+m)!/(l-m)!]^(1/2) Plm(cos th) exp(-im phi)
 
  Yl-m must be calculated explicitly.
 
  !!!!!!!!!!
- The assumption of the VHT programs that 
+ The assumption of the VHT programs that
    (Ylm)* = (-1)^m Yl-m
  is not true for complex arguments cos(theta). Therefore Yl-m is calculated
- explicitly. 
+ explicitly.
  !!!!!!!!!!
 
- 
+
  Variables used within the function:
- 
-  r/i_pre - (dimension: l_max+1) powers of 
+
+  r/i_pre - (dimension: l_max+1) powers of
             sin(x) * exp(i*phi) = sqrt (1- x*x)*(cos(phi) + i sin(phi) )
             which is the m-dependent prefactor of the spherical harmonics.
 
-  r_pre_l, r_pre_m 
+  r_pre_l, r_pre_m
             these variables are either x or 1. The relation holds:
-            if r_pre_l/m  = 1(x) then the next time it is x(1). 
+            if r_pre_l/m  = 1(x) then the next time it is x(1).
             Therefore r_pre_l/m(l/m+1) = 1 + x - r_pre_l/m(l/m).
 
   coef    - coefficients of the power series generated in mk_ylm_coef.
 
  output(return value):
 
- Ylm (may be different from input parameter). The storage scheme for Ylm 
+ Ylm (may be different from input parameter). The storage scheme for Ylm
  is in the natural order:
 
  l      0  1  1  1  2  2  2  2  2  3  3  3  3  3  3  3  4  4 ...
@@ -313,10 +313,10 @@ real sum_r, sum_i;
  Ylm = matalloc( Ylm, 1, iaux, NUM_COMPLEX );
 
 /*
-  Calculate coefficients and allocate memory for prefactors r/i_pre 
+  Calculate coefficients and allocate memory for prefactors r/i_pre
   if not done yet or if l_max has changed since last time.
 */
- if ( l_max > l_max_coef ) 
+ if ( l_max > l_max_coef )
  {
 #ifdef WARNING
    if(l_max_coef != UNUSED)
@@ -327,7 +327,7 @@ real sum_r, sum_i;
 #endif
    mk_ylm_coef(l_max);
  }
- 
+
  if ( l_max > l_max_r)
  {
    if (r_pre == NULL) r_pre = (real *) calloc( (l_max+1) , sizeof(real) );
@@ -369,16 +369,16 @@ real sum_r, sum_i;
  Ylm->rel[1] = coef[0];
  Ylm->iel[1] = 0.;
 
-/* 
- loop over l 
+/*
+ loop over l
 */
  index = 1;
  r_pre_l = 1.; i_pre_l = 0.;
  for(l = 1; l <= l_max; l++ )
  {
- /* 
+ /*
    Write next value into r/i_pre(c);
-   Determine prefactors (for odd (l+m), the lowest power of x is x, 
+   Determine prefactors (for odd (l+m), the lowest power of x is x,
    for even (l+m), it is 1).
    Determine offset in Ylm -> off
  */
@@ -393,7 +393,7 @@ real sum_r, sum_i;
 
    for(m = 0; m <= l; m++ )
    {
-   /* 
+   /*
      loop over powers of (z*z)
    */
      sum_r = sum_i = 0.;
@@ -406,9 +406,9 @@ real sum_r, sum_i;
      } /* lamb */
 
    /*
-      The assumption (-1)^m Yl-m = (Ylm)* is not true for complex 
-      arguments; therefore Yl-m is calculated explicitly: 
-      
+      The assumption (-1)^m Yl-m = (Ylm)* is not true for complex
+      arguments; therefore Yl-m is calculated explicitly:
+
         Ylm  = pre[m]  * pre_m * sum
         Yl-m = prec[m] * pre_m * sum
 
@@ -462,19 +462,19 @@ double *fac;
 
 real pre_0, pre_ll, pre_lm;  /* prefactors */
 real sgn;                    /* sign of the coefficients */
- 
-/* 
-  Produce a list of factorials 
+
+/*
+  Produce a list of factorials
 */
  iaux = 2*l_max + 1;
  fac = (double *) malloc( iaux * sizeof(double) );
- 
+
  for (fac[0] = 1. , i = 1; i < iaux; i ++ )
    fac[i] = fac[i-1] * i;
 
-/* 
+/*
    Allocate memory for coef.
-   (MEM_BLOCK = 512 is enough for l_max <= 15) 
+   (MEM_BLOCK = 512 is enough for l_max <= 15)
 */
 
  i_mem = 1;
@@ -483,8 +483,8 @@ real sgn;                    /* sign of the coefficients */
  else
    coef = (real *) realloc( coef, i_mem * MEM_BLOCK * sizeof(real) );
 
-/* 
- loop over l 
+/*
+ loop over l
  pre_0 is used as sqrt(pi/4) / 2^l
 */
  index = 0;
@@ -494,17 +494,17 @@ real sgn;                    /* sign of the coefficients */
  /* prefactor pre_ll is common to all m's */
    pre_ll = pre_0 * sqrt(2. * l + 1.);
 
-/* 
-  loop over the nonnegative values of m 
+/*
+  loop over the nonnegative values of m
 */
-   for( m = 0; m <= l; m++) 
+   for( m = 0; m <= l; m++)
    {
    /* prefactor pre_lm is common to all lambdas */
      pre_lm = pre_ll * (real)sqrt( fac[l-m] / fac[l+m] );
-/* 
+/*
   loop over lambda, i.e. over all powers of x in Legendre's function Plm:
   2*lamb - l - m > 0
-  
+
   The sign starts with (-1)^(2l+m) = (-1)^m.
 */
      sgn = (m%2)?(-1):1;
@@ -520,11 +520,11 @@ real sgn;                    /* sign of the coefficients */
 
      for(lamb = l; lamb >= iaux; lamb--, index++ )
      {
-       coef[index] = sgn * pre_lm * 
-                     (real) ( fac[2*lamb] / 
+       coef[index] = sgn * pre_lm *
+                     (real) ( fac[2*lamb] /
                              (fac[lamb] * fac[l - lamb] * fac[2*lamb -l -m]));
 #ifdef CONTROL_MK
-       fprintf(STDCTR,"l:%2d, m:%2d, lamb:%2d, coef[%2d]:%7.3f\n", 
+       fprintf(STDCTR,"l:%2d, m:%2d, lamb:%2d, coef[%2d]:%7.3f\n",
                l,m,lamb,index, coef[index]);
 #endif
        sgn = -sgn;

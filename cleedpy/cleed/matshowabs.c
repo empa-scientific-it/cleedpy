@@ -4,9 +4,9 @@
     Show the modulus of the elements of a matrix:
 
   Changes:
-  
+
 *********************************************************************/
-#include <math.h>  
+#include <math.h>
 #include <stdio.h>
 
 #include "mat.h"
@@ -31,7 +31,7 @@ int matshowabs(mat M)
 
  Show the modulus of the elements of a matrix (STDOUT).
 
- RETURN VALUES: 
+ RETURN VALUES:
    1, if o.k.
    0, if failed.
 
@@ -41,7 +41,7 @@ int i_r, i_c;
 int maxcol;
 
 real faux;
-  
+
  if (matcheck(M) < 1)
  {
 #ifdef ERROR
@@ -52,7 +52,7 @@ real faux;
  else
  {
   maxcol = MIN(M->cols, RMAXCOL);
-  fprintf(STDOUT," *** abs ***  (%d rows) x (%d columns); --- < %.0e:\n", 
+  fprintf(STDOUT," *** abs ***  (%d rows) x (%d columns); --- < %.0e:\n",
                    M->rows, M->cols, MINVAL);
   switch(M->mat_type)
   {
@@ -72,7 +72,7 @@ real faux;
              fprintf(STDOUT,ZFORM);
          }
          fprintf(STDOUT,"\n");
-        } 
+        }
         fprintf(STDOUT,"\n");
         break;
        } /* case REAL */
@@ -93,7 +93,7 @@ real faux;
         fprintf(STDOUT,"\n");
         break;
        } /* case COMPLEX */
-      }  /* switch num_type */ 
+      }  /* switch num_type */
       break;
     }  /* MAT_NORMAL, MAT_SQUARE */
 

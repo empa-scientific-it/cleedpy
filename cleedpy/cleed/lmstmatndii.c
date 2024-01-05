@@ -1,5 +1,5 @@
 /*********************************************************************
-GH/16.07.02 
+GH/16.07.02
   file contains functions:
 
   ms_tmat_nd_ii
@@ -43,22 +43,22 @@ mat ms_tmat_nd_ii ( mat Tii, mat Llm, mat Tlm_in, int l_max /* arguments */ )
 /************************************************************************
 
  DESCRIPTION
- 
+
    Create the multiple scattering Matrix [(1 - Tl*Giilm)^-1]*Tl for a
    periodic plane of scatterers.
 
  INPUT:
 
    mat Tii  - output: multiple scattering matrix in (l,m)-space.
-   mat Llm  - input: lattice sum: 
+   mat Llm  - input: lattice sum:
 
-              Llm =  (-1)^m * 4 PI * Ylm (cos(theta) = 0, phi = 0) * 
+              Llm =  (-1)^m * 4 PI * Ylm (cos(theta) = 0, phi = 0) *
                      * sum(R) [ H(1)l(k*|R|) * exp( i(-kin*R + m*phi(R)) ) ]
 
               (in natural order: (l,m) = (0,0); (-1,1); (0,1); (1,1); ...)
 
    mat Tlm_in - (input) non-diagonal Atomic scattering matrix (square)
-              
+
               (in natural order: (l,m) = (0,0); (-1,1); (0,1); (1,1); ...)
 
    int l_max  - max angular momentum quantum number.
@@ -69,7 +69,7 @@ mat ms_tmat_nd_ii ( mat Tii, mat Llm, mat Tlm_in, int l_max /* arguments */ )
 
  First create:
 
-   Gii(l1,m1; l2,m2) = 
+   Gii(l1,m1; l2,m2) =
        S[ (-1)^((l1-l2-l3_min)/2 - m2) * L(l3,m3) * C(l3,m3,l1,m1,l2,m2)]
 
     L(l3,m3) = lattice sum
@@ -103,7 +103,7 @@ mat Tlm;
 mat Gii;
 
 /*************************************************************************
-Check matrix dimensions of Tlm_in and compatibilities with l_max. 
+Check matrix dimensions of Tlm_in and compatibilities with l_max.
  - allocate Tii and Tlm.
  - check dimension of Tlm_in:
    increase or reduce if necessary.
@@ -122,7 +122,7 @@ Check matrix dimensions of Tlm_in and compatibilities with l_max.
    if (Tlm_in->num_type == MAT_SQUARE | NUM_COMPLEX)
    {
      if (Tlm_in->rows < Tlm->rows)
-     /* 
+     /*
         insert Tlm_in in greater Tlm
      */
      {
@@ -140,7 +140,7 @@ Check matrix dimensions of Tlm_in and compatibilities with l_max.
      }
 
      else if (Tlm_in->rows > Tlm->rows)
-     /* 
+     /*
         Reduce dimesions of Tlm_in.
         Use l for rows and m for columns (1 for Tlm_in, 2 for Tlm).
         ilm counts elements.
@@ -153,7 +153,7 @@ Check matrix dimensions of Tlm_in and compatibilities with l_max.
 #endif
        for(ilm1 = 1, ilm2 = 1 , l2 = 1; l2 <= Tlm->rows; l2 ++)
        {
-         for(m1 = 1, m2 = 1; m1 <= Tlm_in->cols; m1 ++, ilm1 ++) 
+         for(m1 = 1, m2 = 1; m1 <= Tlm_in->cols; m1 ++, ilm1 ++)
          {
            if ( m2 <= Tlm->cols)
            {
@@ -188,7 +188,7 @@ Check matrix dimensions of Tlm_in and compatibilities with l_max.
  Allocate
    - C.G. coefficients for G matix.
    - memory for G matrix
- 
+
 *************************************************************************/
 
  if(mk_cg_coef(2*l_max) != 0)
@@ -203,15 +203,15 @@ Check matrix dimensions of Tlm_in and compatibilities with l_max.
 /*************************************************************************
  Loop over (l1,m1),(l2,m2): Set up  - Gii(l1,m1; l2,m2).
 
- Gii(l1,m1; l2,m2) = 
+ Gii(l1,m1; l2,m2) =
        S[ (-1)^((l1-l2-l3_min)/2 - m2) * L(l3,m3) * C(l3,m3,l1,m1,l2,m2)]
-    L(l3,m3) = lattice sum 
+    L(l3,m3) = lattice sum
     C(l3,m3,l1,m1,l2,m2) = C.G. coefficients.
 
-  - Gii(l1,m1; l2,m2)  is symmetric under exchange of (l1,m1) and (l2,m2), 
+  - Gii(l1,m1; l2,m2)  is symmetric under exchange of (l1,m1) and (l2,m2),
     (under most conditions)
     therefore only (l2,m2) <= (l1,m1) could be calculated which is,
-    however not implemented (see comments in m2 loops). 
+    however not implemented (see comments in m2 loops).
 *************************************************************************/
 
  Gii = NULL;
@@ -265,8 +265,8 @@ Check matrix dimensions of Tlm_in and compatibilities with l_max.
          }  /* l3 */
 
        /*
-         Store -i * sum in Gii (to be multiplied with Tlm). The factor i 
-         is a correction necessary to get the same results as in XM (VHT). 
+         Store -i * sum in Gii (to be multiplied with Tlm). The factor i
+         is a correction necessary to get the same results as in XM (VHT).
          Don't ask why!
        */
 
@@ -318,10 +318,10 @@ Check matrix dimensions of Tlm_in and compatibilities with l_max.
 #ifdef CONTROL
  fprintf(STDCTR,"\n(ms_tmat_nd_ii): (1 - Gii * Tlm )^-1: \n");
 #endif
- 
+
 /*************************************************************************
-  Multiply with Tl from the l.h.s: 
-          Tlm * (1 - Gii * Tlm)^-1 
+  Multiply with Tl from the l.h.s:
+          Tlm * (1 - Gii * Tlm)^-1
 *************************************************************************/
 
  Tii = matmul(Tii, Tlm, Tii);
@@ -334,14 +334,14 @@ Check matrix dimensions of Tlm_in and compatibilities with l_max.
 
  for(l1 = 0, ilm1 = 1; l1 <= l_max; l1 ++)
  {
-   for(m1 = -l1; m1 <= l1; m1 ++) 
+   for(m1 = -l1; m1 <= l1; m1 ++)
    {
      for(l2 = 0; l2 <= l_max; l2 ++)
      {
        for(m2 = -l2; m2 <= l2; m2 ++, ilm1 ++)
        {
          cri_powi(&faux_r, &faux_i, l2-l1);
-         cri_mul(Tii->rel+ilm1, Tii->iel+ilm1, Tii->rel[ilm1], Tii->iel[ilm1], 
+         cri_mul(Tii->rel+ilm1, Tii->iel+ilm1, Tii->rel[ilm1], Tii->iel[ilm1],
                  faux_r, faux_i);
        }  /* m2 */
      }  /* l2 */

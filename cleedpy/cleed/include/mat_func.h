@@ -13,11 +13,11 @@ mat matarralloc(mat, int);
   /* free array of matrices in file matarrfree.c*/
 int matarrfree(mat);
   /* check validity of pointer */
-int matcheck(mat); 
+int matcheck(mat);
   /*  extract a column from a matrix */
-mat matcol(mat, mat, int); 
+mat matcol(mat, mat, int);
   /* transpose and conjugate a matrix */
-mat matconj(mat, mat); 
+mat matconj(mat, mat);
   /* Copy matrices */
 mat matcop(mat, mat);
   /* difference between matrices */
@@ -39,21 +39,21 @@ mat matmul(mat, mat, mat);
 int matnattovht (mat , int, int );
 int matline( mat , int , int , int , int );
   /*  extract a row from a matrix */
-mat matrow(mat, mat, int); 
-  /* matrix multiplication with complex number in file matscal.c */  
-mat matscal(mat, mat, real, real); 
-  /* print a matrix in file matshow.c */  
-int matshow(mat); 
-  /* print the modulus of a matrix in file matshow.c */  
-int matshowabs(mat); 
-  /* print the parameters of a matrix in file matshowpar.c */  
-int matshowpar(mat); 
+mat matrow(mat, mat, int);
+  /* matrix multiplication with complex number in file matscal.c */
+mat matscal(mat, mat, real, real);
+  /* print a matrix in file matshow.c */
+int matshow(mat);
+  /* print the modulus of a matrix in file matshow.c */
+int matshowabs(mat);
+  /* print the parameters of a matrix in file matshowpar.c */
+int matshowpar(mat);
   /* square modulus of a matrix */
-mat matsqmod(mat, mat); 
+mat matsqmod(mat, mat);
   /* trace of a matrix */
-int mattrace(mat, mat); 
+int mattrace(mat, mat);
   /* transpose a matrix */
-mat mattrans(mat, mat); 
+mat mattrans(mat, mat);
 
 /*********************************************************************
  read and write
@@ -81,4 +81,3 @@ int  c_luinv( real *, real *, real *, real *, int *, int);
 int  c_lubksb( real *, real *, int *, real *, real *, int);
   /* matrix multiplication for square mat. in file matrm.c */
 real * r_sqmul( real *, real *, real *, int);
-

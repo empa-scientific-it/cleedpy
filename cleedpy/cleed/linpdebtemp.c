@@ -1,9 +1,9 @@
 /*********************************************************************
-GH/28.09.00 
+GH/28.09.00
   file contains function:
 
   inp_debtemp
- 
+
 !!!
 !!! This function is used in CLEED and in CSEARCH
 !!!
@@ -82,10 +82,10 @@ real faux;                    /* dummy variable */
  Check parameters
 *********************************************************************/
 
- if (deb_temp <= 0.) 
+ if (deb_temp <= 0.)
  {
 #ifdef ERROR
-   fprintf(STDERR, 
+   fprintf(STDERR,
            "*** error (inp_debtemp): wrong value for Debye temperature: %f\n",             deb_temp);
 #endif
 #ifdef EXIT_ON_ERROR
@@ -126,7 +126,7 @@ real faux;                    /* dummy variable */
 *********************************************************************/
 
 #ifdef CONTROL
- fprintf(STDCTR, "(inp_debtemp): Debye = %.1f, Mass = %.1f, Temp. = %.1f\n", 
+ fprintf(STDCTR, "(inp_debtemp): Debye = %.1f, Mass = %.1f, Temp. = %.1f\n",
          deb_temp, mass, temp);
 #endif
 
@@ -146,7 +146,7 @@ real faux;                    /* dummy variable */
  }
 
 #ifdef CONTROL
- fprintf(STDCTR, "(inp_debtemp): dr2 = %.3f dr1 = %.3f \n", 
+ fprintf(STDCTR, "(inp_debtemp): dr2 = %.3f dr1 = %.3f \n",
          dr2 * BOHR * BOHR, R_sqrt(dr2)*BOHR );
 #endif
 

@@ -1,11 +1,11 @@
 /*********************************************************************
   GH/15.08.94
-  
+
   matsqmod
      calculate the square of the modulus of each matrix element.
 
   Changes:
-  
+
 *********************************************************************/
 
 #include <stdio.h>
@@ -27,12 +27,12 @@ mat matsqmod(mat Msq, mat M)
 /*********************************************************************
 
   Transpose a matrix
-  
+
   INPUT
     mat Msq  - (output) pointer to the result
     mat M    - input matrix
 
-  RETURN VALUE: 
+  RETURN VALUE:
     pointer to the matrix (mat) (if successful)
     NULL else.
 
@@ -62,7 +62,7 @@ mat Maux;
 /********************************************************************
  Diagonal Matrix:
 ********************************************************************/
- if (M->mat_type == MAT_DIAG) 
+ if (M->mat_type == MAT_DIAG)
  {
    Maux = matalloc(NULL, M->rows, M->cols, NUM_REAL | MAT_DIAG);
 
@@ -72,11 +72,11 @@ mat Maux;
      {
        for(ptr_r = M->rel+1, ptr_sq = Maux->rel+1,
            ptr_end = M->rel + M->cols;
-           ptr_r <= ptr_end; 
+           ptr_r <= ptr_end;
            ptr_r ++, ptr_sq ++)
        {
          *ptr_sq = SQUARE(*ptr_r);
-       } 
+       }
        break;
      } /* NUM_REAL */
 
@@ -84,7 +84,7 @@ mat Maux;
      {
        for(ptr_r = M->rel+1, ptr_i = M->iel+1, ptr_sq = Maux->rel+1,
            ptr_end = M->rel + M->cols;
-           ptr_r <= ptr_end; 
+           ptr_r <= ptr_end;
            ptr_r ++, ptr_i ++, ptr_sq ++)
        {
          *ptr_sq = SQUARE(*ptr_r) + SQUARE(*ptr_i);
@@ -106,11 +106,11 @@ mat Maux;
      {
        for(ptr_r = M->rel+1, ptr_sq = Maux->rel+1,
            ptr_end = M->rel + M->cols*M->rows;
-           ptr_r <= ptr_end; 
+           ptr_r <= ptr_end;
            ptr_r ++, ptr_sq ++)
        {
          *ptr_sq = SQUARE(*ptr_r);
-       } 
+       }
        break;
      } /* NUM_REAL */
 
@@ -118,7 +118,7 @@ mat Maux;
      {
        for(ptr_r = M->rel+1, ptr_i = M->iel+1, ptr_sq = Maux->rel+1,
            ptr_end = M->rel + M->cols*M->rows;
-           ptr_r <= ptr_end; 
+           ptr_r <= ptr_end;
            ptr_r ++, ptr_i ++, ptr_sq ++)
        {
          *ptr_sq = SQUARE(*ptr_r) + SQUARE(*ptr_i);

@@ -1,9 +1,9 @@
 /*********************************************************************
-GH/29.09.00 
+GH/29.09.00
   file contains function:
 
   inp_rdovl
- 
+
 Changes:
 
 GH/25.07.95 - Creation (copy from rd_bulpar).
@@ -45,7 +45,7 @@ GH/29.09.00 - calculate dr2 for dmt input in function inp_debtemp
 
 /********************************************************************/
 
-int inp_rdovl_nd (struct cryst_str **p_over_par, 
+int inp_rdovl_nd (struct cryst_str **p_over_par,
                   struct phs_str **p_phs_shifts,
                   struct cryst_str *bulk_par,
                   char *filename)
@@ -54,11 +54,11 @@ int inp_rdovl_nd (struct cryst_str **p_over_par,
 
   DESIGN
 
-  Letters 'e' - 'l' are reserved as identifiers for parameter input 
+  Letters 'e' - 'l' are reserved as identifiers for parameter input
   through function inp_rdpar
 
   currently recognized identifier:
-  
+
   'c': comment
   'po': postion and type of overlayer atoms.
 
@@ -79,7 +79,7 @@ int inp_rdovl_nd (struct cryst_str **p_over_par,
 FILE *inp_stream;
 
 /* input buffers */
-char linebuffer[STRSZ];  
+char linebuffer[STRSZ];
 char phaseinp[STRSZ];
 char whatnext[STRSZ];
 
@@ -95,7 +95,7 @@ real faux;                    /* dummy variable */
 real a1[4], a2[4], a3[4];     /* vectors: 1=x, 2=y, 3=z, 0 is not used */
 real vaux[4];                 /* dummy vector */
 
-struct cryst_str *over_par;   /* use *over_par instead of the pointer 
+struct cryst_str *over_par;   /* use *over_par instead of the pointer
                                  p_over_par */
 
 struct atom_str atom_aux;     /* used for sorting atoms */
@@ -107,14 +107,14 @@ struct atom_str *atoms_rd;    /* this vector of structure atom_str is
 /********************************************************************
   If p_over_par is NULL: allocate memory
   Copy contents of bulk_par into p_over_par.
-  
+
 *********************************************************************/
- if (*p_over_par == NULL) 
+ if (*p_over_par == NULL)
  {
-   over_par = *p_over_par = 
+   over_par = *p_over_par =
    (struct cryst_str *)malloc( sizeof(struct cryst_str) );
     memcpy(over_par, bulk_par, sizeof(struct cryst_str) );
- } 
+ }
 /********************************************************************
   Preset parameters
   - allocate atoms_rd (1 unit)
@@ -141,7 +141,7 @@ struct atom_str *atoms_rd;    /* this vector of structure atom_str is
   START INPUT
   Open and Read input file
 ********************************************************************/
- if( (inp_stream = fopen(filename, "r")) == NULL) 
+ if( (inp_stream = fopen(filename, "r")) == NULL)
  {
 #ifdef ERROR
    fprintf(STDERR,
@@ -152,12 +152,12 @@ struct atom_str *atoms_rd;    /* this vector of structure atom_str is
 #else
   return(-1);
 #endif
- } 
+ }
 
 #ifdef CONTROL
  fprintf(STDCTR,"(inp_rdovl): Reading file \"%s\"\n",filename);
 #endif
- while ( fgets(linebuffer, STRSZ, inp_stream) != NULL) 
+ while ( fgets(linebuffer, STRSZ, inp_stream) != NULL)
  {
 #ifdef CONTROL_X
    fprintf(STDCTR,"(inp_rdovl): %s", linebuffer);
@@ -167,27 +167,27 @@ struct atom_str *atoms_rd;    /* this vector of structure atom_str is
    switch( *(linebuffer+i_str) )
    {
      case ('c'): case ('C'):
-   /*********************************** 
+   /***********************************
      input of comments to be stored
    ***********************************/
      {
-       over_par->comments = ( char * * ) realloc( 
-                           over_par->comments, (i_com+2) * sizeof(char *) ); 
+       over_par->comments = ( char * * ) realloc(
+                           over_par->comments, (i_com+2) * sizeof(char *) );
 
        *(over_par->comments + i_com) = (char *)calloc(
-            strlen(filename) + strlen(linebuffer) + 2 - i_str, 
+            strlen(filename) + strlen(linebuffer) + 2 - i_str,
             sizeof(char));
        *(over_par->comments + i_com+1) = NULL;
 
        sprintf(*(over_par->comments + i_com), "(%s): %s",
                filename, linebuffer+i_str+2);
-       
+
        i_com ++;
        break;
      } /* case 'c' */
 
      case ('p'): case ('P'):
-   /*********************************** 
+   /***********************************
      input of atom positions and types
      for bulk through 'po':
    ***********************************/
@@ -196,7 +196,7 @@ struct atom_str *atoms_rd;    /* this vector of structure atom_str is
        if( (*(linebuffer+i_str+1) != 'o') && (*(linebuffer+i_str+1) != 'O') )
          break;
 
-       atoms_rd = ( struct atom_str *) realloc( 
+       atoms_rd = ( struct atom_str *) realloc(
                    atoms_rd, (i_atoms+2) * sizeof(struct atom_str) );
 
 #ifdef REAL_IS_DOUBLE
@@ -205,23 +205,23 @@ struct atom_str *atoms_rd;    /* this vector of structure atom_str is
 #ifdef REAL_IS_FLOAT
        iaux = sscanf(linebuffer+i_str+3 ," %s %f %f %f %s %f %f %f",
 #endif
-              phaseinp, 
-              atoms_rd[i_atoms].pos+1, 
-              atoms_rd[i_atoms].pos+2, 
+              phaseinp,
+              atoms_rd[i_atoms].pos+1,
+              atoms_rd[i_atoms].pos+2,
               atoms_rd[i_atoms].pos+3,
               whatnext, vaux+1, vaux+2, vaux+3);
 
        for(i=1; i<=3; i++) atoms_rd[i_atoms].pos[i] /= BOHR;
-       
+
      /**********************************
-       Input of phaseshifts and (root) mean square displacements due to 
+       Input of phaseshifts and (root) mean square displacements due to
        thermal vibrations:
 
        Eventually, the vector vaux will contain
 
          vaux[0] = <dr^2> = <dx^2> + <dy^2> + <dz^2>;
-         vaux[1] = sqrt(<dx^2>), 
-         vaux[2] = sqrt(<dy^2>), 
+         vaux[1] = sqrt(<dx^2>),
+         vaux[2] = sqrt(<dy^2>),
          vaux[3] = sqrt(<dz^2>),
 
        In the case of isotropic vibrations
@@ -262,15 +262,15 @@ struct atom_str *atoms_rd;    /* this vector of structure atom_str is
              vaux[0] = SQUARE(vaux[1]) + SQUARE(vaux[2]) + SQUARE(vaux[3]);
            }
 
-     /* 
+     /*
         Input of Debye temperature, atomic mass and temperature:
           vaux[1] = Debye temperature
           vaux[2] = atomic mass
-          vaux[3] = temperature (has to be specified only for the first atom; 
+          vaux[3] = temperature (has to be specified only for the first atom;
                     if not specified, 300 K is used)
 
           <r^2> is calculated in inp_debtemp
-          
+
      */
          else if( ( !strncmp(whatnext, "dmt", 3) ) && (iaux >= 7) )
            {
@@ -288,7 +288,7 @@ struct atom_str *atoms_rd;    /* this vector of structure atom_str is
              vaux[1] = vaux[2] = vaux[3] = R_sqrt(vaux[0])/SQRT3;
 
 #ifdef CONTROL_X
-             fprintf(STDCTR, "(inp_rdovl): temp = %.1f dr = %.3f\n", 
+             fprintf(STDCTR, "(inp_rdovl): temp = %.1f dr = %.3f\n",
              bulk_par->temp, vaux[1] * SQRT3 * BOHR);
 #endif
            }
@@ -306,8 +306,8 @@ struct atom_str *atoms_rd;    /* this vector of structure atom_str is
        }
 
      /* input of atomic phase shifts */
-       atoms_rd[i_atoms].type = inp_phase_nd(phaseinp, vaux, 
-                                            atoms_rd[i_atoms].t_type, 
+       atoms_rd[i_atoms].type = inp_phase_nd(phaseinp, vaux,
+                                            atoms_rd[i_atoms].t_type,
                                             p_phs_shifts);
        over_par->ntypes = MAX(atoms_rd[i_atoms].type+1, over_par->ntypes);
 
@@ -346,28 +346,28 @@ struct atom_str *atoms_rd;    /* this vector of structure atom_str is
      } /* case 'v' */
 
    /***********************************
-     comments not to be stored and 
+     comments not to be stored and
      new line characters
    ***********************************/
-     case ('#'): case ('\n'): case('\r'): 
+     case ('#'): case ('\n'): case('\r'):
    /***********************************
      identifiers used in inp_rdbul
    ***********************************/
-     case ('a'): case ('A'): 
-     case ('b'): case ('B'): 
-     case ('m'): case ('M'): 
+     case ('a'): case ('A'):
+     case ('b'): case ('B'):
+     case ('m'): case ('M'):
    /***********************************
      identifiers used in inp_rdpar
    ***********************************/
-     case ('e'): case ('E'): 
-     case ('f'): case ('F'): 
-     case ('i'): case ('I'): 
-     case ('l'): case ('L'): 
+     case ('e'): case ('E'):
+     case ('f'): case ('F'):
+     case ('i'): case ('I'):
+     case ('l'): case ('L'):
      { break; }
 
-     default: 
+     default:
    /***********************************
-     default: print warning for not 
+     default: print warning for not
               recognized key words
    ***********************************/
      {
@@ -376,11 +376,11 @@ struct atom_str *atoms_rd;    /* this vector of structure atom_str is
   "* warning (inp_rdovl): could not interpret line \n\t%s\t(in file \"%s\")\n",
        linebuffer, filename);
 #endif
-       break; 
+       break;
      }
    } /* switch linebuffer */
  }   /* while: read input file */
- 
+
  close(inp_stream);
 
 /************************************************************************
@@ -394,11 +394,11 @@ struct atom_str *atoms_rd;    /* this vector of structure atom_str is
 #endif
  atoms_rd[i_atoms].type = I_END_OF_LIST;
  over_par->natoms = i_atoms;
- 
+
  if(i_atoms > 0)
  {
 /************************************************************************
- Move all atomic positions specified in atoms.pos into the 2-dim bulk unit 
+ Move all atomic positions specified in atoms.pos into the 2-dim bulk unit
  cell specified through b1 and b2:
 
  The vector x = A_1*pos must only have components between 0 and 1.
@@ -428,7 +428,7 @@ struct atom_str *atoms_rd;    /* this vector of structure atom_str is
    } /* for i */
 
 /************************************************************************
-  Sort the atoms specified through atoms_rd.pos according to their z 
+  Sort the atoms specified through atoms_rd.pos according to their z
   coordinates (smallest z first).
 *************************************************************************/
 
@@ -454,8 +454,8 @@ struct atom_str *atoms_rd;    /* this vector of structure atom_str is
     i_layer = inp_ovl_layer(over_par, atoms_rd);
 
   free(atoms_rd);
-  
-/* 
+
+/*
    Find the minimum interlayer distance in bulk and overlayer.
    - The distance between the last bulk layer and the first overlayer is:
      bulk_par->layers[bulk_par->nlayers-1].vec_to_next[3] (bulk - origin)
@@ -463,12 +463,12 @@ struct atom_str *atoms_rd;    /* this vector of structure atom_str is
 */
    over_par->dmin = bulk_par->dmin;
 
-   faux = R_fabs( over_par->layers[0].vec_from_last[3] + 
+   faux = R_fabs( over_par->layers[0].vec_from_last[3] +
                   bulk_par->layers[bulk_par->nlayers-1].vec_to_next[3] );
    over_par->dmin = MIN(over_par->dmin, faux);
 
 #ifdef CONTROL
-   fprintf(STDCTR, "(inp_rdovl): bulk - overlayer distance = %5.2f\n", 
+   fprintf(STDCTR, "(inp_rdovl): bulk - overlayer distance = %5.2f\n",
                    faux*BOHR);
 #endif
 
@@ -478,7 +478,7 @@ struct atom_str *atoms_rd;    /* this vector of structure atom_str is
      fprintf(STDCTR, "(inp_rdovl): interlayer distance [%d] = %5.2f\n",
              i, over_par->layers[i].vec_from_last[3]*BOHR);
 #endif
-     over_par->dmin = 
+     over_par->dmin =
           MIN(over_par->dmin, R_fabs(over_par->layers[i].vec_from_last[3]) );
    }
 
@@ -503,12 +503,12 @@ struct atom_str *atoms_rd;    /* this vector of structure atom_str is
  printf("\npositions (overlayer):\n");
 
  printf("\n\tdmin (bulk and overlayer): %.4f\n", over_par->dmin*BOHR);
- 
+
  for(i=0; i < over_par->nlayers; i++)
  {
-   printf("\n->\tvec: (%7.4f  %7.4f  %7.4f) A\n\n", 
+   printf("\n->\tvec: (%7.4f  %7.4f  %7.4f) A\n\n",
             over_par->layers[i].vec_from_last[1]*BOHR,
-            over_par->layers[i].vec_from_last[2]*BOHR, 
+            over_par->layers[i].vec_from_last[2]*BOHR,
             over_par->layers[i].vec_from_last[3]*BOHR );
 
    if( over_par->layers[i].periodic == 0 ) printf("np:");
@@ -516,18 +516,18 @@ struct atom_str *atoms_rd;    /* this vector of structure atom_str is
 
    for( j = 0; j < over_par->layers[i].natoms; j ++)
    {
-     printf("\tpos: (%7.4f  %7.4f  %7.4f) A\tlayer: %d type: %d atom: %d\n", 
-             over_par->layers[i].atoms[j].pos[1]*BOHR, 
-             over_par->layers[i].atoms[j].pos[2]*BOHR, 
+     printf("\tpos: (%7.4f  %7.4f  %7.4f) A\tlayer: %d type: %d atom: %d\n",
+             over_par->layers[i].atoms[j].pos[1]*BOHR,
+             over_par->layers[i].atoms[j].pos[2]*BOHR,
              over_par->layers[i].atoms[j].pos[3]*BOHR,
-             over_par->layers[i].atoms[j].layer, 
+             over_par->layers[i].atoms[j].layer,
              over_par->layers[i].atoms[j].type, j);
    }
  }
 
- printf("\n->\tvec: (%7.4f  %7.4f  %7.4f) A\n\n", 
+ printf("\n->\tvec: (%7.4f  %7.4f  %7.4f) A\n\n",
           over_par->layers[over_par->nlayers-1].vec_to_next[1]*BOHR,
-          over_par->layers[over_par->nlayers-1].vec_to_next[2]*BOHR, 
+          over_par->layers[over_par->nlayers-1].vec_to_next[2]*BOHR,
           over_par->layers[over_par->nlayers-1].vec_to_next[3]*BOHR );
 
  printf("comments:\n");
@@ -538,13 +538,13 @@ struct atom_str *atoms_rd;    /* this vector of structure atom_str is
  }
 
  fprintf(STDCTR,"phase shifts:\n");
- fprintf(STDCTR,"\t%d different sets of phase shifts used:\n", 
+ fprintf(STDCTR,"\t%d different sets of phase shifts used:\n",
          over_par->ntypes);
  for(i_c = 0; i_c < over_par->ntypes; i_c ++)
    fprintf(STDCTR,"\t(%d) %s (%d energies, lmax = %d)\tV<dr^2>_T = %.3f A^2\n",
            i_c,
-           (*(p_phs_shifts)+i_c)->input_file, 
-           (*(p_phs_shifts)+i_c)->neng, 
+           (*(p_phs_shifts)+i_c)->input_file,
+           (*(p_phs_shifts)+i_c)->neng,
            (*(p_phs_shifts)+i_c)->lmax,
            R_sqrt( (*(p_phs_shifts)+i_c)->dr[0] ) *BOHR);
 

@@ -86,7 +86,7 @@ FILE *inp_stream;
    filename);
 #endif
    exit(1);
- } 
+ }
 
 /********************************************************************
   Read the first line of the input file which contains the
@@ -102,7 +102,7 @@ FILE *inp_stream;
 #endif
    exit(1);
  }
-   
+
 #ifdef REAL_IS_DOUBLE
  else if( sscanf(linebuffer, "%d %lf", &l_max_in, &eng) < 2)
 #endif
@@ -111,8 +111,8 @@ FILE *inp_stream;
 #endif
  {
 #ifdef ERROR
-   fprintf(STDERR, 
-   "\n*** error (inp_mat_lm): improper input line in file \"%s\":\n%s", 
+   fprintf(STDERR,
+   "\n*** error (inp_mat_lm): improper input line in file \"%s\":\n%s",
    filename, linebuffer);
 #endif
      exit(1);
@@ -143,9 +143,9 @@ FILE *inp_stream;
  Read the next lines and store each matrix element:
  Design:
 
-  (l1, m1)   (l2,m2)   (real part)   (imaginary part)    
+  (l1, m1)   (l2,m2)   (real part)   (imaginary part)
 
-  matrixposition 1: (l1 + 1)l1 + m1 + 1 
+  matrixposition 1: (l1 + 1)l1 + m1 + 1
   matrixposition 2: (l2 + 2)l2 + m2 + 1
 
 **********************************************************************/
@@ -176,7 +176,7 @@ FILE *inp_stream;
  }/* Ende while */
 
  fclose(inp_stream);
-   
+
  return(Mat);
 
 }/* Ende input */

@@ -1,5 +1,5 @@
 /*********************************************************************
-GH/04.09.97 
+GH/04.09.97
   file contains function:
 
   bm_select
@@ -26,36 +26,36 @@ GH/04.09.97 - use memcpy for copying beams.
 #define ERROR
 
 
-int bm_select(struct beam_str ** p_beams_out, 
+int bm_select(struct beam_str ** p_beams_out,
               struct beam_str * beams_in,
-              struct var_str *v_par, 
+              struct var_str *v_par,
               real dmin)
 
 /************************************************************************
 
  Find all beams to be included at the current energy and write them to a
  list.
- 
+
  INPUT:
 
-  struct beam_str ** p_beams_out - (output) 
-                Pointer to the list of beams to be included at the current 
-                energy. The list will be terminated by "F_END_OF_LIST" in the 
+  struct beam_str ** p_beams_out - (output)
+                Pointer to the list of beams to be included at the current
+                energy. The list will be terminated by "F_END_OF_LIST" in the
                 structure element "k_par".
 
   struct beam_str * beams_in - (input)
                 List of all beams used throughout the energy
-                loop. The list must be terminated by "F_END_OF_LIST" in the 
+                loop. The list must be terminated by "F_END_OF_LIST" in the
                 structure element "k_par".
 
   struct var_str *v_par - (input)
-                All necessary parameters that change during the energy loop 
+                All necessary parameters that change during the energy loop
                 (for details see "leed_def.h").
-                used: 
-                real eng_r, eng_i - current complex energy (in Hartree) 
+                used:
+                real eng_r, eng_i - current complex energy (in Hartree)
                 real k_in - incident k-vector.
-                real epsilon - parameter determining the cutoff radius for 
-                k_par. (maximum amplitude which can propagate between two 
+                real epsilon - parameter determining the cutoff radius for
+                k_par. (maximum amplitude which can propagate between two
                 layers).
 
    real dmin    (input) min. distance between two successive layers.
@@ -111,20 +111,20 @@ struct beam_str *beams_out, bm_ptr;
  faux_r = R_log(v_par->epsilon) / dmin;
  k_max_2 = faux_r*faux_r + 2*v_par->eng_r;
  k_max = R_sqrt(k_max_2);
- 
+
 #ifdef CONTROL_X
- fprintf(STDCTR,"(bm_select): dmin  = %.2f, epsilon = %.2e\n", 
+ fprintf(STDCTR,"(bm_select): dmin  = %.2f, epsilon = %.2e\n",
                  dmin * BOHR, v_par->epsilon);
- fprintf(STDCTR,"(bm_select): k_max = %.2f, max. No of beams = %2d\n", 
+ fprintf(STDCTR,"(bm_select): k_max = %.2f, max. No of beams = %2d\n",
                  k_max, iaux);
 #endif
 
 /*********************************************************
-  Copy those beams from list beams_in whose k_par are within the 
+  Copy those beams from list beams_in whose k_par are within the
   radius defined by k_max into list beams_out.
   - loop over beam indices.
-*********************************************************/ 
- 
+*********************************************************/
+
 #ifdef CONTROL
  fprintf(STDCTR,"(bm_select): currently used beams:\n\n");
 #endif
@@ -135,7 +135,7 @@ struct beam_str *beams_out, bm_ptr;
  cri_sqrt(&k_r, &k_i, 2.*v_par->eng_r, 2.*v_par->eng_i);
 
  i_beams_out = 0;
- for(i_beams_in = 0; (beams_in + i_beams_in)->k_par != F_END_OF_LIST; 
+ for(i_beams_in = 0; (beams_in + i_beams_in)->k_par != F_END_OF_LIST;
      i_beams_in ++)
  {
    k_x = (beams_in + i_beams_in)->k_r[1] + v_par->k_in[1];
@@ -144,8 +144,8 @@ struct beam_str *beams_out, bm_ptr;
    if(faux_r <= k_max_2)
    {
 /* copy the complete beam structure */
-     memcpy( beams_out + i_beams_out, 
-             beams_in + i_beams_in, 
+     memcpy( beams_out + i_beams_out,
+             beams_in + i_beams_in,
              sizeof(struct beam_str) );
 
 /* replace, k_par, k_r/i, k_r/ix/y */
@@ -162,39 +162,39 @@ struct beam_str *beams_out, bm_ptr;
   minus the energy corresponding to the parallel momentum.
   sqrt(2E-kpar^2)
 */
-     cri_sqrt((beams_out + i_beams_out)->k_r+3, 
+     cri_sqrt((beams_out + i_beams_out)->k_r+3,
               (beams_out + i_beams_out)->k_i+3,
                2*(v_par->eng_r) - faux_r, 2*(v_par->eng_i));
-/* 
+/*
   cos(theta) = k_z/k.
   phi = atan (ky/kx).
 */
-     cri_div(&(beams_out + i_beams_out)->cth_r, 
+     cri_div(&(beams_out + i_beams_out)->cth_r,
              &(beams_out + i_beams_out)->cth_i,
-             (beams_out + i_beams_out)->k_r[3], 
+             (beams_out + i_beams_out)->k_r[3],
              (beams_out + i_beams_out)->k_i[3], k_r, k_i);
      (beams_out + i_beams_out)->phi = R_atan2(k_y, k_x);
 /*
   1/ A*kz
 */
-     cri_div(&(beams_out + i_beams_out)->Akz_r, 
+     cri_div(&(beams_out + i_beams_out)->Akz_r,
              &(beams_out + i_beams_out)->Akz_i,
-             (beams_in  + i_beams_in)->Akz_r, 0., 
+             (beams_in  + i_beams_in)->Akz_r, 0.,
              (beams_out + i_beams_out)->k_r[3],
              (beams_out + i_beams_out)->k_i[3]);
 
 #ifdef CONTROL
 /* mark new beam sets */
- if((i_beams_out > 0) && 
+ if((i_beams_out > 0) &&
     ((beams_out+i_beams_out)->set != (beams_out+i_beams_out-1)->set) )
    fprintf(STDCTR,"\n");
 /* mark evanescent beams */
  if ((beams_out + i_beams_out)->k_par <= k_r)
    fprintf(STDCTR,"   ");
- else 
+ else
    fprintf(STDCTR,"(*)");
 
- fprintf(STDCTR,"%3d [%d]: (%6.2f, %6.2f)\t", i_beams_out, 
+ fprintf(STDCTR,"%3d [%d]: (%6.2f, %6.2f)\t", i_beams_out,
     (beams_out + i_beams_out)->set,
     (beams_out + i_beams_out)->ind_1, (beams_out + i_beams_out)->ind_2);
  fprintf(STDCTR,"k_par:\t%6.2f\tk_r:(%6.2f, %6.2f, %6.2f)\n",

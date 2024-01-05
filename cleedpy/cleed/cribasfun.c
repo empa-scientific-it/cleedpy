@@ -1,22 +1,22 @@
 /*********************************************************************
-  GH/03.08.94 
+  GH/03.08.94
   file contains:
 
   cri_*    - basic mathematical operations for complex arguments. The
-             input of arguments is done for real (*_r) and imaginary part 
-             (*_i) separately; the output of the result is done by 
-             pointers to the respective variables (again real and imaginary 
+             input of arguments is done for real (*_r) and imaginary part
+             (*_i) separately; the output of the result is done by
+             pointers to the respective variables (again real and imaginary
              part separately). The typical argument list is:
-             
+
              void cri_<func> ( res_r, res_i, arg1_r, arg1_i [, arg2_r, argi_i] )
-  
+
   cri_mul  - complex multiplication (04.08.94)
   cri_div  - complex division (03.08.94)
   cri_sqrt - complex square root (03.08.94)
   cri_exp  - complex exponent exp(z) (03.08.94)
   cri_expi - complex exponent exp(i*z) (03.08.94)
   cri_powi - integer exponent of i (23.08.94)
-  
+
 Changes:
 
 GH/18.08.94 - type real insted of double
@@ -59,7 +59,7 @@ void cri_mul(real *res_r, real *res_i,
 /*=====================================================================*/
 /*=====================================================================*/
 
-void cri_div(real *res_r, real *res_i, 
+void cri_div(real *res_r, real *res_i,
             real num_r, real num_i, real den_r, real den_i)
 
 /************************************************************************
@@ -97,9 +97,9 @@ real r, faux;
 void cri_sqrt(real *res_r, real *res_i, real arg_r, real arg_i)
 
 /************************************************************************
- 
- complex square root 
- 
+
+ complex square root
+
  res = sqrt(arg)
 
  res_r, res_i  - result ( input of pointers ).
@@ -109,17 +109,17 @@ void cri_sqrt(real *res_r, real *res_i, real arg_r, real arg_i)
 {
  real i_c, r_c;
  real x, y, w, r;
- 
+
  if ((arg_r == 0.0) && (arg_i == 0.0))
  {
    *res_i = *res_r = 0.;
  }
  else
  {
-   x = R_fabs(arg_r); 
+   x = R_fabs(arg_r);
    y = R_fabs(arg_i);
 
-   if (x >= y) 
+   if (x >= y)
    {
      r=y/x;
      w=R_sqrt(x)*R_sqrt(0.5*(1.0+R_sqrt(1.0+r*r)));
@@ -128,7 +128,7 @@ void cri_sqrt(real *res_r, real *res_i, real arg_r, real arg_i)
    {
      r=x/y;
      w=R_sqrt(y)*R_sqrt(0.5*(r+R_sqrt(1.0+r*r)));
-   } 
+   }
    if (arg_r > 0.0)
    {
      *res_r = w;
@@ -160,12 +160,12 @@ void cri_exp(real *res_r, real *res_i, real arg_r, real arg_i)
 {
 real faux;
  if (arg_i == 0.)
- 
+
  {
    *res_r = R_exp(arg_r);
    *res_i = 0.;
- } 
- else 
+ }
+ else
  {
    if (arg_r == 0.)
    {
@@ -212,7 +212,7 @@ real faux;
 */
 
  if (arg_i == 0.)
- 
+
  {
    *res_r = R_exp(arg_r);
    *res_i = 0.;

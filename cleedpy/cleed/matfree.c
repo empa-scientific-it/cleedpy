@@ -5,7 +5,7 @@
      Free the memory allocated for a matrix
 
  Changes:
-  
+
  GH/26.08.94 - Remove MAT_ERROR
 *********************************************************************/
 #include <malloc.h>
@@ -28,7 +28,7 @@ int matfree( mat M )
 
 *********************************************************************/
 {
-/* 
+/*
   check input matrix
 */
  if ( matcheck(M) < 1)

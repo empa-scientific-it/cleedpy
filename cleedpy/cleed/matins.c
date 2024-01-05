@@ -1,11 +1,11 @@
 /*********************************************************************
   GH/02.02.95
-  
+
   matins
      Insert a matrix into a larger one
 
   Changes:
-  
+
 *********************************************************************/
 
 #include <stdio.h>
@@ -28,14 +28,14 @@ mat matins(mat Mbg, mat Msm, int off_row, int off_col)
 /*********************************************************************
 
   Transpose a matrix
-  
+
   INPUT
     mat Mbg  - (output) pointer to the result
     mat Msm  - input matrix
     int off_row, off_col position of the (1,1) element of matrix Msm in
                Mbg.
 
-  RETURN VALUE: 
+  RETURN VALUE:
     Mbg: pointer to the matrix (mat) (if successful)
     NULL if failed (and EXIT_ON_ERROR is not defined)
 
@@ -62,7 +62,7 @@ mat Maux;
   return(NULL);
 #endif
  }
- 
+
  if (matcheck(Mbg) < 0)
  {
 #ifdef ERROR
@@ -83,7 +83,7 @@ mat Maux;
 #endif
   Mbg = matalloc(Mbg, off_row + Msm->rows, off_col + Msm->cols, Msm->num_type);
  }
- else if((off_row + Msm->rows - 1 > Mbg->rows) || 
+ else if((off_row + Msm->rows - 1 > Mbg->rows) ||
          (off_col + Msm->cols - 1 > Mbg->cols) ||
          (Msm->num_type !=  Mbg->num_type) )
  {
@@ -100,7 +100,7 @@ mat Maux;
 /********************************************************************
  Diagonal Matrix:
 ********************************************************************/
- if (Msm->mat_type == MAT_DIAG) 
+ if (Msm->mat_type == MAT_DIAG)
  {
 #ifdef ERROR
   fprintf(STDOUT,
@@ -122,7 +122,7 @@ mat Maux;
   Copy real parts first (for real and complex matrices)
 */
    ptr_end = Msm->rel + Msm->cols*Msm->rows;
-   for(ptr_bg = Mbg->rel + (off_row-1)*Mbg->cols + off_col, 
+   for(ptr_bg = Mbg->rel + (off_row-1)*Mbg->cols + off_col,
        ptr_sm = Msm->rel+1;
        ptr_sm <= ptr_end;
        ptr_bg += Mbg->cols, ptr_sm += Msm->cols)
@@ -136,7 +136,7 @@ mat Maux;
   For complex matrix copy also imag. parts.
 */
      ptr_end = Msm->iel + Msm->cols*Msm->rows;
-     for(ptr_bg = Mbg->iel + (off_row-1)*Mbg->cols + off_col, 
+     for(ptr_bg = Mbg->iel + (off_row-1)*Mbg->cols + off_col,
          ptr_sm = Msm->iel+1;
          ptr_sm <= ptr_end;
          ptr_bg += Mbg->cols, ptr_sm += Msm->cols)

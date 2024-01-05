@@ -1,11 +1,11 @@
 /*********************************************************************
   GH/15.08.94
-  
+
   mattrans
      Transpose a matrix
 
   Changes:
-  
+
 *********************************************************************/
 
 #include <stdio.h>
@@ -27,12 +27,12 @@ mat mattrans(mat Mt, mat M)
 /*********************************************************************
 
   Transpose a matrix
-  
+
   INPUT
     mat Mt
     mat M
 
-  RETURN VALUE: 
+  RETURN VALUE:
     pointer to the matrix (mat) (if successful)
     NULL else.
 
@@ -67,9 +67,9 @@ mat Maux;
 /********************************************************************
  Diagonal Matrix: A diagonal matrix is its own transposed
 ********************************************************************/
- if (M->mat_type == MAT_DIAG) 
+ if (M->mat_type == MAT_DIAG)
  {
-   matcop(M,Mt); 
+   matcop(M,Mt);
    return(Mt);
  }
  else
@@ -97,7 +97,7 @@ mat Maux;
 
      case(NUM_COMPLEX):
      {
-   /* 
+   /*
      rel
    */
        ptr_o_end = Maux->rel;
@@ -112,7 +112,7 @@ mat Maux;
          }
        } /* for i_r */
 
-   /* 
+   /*
      iel
    */
        ptr_o_end = Maux->iel;

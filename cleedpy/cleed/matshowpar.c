@@ -4,11 +4,11 @@
     Show the elements of a matrix:
 
   Changes:
-  
+
   GH/20.01.95 - Creation
-  
+
 *********************************************************************/
-#include <math.h>  
+#include <math.h>
 #include <stdio.h>
 
 #include "mat.h"
@@ -25,14 +25,14 @@ int matshowpar(mat M)
 
  Show the header elements of a matrix (STDOUT).
 
- RETURN VALUES: 
+ RETURN VALUES:
    1, if o.k.
    0, if failed.
 
 *********************************************************************/
 {
 int i_r, i_c;
-  
+
  if (matcheck(M) < 1)
  {
 #ifdef ERROR

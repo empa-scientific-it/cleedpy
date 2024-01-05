@@ -1,12 +1,12 @@
 /*********************************************************************
   GH/07.08.95
-  
+
   matwrite
      write matrix to a file.
 
   Changes:
 GH/07.08.95 - Creation (copy from matext)
-  
+
 *********************************************************************/
 
 #include <stdio.h>
@@ -28,12 +28,12 @@ int matwrite(mat M, FILE *file)
 /*********************************************************************
 
   write matrix to a file.
-  
+
   INPUT
     mat M  - input matrix
     FILE * file - (input) pointer to output file.
 
-  RETURN VALUE: 
+  RETURN VALUE:
     total number of bytes if successful
    -1 if not
 
@@ -57,11 +57,11 @@ int tot_size;
   return(-1);
 #endif
  }
- 
+
 /********************************************************************
  Diagonal Matrix:
 ********************************************************************/
- if (M->mat_type == MAT_DIAG) 
+ if (M->mat_type == MAT_DIAG)
  {
 #ifdef ERROR
   fprintf(STDERR,
@@ -95,7 +95,7 @@ int tot_size;
    }
 
    tot_size = sizeof(struct mat_str);
-   
+
 /*
   Write real parts first (for real and complex matrices)
 */

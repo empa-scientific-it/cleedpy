@@ -1,15 +1,15 @@
 /*********************************************************************
-  GH/09.08.94 
+  GH/09.08.94
   file contains functions:
 
   r_hank1            (09.08.94)
 
-       Calculate all Hankel functions H(1)l up to l = l_max for a given 
+       Calculate all Hankel functions H(1)l up to l = l_max for a given
        real argument.
 
   c_hank1            (09.08.94)
 
-       Calculate all Hankel functions H(1)l up to l = l_max for a given 
+       Calculate all Hankel functions H(1)l up to l = l_max for a given
        complex argument.
 
   (Tested for PI/2, PI, i and -i.)
@@ -39,12 +39,12 @@ mat r_hank1 ( mat Hl, real x, int l_max )
 
 /************************************************************************
 
- Calculate all orders of the Hankel function of the first kind H(1)l up to 
+ Calculate all orders of the Hankel function of the first kind H(1)l up to
  l = l_max for a given real argument x.
- 
- Input: 
 
- mat Hl    - output: Hankel function of the first kind in natural order 
+ Input:
+
+ mat Hl    - output: Hankel function of the first kind in natural order
              (l = 0,1, ..., see below)
  real x    - real argument.
  int l_max - max angular momentum for output.
@@ -57,12 +57,12 @@ mat r_hank1 ( mat Hl, real x, int l_max )
   H(1)l (x) = (2*l-1)/x H(1)l-1(x) - H(1)l-2(x)
 
  knowing the exact formula for H(1)0 and H(1)1:
-  
+
   H(1)0(x) = - exp(ix)/x * (i) = sin(x)/x - i*cos(x)/x.
   H(1)1(x) = - exp(ix)/x * (i/x + 1) = H(1)0(x) * (1/x - i).
 
  Variables used within the function:
- 
+
  Return value:
 
  NULL, if failed
@@ -73,7 +73,7 @@ mat r_hank1 ( mat Hl, real x, int l_max )
  l      0  1  2  3  4  ...
  index  1  2  3  4  5  ...
 
- I.e. index(l,m) = l + 1. 
+ I.e. index(l,m) = l + 1.
 
 *************************************************************************/
 {
@@ -102,7 +102,7 @@ real *ptr_r, *ptr_i;
    exit(1);
 #endif
  }
- 
+
  if (l_max < 1) l_max = 1;   /* we need at least that much storage */
 
 /*
@@ -118,22 +118,22 @@ real *ptr_r, *ptr_i;
   Some often used values
 */
  z_inv = 1./x;
- 
+
 /*
   H0 and H1 are calculated from the exact formula:
   H0(x) = sin(x)/x - i*cos(x)/x.
   H1(x) = H0(x) * (1/x - i).
 */
- 
+
  /* H0(x) */
  ptr_r[0] =  z_inv * sin(x);
  ptr_i[0] = -z_inv * cos(x);
 
  /* H1(x) */
  cri_mul(ptr_r+1, ptr_i+1, ptr_r[0], ptr_i[0], z_inv, -1.);
- 
 
-/* 
+
+/*
  loop over l:
 
   Hl (x) = (2*l-1)/x Hl-1(x) - Hl-2(x)
@@ -157,12 +157,12 @@ mat c_hank1 ( mat Hl, real z_r, real z_i, int l_max )
 
 /************************************************************************
 
- Calculate all orders of the Hankel function of the first kind H(1)l up to 
+ Calculate all orders of the Hankel function of the first kind H(1)l up to
  l = l_max for a given complex argument z.
- 
- input: 
 
- mat Hl    - output: Hankel function of the first kind in natural order 
+ input:
+
+ mat Hl    - output: Hankel function of the first kind in natural order
              (l = 0,1, ..., see below)
  real z_r, z_i - real and imaginary part of the argument.
  int l_max - max angular momentum for output.
@@ -175,12 +175,12 @@ mat c_hank1 ( mat Hl, real z_r, real z_i, int l_max )
   H(1)l (z) = (2*l-1)/z H(1)l-1(z) - H(1)l-2(z)
 
  knowing the exact formula for H(1)0 and H(1)1:
-  
+
   H(1)0(z) = - exp(iz)/z * (i);
   H(1)1(z) = - exp(iz)/z * (i/z + 1) = H(1)0(z) * (1/z - i).
 
  Variables used within the function:
- 
+
  output(return value):
 
  NULL, if failed
@@ -191,7 +191,7 @@ mat c_hank1 ( mat Hl, real z_r, real z_i, int l_max )
  l      0  1  2  3  4  ...
  index  1  2  3  4  5  ...
 
- I.e. index(l,m) = l + 1. 
+ I.e. index(l,m) = l + 1.
 
 *************************************************************************/
 {
@@ -235,25 +235,25 @@ real *ptr_r, *ptr_i;
 /*
   Some often used values
 */
- cri_div(&z_inv_r, &z_inv_i, 1., 0., z_r, z_i); 
- 
+ cri_div(&z_inv_r, &z_inv_i, 1., 0., z_r, z_i);
+
 /*
   H0 and H1 are calculated from the exact formula:
   H0(z) = - i/z * exp(iz).
   H1(x) = H0(x) * (1/x - i).
 */
- 
+
  /* H0(x) */
  cri_expi(&faux_r, &faux_i, z_r, z_i);
- 
+
  /* -i * z_inv = z_inv_i - i* z_inv_r */
  cri_mul(ptr_r  , ptr_i  , z_inv_i , -z_inv_r , faux_r, faux_i);
 
  /* H1(x) */
  cri_mul(ptr_r+1, ptr_i+1, ptr_r[0], ptr_i[0], z_inv_r, z_inv_i - 1.);
- 
 
-/* 
+
+/*
  loop over l:
 
   Hl (z) = (2*l-1)/z Hl-1(z) - Hl-2(z)

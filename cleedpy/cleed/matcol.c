@@ -1,15 +1,15 @@
 /*********************************************************************
   GH/23.01.95
-  
+
   mat matcol(mat col, mat M, int col_num)
-  
+
   Extract a single column from a matrix M
 
   Changes:
   GH/23.01.95 - diagonal matrices are implemented.
 
 *********************************************************************/
-#include <math.h>  
+#include <math.h>
 #include <stdio.h>
 
 #include "mat.h"
@@ -22,7 +22,7 @@
 
 mat matcol(mat col, mat M, int col_num)
 
-/* 
+/*
   Extract a single column (col_num) from a matrix M.
 
   parameters:
@@ -30,16 +30,16 @@ mat matcol(mat col, mat M, int col_num)
   M - input matrix.
   col_num - (input) number of column.
 
-  RETURN VALUE:  
-  
+  RETURN VALUE:
+
     col
     NULL         if failed (and EXIT_ON_ERROR is not defined)
 */
 
 {
 real *ptr_r, *ptr_M, *ptr_end;
-  
-/********************************************************************* 
+
+/*********************************************************************
   Check input matrix and column number
 *********************************************************************/
 
@@ -68,7 +68,7 @@ real *ptr_r, *ptr_M, *ptr_end;
 #endif
  }
 
-/********************************************************************* 
+/*********************************************************************
   Extract column
 *********************************************************************/
 
@@ -80,10 +80,10 @@ real *ptr_r, *ptr_M, *ptr_end;
    {
      case(NUM_REAL):
      {
-       for (ptr_M = M->rel + col_num, 
-            ptr_r = col->rel + 1, ptr_end = M->rel + M->rows*M->cols; 
+       for (ptr_M = M->rel + col_num,
+            ptr_r = col->rel + 1, ptr_end = M->rel + M->rows*M->cols;
             ptr_M <= ptr_end; ptr_r ++, ptr_M += M->cols)
-       { *ptr_r = *ptr_M; } 
+       { *ptr_r = *ptr_M; }
 
        break;
      } /* case REAL */
@@ -106,7 +106,7 @@ real *ptr_r, *ptr_M, *ptr_end;
      } /* case COMPLEX */
    }   /* switch */
  }     /* matrix type is not diagonal */
- 
+
  else if (M->mat_type == MAT_DIAG)
  {
    switch(M->num_type)
@@ -144,7 +144,7 @@ real *ptr_r, *ptr_M, *ptr_end;
 
  else /* neither square nor normal, nor diagonal matrix */
  {
-/********************************************************************* 
+/*********************************************************************
   matrix type is not implemented!
 *********************************************************************/
 

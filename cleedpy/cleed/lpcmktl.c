@@ -1,5 +1,5 @@
 /*********************************************************************
-  GH/18.07.95 
+  GH/18.07.95
   file contains function:
 
   pc_mktl(mat *p_tl, struct phs_str *phs_shifts, int l_max, real energy)
@@ -33,11 +33,11 @@ mat * pc_mktl(mat *p_tl, struct phs_str *phs_shifts, int l_max, real energy)
 
  Update matrix tl containing the atomic scattering factors for all types
  of atoms used in the calculation.
- 
+
  INPUT:
 
-  mat *p_tl - (input) Array of scattering factor matrices. The function 
-           returns its first argument. If tl is NULL, the structure will 
+  mat *p_tl - (input) Array of scattering factor matrices. The function
+           returns its first argument. If tl is NULL, the structure will
            be created.
   struct phs_str *phs_shifts  -  phase shifts.
   real energy - new energy (real part)
@@ -61,11 +61,11 @@ real faux_r, faux_i;
 struct phs_str *ptr;
 
 /*********************************************************
-   Search through list "phs_shifts". 
-   - Find number of sets (n_set) and 
-   - max. number of l (l_max: > input value if there is one larger 
+   Search through list "phs_shifts".
+   - Find number of sets (n_set) and
+   - max. number of l (l_max: > input value if there is one larger
      set of phase shifts);
-   - call mkcg_coeff to ensure all C.G. coefficients are available. 
+   - call mkcg_coeff to ensure all C.G. coefficients are available.
    - allocate p_tl.
 *********************************************************/
 
@@ -73,7 +73,7 @@ struct phs_str *ptr;
  { ; }
 
 #ifdef CONTROL
- fprintf(STDCTR,"(pc_mktl): energy = %.2f H, n_set = %d, l_max = %d\n", 
+ fprintf(STDCTR,"(pc_mktl): energy = %.2f H, n_set = %d, l_max = %d\n",
                 energy /*HART*/, n_set, l_max);
 #endif
 
@@ -82,7 +82,7 @@ struct phs_str *ptr;
    p_tl = (mat *)malloc(n_set * sizeof(mat));
    for(i_set = 0; i_set < n_set; i_set ++) p_tl[i_set] = NULL;
  }
- 
+
 /*********************************************************
    Calculate tl for each set of phase shifts.
 *********************************************************/
@@ -94,7 +94,7 @@ struct phs_str *ptr;
    l_set_1 = ptr->lmax + 1;
 
 #ifdef CONTROL_X
-   fprintf(STDCTR,"(pc_mktl):i_set = %d, lmax(set) = %d, neng = %d\n", 
+   fprintf(STDCTR,"(pc_mktl):i_set = %d, lmax(set) = %d, neng = %d\n",
            i_set, l_set_1 - 1, ptr->neng);
 #endif
 
@@ -151,7 +151,7 @@ struct phs_str *ptr;
        iaux = 1 + l;
        faux_r = R_cos(delta);
        faux_i = R_sin(delta);
-       cri_mul(p_tl[i_set]->rel+iaux, p_tl[i_set]->iel+iaux, 
+       cri_mul(p_tl[i_set]->rel+iaux, p_tl[i_set]->iel+iaux,
                faux_r, faux_i, faux_i, 0.);
      }
 
@@ -161,7 +161,7 @@ struct phs_str *ptr;
      pc_temtl(p_tl[i_set], p_tl[i_set], ptr->dr[0], energy, l_max, ptr->lmax);
 
 #ifdef CONTROL
-     fprintf(STDCTR, "(pc_mktl): after pc_temtl, dr[0] = %.3f A^2:\n", 
+     fprintf(STDCTR, "(pc_mktl): after pc_temtl, dr[0] = %.3f A^2:\n",
              ptr->dr[0]*BOHR*BOHR);
      matshow(p_tl[i_set]);
 #endif
@@ -171,25 +171,25 @@ struct phs_str *ptr;
    {
 /*********************************************************
   If the energy is within the range of phase shifts:
-  scan through the energy list and find the right values to 
+  scan through the energy list and find the right values to
   interpolate:
 
   dl(E) = dl(i) - (dl(i) - dl(i-1))/(E(i) - E(i-1)) * ((E(i) - E)
 *********************************************************/
      for(i_eng = 0; ptr->energy[i_eng] < energy; i_eng ++)
        ;
-     
+
      for(l = 0; l < l_set_1; l ++)
      {
-       delta =  ptr->pshift[i_eng*l_set_1 + l] - 
-       ( ( ptr->pshift[i_eng*l_set_1+l] - ptr->pshift[(i_eng - 1)*l_set_1+l] ) 
+       delta =  ptr->pshift[i_eng*l_set_1 + l] -
+       ( ( ptr->pshift[i_eng*l_set_1+l] - ptr->pshift[(i_eng - 1)*l_set_1+l] )
        / ( ptr->energy[i_eng] - ptr->energy[i_eng - 1] ) ) *
          ( ptr->energy[i_eng] - energy);
 
        iaux = 1 + l;
        faux_r = R_cos(delta);
        faux_i = R_sin(delta);
-       cri_mul(p_tl[i_set]->rel+iaux, p_tl[i_set]->iel+iaux, 
+       cri_mul(p_tl[i_set]->rel+iaux, p_tl[i_set]->iel+iaux,
                faux_r, faux_i, faux_i, 0.);
      }
 
@@ -199,7 +199,7 @@ struct phs_str *ptr;
      pc_temtl(p_tl[i_set], p_tl[i_set], ptr->dr[0], energy, l_max, ptr->lmax);
 
 #ifdef CONTROL
-     fprintf(STDCTR, "(pc_mktl): after pc_temtl, dr[0] = %.3f A^2:\n", 
+     fprintf(STDCTR, "(pc_mktl): after pc_temtl, dr[0] = %.3f A^2:\n",
              ptr->dr[0]*BOHR*BOHR);
      matshow(p_tl[i_set]);
 #endif
