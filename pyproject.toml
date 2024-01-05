@@ -25,6 +25,7 @@ dependencies = [
     "click",
     "numpy",
     "pyyaml",
+    "scipy",
 ]
 
 [project.optional-dependencies]
@@ -37,6 +38,7 @@ dev = [
 
 [project.scripts]
 cleedpy-rfactor = "cleedpy.cli.rfactor:cli"
+cleedpy-search = "cleedpy.cli.search:cli"
 
 [tool.setuptools]
 include-package-data = true
