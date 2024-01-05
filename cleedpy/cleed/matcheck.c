@@ -1,6 +1,6 @@
 /*********************************************************************
   GH/26.08.94
-  
+
   matcheck
      Check if a pointer points to a matrix type
 
@@ -21,11 +21,11 @@ int matcheck(mat M)
 /*********************************************************************
 
   Check if a pointer points to a matrix type.
-  
+
   INPUT
     mat M
 
-  RETURN VALUE: 
+  RETURN VALUE:
     1  M points to a matrix structure.
     0  M is a NULL-pointer.
    -1  M does not point to a matrix structure.
@@ -33,13 +33,13 @@ int matcheck(mat M)
 *********************************************************************/
 {
 
- if (M == NULL)           
+ if (M == NULL)
    return(0);
- else 
+ else
  {
-   if (M->mag_no == MATRIX) 
+   if (M->mag_no == MATRIX)
      return(1);
-   else 
+   else
      return(-1);
  }
 }  /* end of function matcheck */

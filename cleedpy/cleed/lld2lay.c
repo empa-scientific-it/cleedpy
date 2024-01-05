@@ -1,5 +1,5 @@
 /*********************************************************************
-  GH/17.03.95 
+  GH/17.03.95
   file contains functions:
 
   ld_2lay            (06.09.94)
@@ -8,7 +8,7 @@
 
 Changes:
  GH/06.09.94 - Creation
- GH/30.01.95 - 
+ GH/30.01.95 -
 
 *********************************************************************/
 
@@ -30,7 +30,7 @@ Changes:
 /*======================================================================*/
 
 int ld_2lay ( mat *p_Tpp_ab, mat *p_Tmm_ab, mat *p_Rpm_ab, mat *p_Rmp_ab,
-              mat Tpp_a,  mat Tmm_a,  mat Rpm_a,  mat Rmp_a, 
+              mat Tpp_a,  mat Tmm_a,  mat Rpm_a,  mat Rmp_a,
               mat Tpp_b,  mat Tmm_b,  mat Rpm_b,  mat Rmp_b,
               struct beam_str *beams, real *vec_ab )
 
@@ -54,7 +54,7 @@ int ld_2lay ( mat *p_Tpp_ab, mat *p_Tmm_ab, mat *p_Rpm_ab, mat *p_Rmp_ab,
    beam_str *beams - (input) information about beams.
                   used: k_r, k_i.
    real *vec_ab - (input) vector pointing from the origin of layer a to
-                  the origin of layer b. The usual convention for vectors is 
+                  the origin of layer b. The usual convention for vectors is
                   used (x = 1, y = 2, z = 3).
 
  DESIGN:
@@ -68,10 +68,10 @@ int ld_2lay ( mat *p_Tpp_ab, mat *p_Tmm_ab, mat *p_Rpm_ab, mat *p_Rmp_ab,
    Rab+- = Rb+- + (Tb++ P+ Ra+- P-) * (I - Rb-+ P+ Ra+- P-)^(-1) * Tb--
 
  FUNCTIONS:
- 
-   matcop   
-   matmul   
-   matinv   
+
+   matcop
+   matmul
+   matinv
 
  RETURN VALUES:
 
@@ -98,7 +98,7 @@ static mat Tpp_ab = NULL, Tmm_ab = NULL, Rpm_ab = NULL, Rmp_ab = NULL;
 *************************************************************************/
 
 /*************************************************************************
-  Allocate memory and set up propagators Pp and Pm. 
+  Allocate memory and set up propagators Pp and Pm.
 
   Pp = exp[ i *( k_x*v_ab_x + k_y*v_ab_y + k_z*v_ab_z) ]
   Pm = exp[-i *( k_x*v_ab_x + k_y*v_ab_y - k_z*v_ab_z) ]
@@ -111,7 +111,7 @@ static mat Tpp_ab = NULL, Tmm_ab = NULL, Rpm_ab = NULL, Rmp_ab = NULL;
  Pm = matalloc(NULL, n_beams, 1, NUM_COMPLEX );
 
 #ifdef CONTROL
- fprintf(STDCTR, "(ld_2lay): vec_ab(%.2f %.2f %.2f) = vec_from_last\n", 
+ fprintf(STDCTR, "(ld_2lay): vec_ab(%.2f %.2f %.2f) = vec_from_last\n",
          vec_ab[1] * BOHR, vec_ab[2] * BOHR , vec_ab[3] * BOHR);
 #endif
 
@@ -124,7 +124,7 @@ static mat Tpp_ab = NULL, Tmm_ab = NULL, Rpm_ab = NULL, Rmp_ab = NULL;
 #endif
 
    faux_r = (beams+k)->k_r[1] * vec_ab[1] +
-            (beams+k)->k_r[2] * vec_ab[2] + 
+            (beams+k)->k_r[2] * vec_ab[2] +
             (beams+k)->k_r[3] * vec_ab[3];
    faux_i = (beams+k)->k_i[3] * vec_ab[3];
 
@@ -143,7 +143,7 @@ static mat Tpp_ab = NULL, Tmm_ab = NULL, Rpm_ab = NULL, Rmp_ab = NULL;
    fprintf(STDCTR,": (%6.3f,%6.3f)\n", faux_r, faux_i);
 #endif
  }
- 
+
 /*************************************************************************
   Prepare the quantities (Ra+- P-) and  -(Rb-+ P+):
   Multiply the k-th column of Ra+- / Rb-+ with the k-th element of P-/+.
@@ -174,7 +174,7 @@ static mat Tpp_ab = NULL, Tmm_ab = NULL, Rpm_ab = NULL, Rmp_ab = NULL;
  }
 
 /*************************************************************************
-  (i) Calculate the quantities  
+  (i) Calculate the quantities
       -(Ra+- P- Rb-+ P+) = Maux_a * Maux_b (-> Tpp_ab)  and
       -(Rb-+ P+ Ra+- P-) = Maux_b * Maux_a (-> Tmm_ab)
       and add unity.
@@ -229,7 +229,7 @@ static mat Tpp_ab = NULL, Tmm_ab = NULL, Rpm_ab = NULL, Rmp_ab = NULL;
  Rmp_ab = matmul(Rmp_ab, Maux_b, Tpp_ab);
 
 /*************************************************************************
-  Prepare the quantities 
+  Prepare the quantities
   Maux_a = (Ta-- P-) and Maux_b = (Tb++ P+):
   Multiply the k-th column of Ta-- / Tb++ with the k-th element of P-/+.
 *************************************************************************/
@@ -264,10 +264,10 @@ static mat Tpp_ab = NULL, Tmm_ab = NULL, Rpm_ab = NULL, Rmp_ab = NULL;
  (ii) Complete the computation of the matrix product in Rab+- and Rab-+:
       Rpm_ab = Maux_b * Rpm_ab,
       Rmp_ab = Maux_a * Rmp_ab.
- 
+
 (iii) Finally add the reflection matrix of a single layer to the matrix
       product in Rab+- and Rab-+:
-     
+
       (The minus sign in Rab-+ is due to the negative sign of the matrix
       product).
 
@@ -279,7 +279,7 @@ static mat Tpp_ab = NULL, Tmm_ab = NULL, Rpm_ab = NULL, Rmp_ab = NULL;
 
 /* (ii) */
  Rpm_ab = matmul(Rpm_ab, Maux_b, Rpm_ab);
- Rmp_ab = matmul(Rmp_ab, Maux_a, Rmp_ab); 
+ Rmp_ab = matmul(Rmp_ab, Maux_a, Rmp_ab);
 
 /* (iii) */
 
@@ -306,7 +306,7 @@ static mat Tpp_ab = NULL, Tmm_ab = NULL, Rpm_ab = NULL, Rmp_ab = NULL;
    *ptr_r = *ptr_i - *ptr_r;
 
 /*************************************************************************
- - Free temporary storage space, 
+ - Free temporary storage space,
  - Write results to output pointers
  - Return.
 *************************************************************************/
@@ -332,6 +332,6 @@ static mat Tpp_ab = NULL, Tmm_ab = NULL, Rpm_ab = NULL, Rmp_ab = NULL;
 
  return(1);
 }
- 
+
 /*======================================================================*/
 /*======================================================================*/

@@ -13,7 +13,7 @@ Changes:
                 replace naive matrix multiplication by cblas_Xgemm
 
 *********************************************************************/
-#include <math.h>   
+#include <math.h>
 #include <stdio.h>
 
 /*
@@ -66,8 +66,8 @@ int result_num_type;
 
 real *cblas_m1, *cblas_m2, *cblas_mr; /* passed to cblas_Xgemm */
 
-/********************************************************************* 
-  check input matrices 
+/*********************************************************************
+  check input matrices
 *********************************************************************/
 
 /* check validity of the input matrices */
@@ -131,8 +131,8 @@ real *cblas_m1, *cblas_m2, *cblas_mr; /* passed to cblas_Xgemm */
    result_num_type = NUM_COMPLEX;
  }
 
-/********************************************************************* 
-  Perform the multiplication 
+/*********************************************************************
+  Perform the multiplication
 *********************************************************************/
 #ifdef CONTROL
   fprintf(STDCTR," (matmul) start multiplication \n");

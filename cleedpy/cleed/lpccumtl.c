@@ -1,8 +1,8 @@
 /*********************************************************************
-GH/11.07.03 
+GH/11.07.03
   file contains function:
 
-  pc_cumtl(mat Tmat, mat tl_0, real ux, real uy, real uz, 
+  pc_cumtl(mat Tmat, mat tl_0, real ux, real uy, real uz,
              real energy, int l_max_t, int l_max_0)
 
  Calculate non-diagonal temperature dependent atomic scattering matrix
@@ -10,7 +10,7 @@ GH/11.07.03
 
 CHANGES:
 GH/16.09.00 - Creation - copy from pctemtl and cumulants (PdA)
-GH/22.09.00 - output is -kappa * Tmat (according to the definitions in 
+GH/22.09.00 - output is -kappa * Tmat (according to the definitions in
               the P.DeAndres / D.A. King paper)
 GH/23.09.00 - Convergence test is proportional to number of matrix elements
 GH/03.10.00 - bug fix in set up of T_n (T=0): use RMATEL, IMATEL
@@ -47,30 +47,30 @@ static int last_l = -1;
 static mat Mx = NULL,   My = NULL,   Mz = NULL;
 static mat MxMx = NULL, MyMy = NULL, MzMz = NULL;
 
-mat pc_cumtl(mat Tmat, mat tl_0, real ux, real uy, real uz, 
+mat pc_cumtl(mat Tmat, mat tl_0, real ux, real uy, real uz,
              real energy, int l_max_t, int l_max_0)
 
 /************************************************************************
 
  Calculate non-diagonal temperature dependent atomic scattering matrix
  according to the cumulants expansion (P. de Andres).
- 
+
  INPUT:
 
   mat Tmat - (input) The function writes the output nondiagonal temperature
-           dependent scattering matrix into its first argument. 
+           dependent scattering matrix into its first argument.
            If Tmat is NULL, the structure will be created.
 
-  mat tl_0 - (input) array containing scattering factors 
-           sin(delta_l) * exp( i* delta_l) for T = 0. tl_0 will be stored 
+  mat tl_0 - (input) array containing scattering factors
+           sin(delta_l) * exp( i* delta_l) for T = 0. tl_0 will be stored
            before Tmat is calculated, therefore tl_0 and Tmat can be equal.
-           
-  real ux, uy, uz - (input) root mean square of the anisotropic vibrational 
+
+  real ux, uy, uz - (input) root mean square of the anisotropic vibrational
            displacements at the given temperature: <(dx)^2>(T).
   real energy - (input) energy (real part) in atomic units.
 
   int l_max_0 - (input) max l quantum number of input scattering factors.
-  int l_max_t - (input) max required l quantum number of output scattering 
+  int l_max_t - (input) max required l quantum number of output scattering
            matrix.
 
  RETURN VALUES:
@@ -84,7 +84,7 @@ mat pc_cumtl(mat Tmat, mat tl_0, real ux, real uy, real uz,
  see: P. de Andres, D. A. King, "Anisotropic and Anharmonic effects through
       the t-matrix for Low-Energy Electron Diffraction (TMAT V1.1)",
       Comp. Phys. Comm., sect. 2.4. the equation numbers refer to this paper.
-      
+
       The output matrix (Tmat) is the one described in the above paper
       multiplied by kappa = sqrt(2E)
 
@@ -111,8 +111,8 @@ mat MxMxTn, MxTnMx, TnMxMx;
 mat MyMyTn, MyTnMy, TnMyMy;
 mat MzMzTn, MzTnMz, TnMzMz;
 
-/* 
-  preset variables 
+/*
+  preset variables
   l_max_2 = matrix dimension
   kappa = R_sqrt(2.* energy);
 */
@@ -122,7 +122,7 @@ mat MzMzTn, MzTnMz, TnMzMz;
  ux2 = ux*ux;
  uy2 = uy*uy;
  uz2 = uz*uz;
- 
+
 #ifdef CONTROL
  fprintf(STDCTR,"(pc_cumtl): Enter function: \n");
  fprintf(STDCTR,
@@ -175,12 +175,12 @@ mat MzMzTn, MzTnMz, TnMzMz;
    for(m1 = -l1; m1 <= l1; m1 ++, lm1 ++)
      for(lm2 = 1, l2 = 0; l2 <= l_max_0; l2 ++)
        for(m2 = -l2; m2 <= l2; m2 ++, lm2 ++)
-         if((l1 == l2) && (m1 == m2) ) 
+         if((l1 == l2) && (m1 == m2) )
          {
            RMATEL(lm1, lm2, T_n) = - tl_aux->rel[l1+1] / kappa;
            IMATEL(lm1, lm2, T_n) = - tl_aux->iel[l1+1] / kappa;
          }
- 
+
 #ifdef CONTROL_X
  fprintf(STDCTR,"(pc_cumtl): Tmat(T=0): \n");
  matshowabs(T_n);
@@ -259,7 +259,7 @@ mat MzMzTn, MzTnMz, TnMzMz;
 *************************************************************************/
 
 /* Tmat(T=0) is start value of T_acc for recurrence (i_iter = 0) */
- T_acc = matcop(T_acc, T_n); 
+ T_acc = matcop(T_acc, T_n);
 
  conv_test = CONV_TEST * l_max_2 * l_max_2;
  relerr_r = relerr_i = 2*conv_test;
@@ -277,7 +277,7 @@ mat MzMzTn, MzTnMz, TnMzMz;
 
       MxMxTn = matmul(MxMxTn, MxMx,T_n);
       TnMxMx = matmul(TnMxMx, T_n,MxMx);
-   
+
 #ifdef CONTROL_X
       if (i_iter < 4)
       {
@@ -292,13 +292,13 @@ mat MzMzTn, MzTnMz, TnMzMz;
 
       MyTnMy = matmul(MyTnMy, T_n, My);
       MyTnMy = matmul(MyTnMy, My, MyTnMy);
-   
+
       MyMyTn = matmul(MyMyTn, MyMy,T_n);
       TnMyMy = matmul(TnMyMy, T_n,MyMy);
 
       MzTnMz = matmul(MzTnMz, T_n, Mz);
       MzTnMz = matmul(MzTnMz, Mz, MzTnMz);
-   
+
       MzMzTn = matmul(MzMzTn, MzMz,T_n);
       TnMzMz = matmul(TnMzMz, T_n,MzMz);
 
@@ -322,13 +322,13 @@ mat MzMzTn, MzTnMz, TnMzMz;
       for(i_el = 1; i_el <= iaux; i_el ++)
       {
 /* Eq. 35 */
-        T_n->rel[i_el] =  
+        T_n->rel[i_el] =
          pref * (
          ux2*(MxMxTn->rel[i_el] + TnMxMx->rel[i_el] - 2.*(MxTnMx->rel[i_el])) +
          uy2*(MyMyTn->rel[i_el] + TnMyMy->rel[i_el] - 2.*(MyTnMy->rel[i_el])) +
          uz2*(MzMzTn->rel[i_el] + TnMzMz->rel[i_el] - 2.*(MzTnMz->rel[i_el])) );
 
-        T_n->iel[i_el] =  
+        T_n->iel[i_el] =
          pref * (
          ux2*(MxMxTn->iel[i_el] + TnMxMx->iel[i_el] - 2.*(MxTnMx->iel[i_el])) +
          uy2*(MyMyTn->iel[i_el] + TnMyMy->iel[i_el] - 2.*(MyTnMy->iel[i_el])) +
@@ -339,8 +339,8 @@ mat MzMzTn, MzTnMz, TnMzMz;
         T_acc->iel[i_el] += T_n->iel[i_el];
       }
 
-/* 
-   Calculate relative errors for im. and real parts 
+/*
+   Calculate relative errors for im. and real parts
    and check convergence of each element.
 */
       relerr_r = relerr_i = 0.;
@@ -348,7 +348,7 @@ mat MzMzTn, MzTnMz, TnMzMz;
 
       for(i_el = 1; i_el <= iaux; i_el ++)
       {
-        if( T_acc->rel[i_el] != 0.) 
+        if( T_acc->rel[i_el] != 0.)
         {
           relerr_r += R_fabs(T_n->rel[i_el] / T_acc->rel[i_el]);
         }
@@ -357,10 +357,10 @@ mat MzMzTn, MzTnMz, TnMzMz;
           relerr_i += R_fabs(T_n->iel[i_el] / T_acc->iel[i_el]);
         }
       } /* for i_el */
-      
+
 #ifdef CONTROL
      fprintf(STDCTR,
-     "(pc_cumtl): iteration No %d: rel. errors: (%.3e, %.3e) <> %.3e\n", 
+     "(pc_cumtl): iteration No %d: rel. errors: (%.3e, %.3e) <> %.3e\n",
      i_iter, relerr_r, relerr_i, conv_test);
 #endif
 
@@ -390,9 +390,9 @@ mat MzMzTn, MzTnMz, TnMzMz;
    Tmat->iel[i_el] *= -kappa;
  } /* for i_el */
 
-/* 
+/*
    Prepare returning:
-   - update n_call and last_l 
+   - update n_call and last_l
    - free matrices
 */
 
@@ -400,7 +400,7 @@ mat MzMzTn, MzTnMz, TnMzMz;
  last_l = l_max_t;
 
  matfree(tl_aux);
- matfree(T_n); 
+ matfree(T_n);
  matfree(T_acc);
 
  matfree(MxMxTn); matfree(MxTnMx); matfree(TnMxMx);

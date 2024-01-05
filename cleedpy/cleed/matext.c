@@ -1,13 +1,13 @@
 /*********************************************************************
  GH/07.09.95
-  
+
   matext
      Extract a submatrix from a larger one
 
   Changes:
 GH/04.08.95 - Creation (copy from matins)
 GH/07.09.95 - bug fix: free Maux.
-  
+
 *********************************************************************/
 
 #include <stdio.h>
@@ -23,13 +23,13 @@ GH/07.09.95 - bug fix: free Maux.
 /*======================================================================*/
 /*======================================================================*/
 
-mat matext(mat Msm, mat Mbg, 
-           int off_row, int end_row, 
+mat matext(mat Msm, mat Mbg,
+           int off_row, int end_row,
            int off_col, int end_col)
 /*********************************************************************
 
   Transpose a matrix
-  
+
   INPUT
     mat Mbg  - (output) pointer to the result
     mat Msm  - input matrix
@@ -38,7 +38,7 @@ mat matext(mat Msm, mat Mbg,
     int end_row, end_col position of the (n,m) (lower right) element
                of matrix Msm in Mbg.
 
-  RETURN VALUE: 
+  RETURN VALUE:
     Msm: pointer to the matrix (mat) (if successful)
     NULL if failed (and EXIT_ON_ERROR is not defined)
 
@@ -65,7 +65,7 @@ mat Maux = NULL;
   return(NULL);
 #endif
  }
- 
+
  if (matcheck(Msm) < 0)
  {
 #ifdef ERROR
@@ -80,9 +80,9 @@ mat Maux = NULL;
 
  if( (off_row > end_row) ||
      (off_col > end_col) ||
-     (off_row < 1) || 
+     (off_row < 1) ||
      (off_col < 1) ||
-     (end_row > Mbg->rows) || 
+     (end_row > Mbg->rows) ||
      (end_col > Mbg->cols)
    )
  {
@@ -101,7 +101,7 @@ mat Maux = NULL;
 /********************************************************************
  Diagonal Matrix:
 ********************************************************************/
- if (Mbg->mat_type == MAT_DIAG) 
+ if (Mbg->mat_type == MAT_DIAG)
  {
 #ifdef ERROR
   fprintf(STDOUT,
@@ -119,9 +119,9 @@ mat Maux = NULL;
 ********************************************************************/
  else
  {
-   Maux = matalloc(Maux, 
-                   end_row - off_row + 1, 
-                   end_col - off_col + 1, 
+   Maux = matalloc(Maux,
+                   end_row - off_row + 1,
+                   end_col - off_col + 1,
                    Mbg->num_type);
 
    size = Maux->cols*sizeof(real);
@@ -129,7 +129,7 @@ mat Maux = NULL;
   Copy real parts first (for real and complex matrices)
 */
    ptr_end = Maux->rel + Maux->cols*Maux->rows;
-   for(ptr_bg = Mbg->rel + (off_row-1)*Mbg->cols + off_col, 
+   for(ptr_bg = Mbg->rel + (off_row-1)*Mbg->cols + off_col,
        ptr_sm = Maux->rel+1;
        ptr_sm <= ptr_end;
        ptr_bg += Mbg->cols, ptr_sm += Maux->cols)
@@ -143,7 +143,7 @@ mat Maux = NULL;
   For complex matrix copy also imag. parts.
 */
      ptr_end = Maux->iel + Maux->cols*Maux->rows;
-     for(ptr_bg = Mbg->iel + (off_row-1)*Mbg->cols + off_col, 
+     for(ptr_bg = Mbg->iel + (off_row-1)*Mbg->cols + off_col,
          ptr_sm = Maux->iel+1;
          ptr_sm <= ptr_end;
          ptr_bg += Mbg->cols, ptr_sm += Maux->cols)

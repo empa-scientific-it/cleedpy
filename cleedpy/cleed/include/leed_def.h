@@ -1,13 +1,13 @@
 /*********************************************************************
 GH/06.01.2012
 
-include file for 
+include file for
  - additional data structures and type definitions
  - constant values
 in the LEED programs
 
 Changes:
-GH/20.09.95 
+GH/20.09.95
 ST/16.07.97
 GH/02.09.97 - change beam_str and cryst_str (add. elements),
               define S0, SX, SY, SXY.
@@ -29,20 +29,20 @@ GH/06.01.12 - set MIN_DIST to 1.9 (1.0 A)
 #include "mat_def.h"
 
 /*********************************************************************
- structures and types 
+ structures and types
 *********************************************************************/
 
 /*********************************************************************
   struct atom_str contains all properties of a single atom
 *********************************************************************/
 
-struct atom_str 
+struct atom_str
 {
  int  layer;      /* No of layer where the atom belongs to */
  int  type;       /* type of atom (i. e. set of phase shifts to be used) */
  int  t_type;     /* type of t matrix (T_DIAG or T_NOND) */
  real pos[4];     /* relative position inside the unit cell */
- real dwf;        /* Debye-Waller factor */ 
+ real dwf;        /* Debye-Waller factor */
 };
 
 /*********************************************************************
@@ -55,18 +55,18 @@ struct layer_str
  int  bulk_over;         /* BULK (0) or OVER */
  int  periodic;          /* 1: layer is part of the periodically repeated bulk
                                unit cell
-                            0: layer is only used once 
+                            0: layer is only used once
                          */
  int  natoms;            /* number of atoms in the layer */
  real a_lat[5];          /* basis vectors of the real 2-dim unit cell stored as
                             standard matrix (a1,a2): a1x = a_lat[1], a2x = a_lat[2]
-                                                     a1y = a_lat[3], a2y = a_lat[4] 
+                                                     a1y = a_lat[3], a2y = a_lat[4]
                          */
  real rel_area;          /* area of the unit cell relative to 1x1 */
  real reg_shift[4];      /* 2-dim vector pointing to the axis of rot. symmetry/mirror plane */
  real vec_from_last[4];  /* vector from the origin of layer (n-1) */
  real vec_to_next[4];    /* vector to the origin of layer (n+1) */
- struct atom_str *atoms; /* properties of the atoms within the composite 
+ struct atom_str *atoms; /* properties of the atoms within the composite
                             (or Bravais) layers */
 };
 
@@ -93,13 +93,13 @@ struct cryst_str
  real a[5];       /* basis vectors of the real 2-dim unit cell stored as
                      standard matrix (a1,a2): a1x = a[1], a2x = a[2]
                                              a1y = a[3], a2y = a[4] */
- real a_1[5];     /* inverse of a (= 2PI * (a^-1)) 
-                     => the rows are the basis vectors of the reciprocal 
+ real a_1[5];     /* inverse of a (= 2PI * (a^-1))
+                     => the rows are the basis vectors of the reciprocal
                      2-dim unit cell: a*1x = a_1[1], a*1y = a_1[2]
                                       a*2x = a_1[3], a*2y = a_1[4] */
 
  real area;       /* Area of the real 2-dim (1x1) unit cell */
-                              
+
  real m_trans[5]; /* 2x2 transformation matrix: unit cell used in the programs
                      with respect to the input: a_inp = m_trans * a_prg */
 
@@ -114,7 +114,7 @@ struct cryst_str
                      => the rows are the basis vectors of the reciprocal 2-dim super
                      structure unit cell: b*1x = b_1[1], b*1y = b_1[2]
                                           b*2x = b_1[3], b*2y = b_1[4] */
- real rel_area_sup; /* Area of the real 2-dim superstructure unit cell 
+ real rel_area_sup; /* Area of the real 2-dim superstructure unit cell
                      relative to 1x1 */
 
 /* stacking of layers */
@@ -132,7 +132,7 @@ struct cryst_str
 /*********************************************************************
   struct phs_str contains all parameters concerning the phase shifts
 *********************************************************************/
-struct phs_str 
+struct phs_str
 {
  int  lmax;
  int  neng;
@@ -141,7 +141,7 @@ struct phs_str
  real eng_min;
  real *energy;
  real *pshift;
- 
+
  real dr[4];
  char *input_file;
 };
@@ -149,7 +149,7 @@ struct phs_str
 /*********************************************************************
   struct beam_str contains all parameters of a specific beam in k-space.
 *********************************************************************/
-struct beam_str 
+struct beam_str
 {
  real ind_1;     /* beam indices in (1x1) basis A (real) */
  real ind_2;
@@ -183,10 +183,10 @@ struct beam_str
 };
 
 /*********************************************************************
-  struct var_str contains all parameters that change during the energy 
+  struct var_str contains all parameters that change during the energy
   loop and the parameters controlling them.
 *********************************************************************/
-struct var_str 
+struct var_str
 {
  real eng_r;    /* current energy in crystal (real  part) */
  real eng_i;    /* current energy in crystal (imag. part) */
@@ -217,7 +217,7 @@ struct eng_str  /* contains all parameters that change during the energy loop
 };
 
 /*********************************************************************
- Fundamental constants/conversion factors  
+ Fundamental constants/conversion factors
  (Source: CRC Handbook, 73rd Edition)
 *********************************************************************/
 
@@ -236,16 +236,16 @@ struct eng_str  /* contains all parameters that change during the energy loop
 /* Defaults */
 
 #define PHASE_PATH "CLEED/PHASE"
-                               /* default path name for phase shift input 
+                               /* default path name for phase shift input
                                   relative to HOME directory */
-#define DEF_TEMP 300.          /* default temperature for calculating thermal 
+#define DEF_TEMP 300.          /* default temperature for calculating thermal
                                   vibrations */
 #define R_FOR_LMAX 2.0         /* default muffin-tin-radius (in BOHR) used to
                                   calculate l_max (if not given) */
 
 /* Threshold values */
 
-#define MIN_DIST 1.9           /* Min distance for Layer Doubling in BOHR 
+#define MIN_DIST 1.9           /* Min distance for Layer Doubling in BOHR
                                   (1.0 A) */
 #define VI_START 3.67493       /* start value for variable imag. opt. potential
                                   (100. eV/HART) */
@@ -281,7 +281,7 @@ struct eng_str  /* contains all parameters that change during the energy loop
 #define REC_2MIR   221
 
 #define HEX_1MIR   311
-#define HEX_3ROT   303  
+#define HEX_3ROT   303
 #define HEX_3MIR   331
 
 #define SQ_2ROT    402

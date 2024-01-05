@@ -1,9 +1,9 @@
 /*********************************************************************
-  GH/06.04.95 
+  GH/06.04.95
   file contains functions:
 
   ms_ymmat            (06.04.95)
-     Create the transformation matrix from angular momentum space 
+     Create the transformation matrix from angular momentum space
      into k-space: Ylm(k-).
  Changes:
 GH/06.04.95 - Creation - copied from ms_ymat.
@@ -52,12 +52,12 @@ mat ms_ymmat ( mat Ymat, int l_max, struct beam_str *beams, int n_beams)
 
    k / (l,m) (0,0)     (-1,1)    (0,1)   (1,1)   (-2,2) ....
 
-   k1       Y00(k1)   Y-11(k1)  Y01(k1) 
-   k2       Y00(k2)   Y-11(k2)  Y01(k2) 
-   k3       Y00(k3) 
-   ...                                     Y(l,m)(ki) 
+   k1       Y00(k1)   Y-11(k1)  Y01(k1)
+   k2       Y00(k2)   Y-11(k2)  Y01(k2)
+   k3       Y00(k3)
+   ...                                     Y(l,m)(ki)
 
-   
+
 
 *************************************************************************/
 {
@@ -76,7 +76,7 @@ mat Ylm;
 */
 
 /*
-  Allocate memory for Ymat 
+  Allocate memory for Ymat
 */
  ll_max = (l_max + 1)*(l_max + 1);
  Ymat = matalloc( Ymat, n_beams, ll_max, NUM_COMPLEX );
@@ -93,8 +93,8 @@ mat Ylm;
  {
 
 #ifdef CONTROL
-   fprintf(STDCTR,"(ms_ymmat): cos(th): (%.3f %.3f), phi: %.3f\n", 
-           (beams+i_beams)->cth_r, 
+   fprintf(STDCTR,"(ms_ymmat): cos(th): (%.3f %.3f), phi: %.3f\n",
+           (beams+i_beams)->cth_r,
            (beams+i_beams)->cth_i, (beams+i_beams)->phi);
 #endif
 
@@ -102,7 +102,7 @@ mat Ylm;
                     (beams+i_beams)->phi, l_max);
    memcpy( Ymat->rel+off, Ylm->rel+1, size);
    memcpy( Ymat->iel+off, Ylm->iel+1, size);
- } 
+ }
 
 /*
   Finally: multiply the columns of Ymat by i^l
@@ -114,7 +114,7 @@ mat Ylm;
  {
    for(m = -l; m<= l; m++, off ++)
    {
-     for (ptr_i = Ymat->iel+off, ptr_r  = Ymat->rel+off; 
+     for (ptr_i = Ymat->iel+off, ptr_r  = Ymat->rel+off;
           ptr_r <= ptr_end; ptr_r += Ymat->cols, ptr_i += Ymat->cols)
      cri_mul(ptr_r, ptr_i, *ptr_r, *ptr_i, faux_r, faux_i);
    }
@@ -124,6 +124,6 @@ mat Ylm;
 
  return(Ymat);
 }
- 
+
 /*======================================================================*/
 /*======================================================================*/

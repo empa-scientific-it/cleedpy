@@ -1,5 +1,5 @@
 /*********************************************************************
-  GH/26.08.94 
+  GH/26.08.94
   file contains function:
 
   bm_set
@@ -28,17 +28,17 @@ int bm_set(struct beam_str ** p_beams_out, struct beam_str * beams_in, int set)
 
  Find the beams belonging to a certain beam set ("set") and write them to a
  list.
- 
+
  INPUT:
 
-  struct beam_str ** p_beams_out - (output) 
+  struct beam_str ** p_beams_out - (output)
                 Pointer to the list of beams included in the beam set.
-                The list will be terminated by "F_END_OF_LIST" in the 
+                The list will be terminated by "F_END_OF_LIST" in the
                 structure element "k_par".
 
   struct beam_str * beams_in - (input)
                 List of all beams used throughout the energy
-                loop. The list must be terminated by "F_END_OF_LIST" in the 
+                loop. The list must be terminated by "F_END_OF_LIST" in the
                 structure element "k_par".
 
   int set       (input) set for which the beams are extracted.
@@ -65,9 +65,9 @@ struct beam_str *beams_out, bm_ptr;
   and allocate memory for the beam list p_beams_out.
 *************************************************************************/
 
- for( i_beams_in = 0, n_beams_out = 0; 
-      (beams_in + i_beams_in)->k_par != F_END_OF_LIST; 
-      i_beams_in ++) 
+ for( i_beams_in = 0, n_beams_out = 0;
+      (beams_in + i_beams_in)->k_par != F_END_OF_LIST;
+      i_beams_in ++)
    if( (beams_in + i_beams_in)->set == set) n_beams_out ++;
 
  n_beams_out ++;
@@ -91,24 +91,24 @@ struct beam_str *beams_out, bm_ptr;
   Copy those beams in list beams_in which belong to the required beam
   set into list beams_out.
   - loop over beam indices.
-*********************************************************/ 
- 
+*********************************************************/
+
 #ifdef CONTROL
  fprintf(STDCTR,"(bm_set): %d beams in beam set %d:\n", n_beams_out-1, set);
 #endif
 
  i_beams_out = 0;
- for(i_beams_in = 0; (beams_in + i_beams_in)->k_par != F_END_OF_LIST; 
+ for(i_beams_in = 0; (beams_in + i_beams_in)->k_par != F_END_OF_LIST;
      i_beams_in ++)
  {
    if( (beams_in + i_beams_in)->set == set)
    {
-     memcpy( beams_out+i_beams_out, beams_in+i_beams_in, 
+     memcpy( beams_out+i_beams_out, beams_in+i_beams_in,
              sizeof(struct beam_str) );
 
 #ifdef CONTROL
 
- fprintf(STDCTR,"beam%3d [set%d]: (%6.2f, %6.2f)\n", i_beams_out, 
+ fprintf(STDCTR,"beam%3d [set%d]: (%6.2f, %6.2f)\n", i_beams_out,
     (beams_out + i_beams_out)->set,
     (beams_out + i_beams_out)->ind_1, (beams_out + i_beams_out)->ind_2);
 #endif

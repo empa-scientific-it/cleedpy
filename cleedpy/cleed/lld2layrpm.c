@@ -1,5 +1,5 @@
 /*********************************************************************
-  GH/26.01.95 
+  GH/26.01.95
   file contains functions:
 
   ld_2lay_rpm        (26.01.95)
@@ -54,7 +54,7 @@ mat ld_2lay_rpm ( mat Rpm_ab,
    beam_str *beams - (input) information about beams.
                   used: k_r, k_i.
    real *vec_ab - (input) vector pointing from the origin of layer a to
-                  the origin of layer b. The usual convention for vectors is 
+                  the origin of layer b. The usual convention for vectors is
                   used (x = 1, y = 2, z = 3).
 
  DESIGN:
@@ -63,11 +63,11 @@ mat ld_2lay_rpm ( mat Rpm_ab,
 
    Rab+- = Rb+- + (Tb++ P+ Ra+- P-) * (I - Rb-+ P+ Ra+- P-)^(-1) * Tb--
 
-   
+
 
  RETURN VALUES:
 
-   mat Rpm_ab - reflection matrix (+-) of the stack "ab" (not necessarily 
+   mat Rpm_ab - reflection matrix (+-) of the stack "ab" (not necessarily
                 equal to the first argument).
 
 *************************************************************************/
@@ -89,7 +89,7 @@ mat Res;                           /* result will be copied to Rpm_ab */
 *************************************************************************/
 
 /*************************************************************************
-  Allocate memory and set up propagators Pp and Pm. 
+  Allocate memory and set up propagators Pp and Pm.
 
   Pp = exp[ i *( k_x*v_ab_x + k_y*v_ab_y + k_z*v_ab_z) ]
   Pm = exp[-i *( k_x*v_ab_x + k_y*v_ab_y - k_z*v_ab_z) ]
@@ -115,10 +115,10 @@ mat Res;                           /* result will be copied to Rpm_ab */
 #endif
 
    faux_r = (beams+k)->k_r[1] * vec_ab[1] +
-            (beams+k)->k_r[2] * vec_ab[2] + 
+            (beams+k)->k_r[2] * vec_ab[2] +
             (beams+k)->k_r[3] * vec_ab[3];
    faux_i = (beams+k)->k_i[3] * vec_ab[3];
-   
+
    cri_expi(Pp->rel+k+1, Pp->iel+k+1, faux_r, faux_i);
 
    faux_r -= 2 * (beams+k)->k_r[3] * vec_ab[3];
@@ -130,7 +130,7 @@ mat Res;                           /* result will be copied to Rpm_ab */
            Pp->rel[k+1], Pp->iel[k+1], Pm->rel[k+1], Pm->iel[k+1]);
 */
  }
- 
+
 /*************************************************************************
   Prepare the quantities (Ra+- P-) and  -(Rb-+ P+):
   Multiply the k-th column of Ra+- / Rb-+ with the k-th element of P-/+.
@@ -213,10 +213,10 @@ mat Res;                           /* result will be copied to Rpm_ab */
 /*************************************************************************
  (i) Complete the computation of the matrix product in Rab+- and Rab-+:
      Res = Maux_b * Res,
- 
+
 (ii) Finally add the reflection matrix of a single layer to the matrix
      product in Rab+-:
-     
+
 *************************************************************************/
 
 /* (i) */
@@ -234,7 +234,7 @@ mat Res;                           /* result will be copied to Rpm_ab */
    *ptr_r += *ptr_i;
 
 /*************************************************************************
- - Free temporary storage space, 
+ - Free temporary storage space,
  - Write results to output pointers
  - Return.
 *************************************************************************/
@@ -249,6 +249,6 @@ mat Res;                           /* result will be copied to Rpm_ab */
 
  return(Rpm_ab);
 }
- 
+
 /*======================================================================*/
 /*======================================================================*/

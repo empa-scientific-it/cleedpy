@@ -1,5 +1,5 @@
 /*********************************************************************
-  GH/08.06.94 
+  GH/08.06.94
   file contains function:
 
   matinv
@@ -40,7 +40,7 @@ mat matinv( mat A_1, mat A)
 
   return value:
      pointer to the inverse matrix.
- 
+
 *********************************************************************/
 
 {
@@ -53,8 +53,8 @@ real *ptr, *ptr_end;
 
 real *cblas_a, *work;
 
-/********************************************************************* 
-  check input matrix 
+/*********************************************************************
+  check input matrix
 *********************************************************************/
 /* check type of input matrix */
  if ( (A->mat_type != MAT_SQUARE) && (A->mat_type != MAT_DIAG) )
@@ -66,7 +66,7 @@ real *cblas_a, *work;
  }
 
 /* check dimensions of input matrix A */
- else if (A->cols != A->rows) 
+ else if (A->cols != A->rows)
  {
 #ifdef ERROR
   fprintf(STDERR,
@@ -81,7 +81,7 @@ real *cblas_a, *work;
 *********************************************************************/
 
 /*
- If the matrix is diagonal, the inversion is trivial 
+ If the matrix is diagonal, the inversion is trivial
  (but currently not implemented)
 */
 
@@ -101,7 +101,7 @@ real *cblas_a, *work;
 *********************************************************************/
 
  {
- 
+
 /*********************************************************************
   Create lapack and result matrices
 *********************************************************************/
@@ -114,7 +114,7 @@ real *cblas_a, *work;
                          Real matrix (NUM_REAL)
                     *******************************/
    case (NUM_REAL):
-   { 
+   {
 
       cblas_a = calloc(n*n, sizeof(real)) ;
       mat2cblas( cblas_a, NUM_REAL, A);
@@ -150,7 +150,7 @@ real *cblas_a, *work;
      fprintf(STDCTR,"\n");
 #endif
 
-     /* Allocate A_1 (if it does not exist.) */ 
+     /* Allocate A_1 (if it does not exist.) */
      A_1 = matalloc( A_1, n, n, A->num_type);
      cblas2mat(A_1, cblas_a);
      free(cblas_a);
@@ -162,7 +162,7 @@ real *cblas_a, *work;
                     *******************************/
 
    case (NUM_COMPLEX):
-   { 
+   {
 
       cblas_a = calloc(n*n, 2*sizeof(real)) ;
       mat2cblas( cblas_a, NUM_COMPLEX, A);
@@ -197,14 +197,14 @@ real *cblas_a, *work;
      fprintf(STDCTR,"\n");
 #endif
 
-     /* Allocate A_1 (if it does not exist.) */ 
+     /* Allocate A_1 (if it does not exist.) */
      A_1 = matalloc( A_1, n, n, A->num_type);
      cblas2mat(A_1, cblas_a);
      free(cblas_a);
      break;
    }     /* COMPLEX */
 
- }   /* switch num_type */ 
+ }   /* switch num_type */
  free(ipiv);
  return(A_1);
  } /* non-diagonal */

@@ -13,7 +13,7 @@ CCOMP = gcc
 OPT = -O3 -march=native
 # Use this for homemade BLAS:
 # OPT = -O2
-CFLAGSSUB = -g -c $(OPT) -I$(INCLUDEDIR) -I$(INCLUDEDIRBLAS) -L$(LIBDIR) 
+CFLAGSSUB = -g -c $(OPT) -I$(INCLUDEDIR) -I$(INCLUDEDIRBLAS) -L$(LIBDIR)
 CFLAGS = -g $(OPT) -I$(INCLUDEDIR) -I$(INCLUDEDIRBLAS)
 LDFLAGS = -lm
 
@@ -38,7 +38,7 @@ FILES.h = $(INCLUDEDIR)/stddef.h \
 #===========================================================================
 #  subroutines  for matrix operations
 #
-# complex library 
+# complex library
 CPLOBJ =  cribasfun.o
 
 # basic qm functions
@@ -77,7 +77,7 @@ MATOBJ =  matabs.o     \
           matsqmod.o   \
           mattrace.o   \
           mattrans.o   \
-          matwrite.o   
+          matwrite.o
 
 # input for LEED programs
 INPOBJ =  linpbullayer.o \
@@ -90,13 +90,13 @@ INPOBJ =  linpbullayer.o \
           linpshowbop.o
 
           # lreadpar.o
-          # lwritepar.o 
-          # linpmatlm.o 
+          # lwritepar.o
+          # linpmatlm.o
 
 # output for LEED programs
 OUTOBJ =  loutbmlist.o \
           louthead.o   \
-          loutint.o 
+          loutint.o
 
 # beams:
 BEAMOBJ = lbmgen.o    \
@@ -183,6 +183,6 @@ TMATOBJ_531 = $(CPLOBJ) \
 .c.o:   ;  $(CCOMP) $(CFLAGSSUB) $*.c
 #============================================================================
 test_nsym_lp:	test_nsym_lp.o $(TMATOBJ)
-	$(CCOMP) -o $(MYPRG)/LEED_NSYM_LP/test_nsym_lp $(CFLAGS) $(TMATOBJ) test_nsym_lp.c $(LDFLAGS) $(FLAGSBLAS) 
+	$(CCOMP) -o $(MYPRG)/LEED_NSYM_LP/test_nsym_lp $(CFLAGS) $(TMATOBJ) test_nsym_lp.c $(LDFLAGS) $(FLAGSBLAS)
 	rm -f test_nsym_lp.o
 #============================================================================

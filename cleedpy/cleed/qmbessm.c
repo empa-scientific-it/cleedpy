@@ -1,10 +1,10 @@
 /*********************************************************************
-  GH/13.09.95 
+  GH/13.09.95
   file contains functions:
 
   c_bess             (13.09.95)
 
-       Calculate all spherical Bessel functions J_l up to l = l_max for 
+       Calculate all spherical Bessel functions J_l up to l = l_max for
        a given complex argument (using Miller's algorithm).
 
 *********************************************************************/
@@ -40,46 +40,46 @@ mat c_bess ( mat Jl, real z_r, real z_i, int l_max )
 
 /************************************************************************
 
- Calculate all orders of the spherical Bessel function J_l up to l = l_max 
+ Calculate all orders of the spherical Bessel function J_l up to l = l_max
  for a given complex argument z (z_r + i*z_i) using Miller's device.
- 
- INPUT: 
 
- mat Jl    - output: Bessel function in natural order (l = 0,1, ..., 
+ INPUT:
+
+ mat Jl    - output: Bessel function in natural order (l = 0,1, ...,
              see below)
  real z_r, z_i - real and imaginary part of the argument.
  int l_max - max angular momentum for output.
 
  DESIGN:
 
- The spherical Bessel functions J_l ( 0 <= l <= l_max) are calculated 
+ The spherical Bessel functions J_l ( 0 <= l <= l_max) are calculated
  using the recurrence formula:
 
   J_l (z) = (2*l-1)/z J_(l-1)(z) - J_(l-2)(z)
 
- for l < |z|. And an approximation (Miller's device cf. Abramowitz and 
+ for l < |z|. And an approximation (Miller's device cf. Abramowitz and
  Stegun p. 452) for the remaining l_max > l > |z|. In any case, the first
  two Jl are calculated exactly:
-  
+
   J_0(z) = sin(z)/z * (i);
   J_1(z) = sin(z)/z^2 - cos(z)/z;
 
  whereby
-  
-  sin(z) = -i/2 ( exp(iz) - exp(-iz) ) 
+
+  sin(z) = -i/2 ( exp(iz) - exp(-iz) )
          = sin(z_r)*cosh(z_i) + i*cos(z_r)*sinh(z_i)
   cos(z) =  1/2 ( exp(iz) + exp(-iz) )
          = cos(z_r)*cosh(z_i) - i*sin(z_r)*sinh(z_i)
 
- Miller's device is described in some detail in the "Handbook of 
+ Miller's device is described in some detail in the "Handbook of
  mathematical functions" by Abramowitz and Stegun (p.452) and in Num. Rec.
- (p. 181/ p. 235). The start index is chosen as 
+ (p. 181/ p. 235). The start index is chosen as
 
   l_start =  l_max + (int) R_sqrt(ACC*l_max)
 
  Where ACC determines the accuracy of the approximation (Num. Rec.: 40.0
  for double precision).
- 
+
  RETURN VALUE:
 
  NULL, if failed
@@ -90,7 +90,7 @@ mat c_bess ( mat Jl, real z_r, real z_i, int l_max )
  l      0  1  2  3  4  ...
  index  1  2  3  4  5  ...
 
- I.e. index(l) = l + 1. 
+ I.e. index(l) = l + 1.
 
 *************************************************************************/
 {
@@ -122,7 +122,7 @@ real ax,bj,bjm,bjp,sum,tox,ans;
  {
    Jl->rel[1] = 1.;
    Jl->iel[1] = 0.;
-   
+
    for(l = 1 ; l <= l_max; l++ )
    {
      Jl->rel[l+1] = Jl->iel[l+1] = 0.;
@@ -141,7 +141,7 @@ real ax,bj,bjm,bjp,sum,tox,ans;
   z_2   = z^2
   sin(z), cos(z)
 */
- cri_div(&z_inv_r, &z_inv_i, 1., 0., z_r, z_i); 
+ cri_div(&z_inv_r, &z_inv_i, 1., 0., z_r, z_i);
  cri_mul(&z_2_r, &z_2_i, z_r, z_i, z_r, z_i);
 
 /* faux_r/i are used for cos/sin(z_r) */
@@ -165,32 +165,32 @@ real ax,bj,bjm,bjp,sum,tox,ans;
  cos_i = -faux_i*pref_i;
 
 #ifdef CONTROL_X
- fprintf(STDCTR,"(c_bess-m): sin(z) = (%.3e,%.3e), cos(z) = (%.3e,%.3e)\n", 
+ fprintf(STDCTR,"(c_bess-m): sin(z) = (%.3e,%.3e), cos(z) = (%.3e,%.3e)\n",
          sin_r, sin_i, cos_r, cos_i);
 #endif
- 
+
 /************************************************************************
   J0 and J1 are calculated from the exact formula:
   J0(z) = 1/z * sin(z)
   J1(z) = J0(z) * 1/z  - 1/z * cos(z) = 1/z * (J0(z) - cos(z))
 ************************************************************************/
- 
+
 /* J0(x) */
  cri_mul(Jl->rel+1, Jl->iel+1, z_inv_r, z_inv_i, sin_r, sin_i);
 
 /* J1(x) */
 
 /* (J0(z) - cos(z)) */
- faux_r = Jl->rel[1] - cos_r; 
+ faux_r = Jl->rel[1] - cos_r;
  faux_i = Jl->iel[1] - cos_i;
 
 /* 1/z * (J0(z) - cos(z)) */
  cri_mul(Jl->rel+2, Jl->iel+2, z_inv_r, z_inv_i, faux_r, faux_i);
- 
+
 #ifdef CONTROL
- fprintf(STDCTR,"(c_bess-m): J(%d) = (%.3e,%.3e)\n", 
+ fprintf(STDCTR,"(c_bess-m): J(%d) = (%.3e,%.3e)\n",
                 0, Jl->rel[1], Jl->iel[1]);
- fprintf(STDCTR,"(c_bess-m): J(%d) = (%.3e,%.3e)\n", 
+ fprintf(STDCTR,"(c_bess-m): J(%d) = (%.3e,%.3e)\n",
                 1, Jl->rel[2], Jl->iel[2]);
 #endif
 
@@ -228,16 +228,16 @@ real ax,bj,bjm,bjp,sum,tox,ans;
  }   /* for l */
 
 /************************************************************************
-  The remaining Jl are calculated according to Miller's formula 
+  The remaining Jl are calculated according to Miller's formula
 
  - Downwards recurrence from an l_start =  l_max + (int) R_sqrt(ACC*n)
     Fl_start   = 0.
     Fl_start-1 = 1.
     Fl-1 (z) = (2*l+1)/z Fl(z) - Fl+1(z)
-   
+
  - Store coefficients for l in F_r/i[l].
- 
-  
+
+
 ************************************************************************/
 
  if(l_int < l_max)
@@ -248,8 +248,8 @@ real ax,bj,bjm,bjp,sum,tox,ans;
 
    F_r[l_start+1] = 0.; F_i[l_start+1] = 0.;
    F_r[l_start]   = 1.; F_i[l_start]   = 0.;
- 
-   for (l = l_start-1; l>0; l--) 
+
+   for (l = l_start-1; l>0; l--)
    {
      faux_r = (2*l + 1) * z_inv_r;
      faux_i = (2*l + 1) * z_inv_i;
@@ -272,7 +272,7 @@ real ax,bj,bjm,bjp,sum,tox,ans;
 #endif
    }
 #ifdef CONTROL
-     fprintf(STDCTR,"(c_bess-m): l_start = %d, pref = (%.3e,%.3e)\n", 
+     fprintf(STDCTR,"(c_bess-m): l_start = %d, pref = (%.3e,%.3e)\n",
              l_start, pref_r, pref_i);
 #endif
    free(F_r);

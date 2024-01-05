@@ -28,12 +28,12 @@ struct mat_str      /* real or complex matrix */
  int mag_no;        /* magic number */
  int blk_type;      /* type of matrix array (single, block) */
  int mat_type;      /* type of matrix (square, real etc.) */
- int num_type;      /* type of matrix elements */ 
+ int num_type;      /* type of matrix elements */
  int rows;          /* 1st dimension of matrix (number of rows) */
  int cols;          /* 2nd dimension of matrix (number of columns) */
- real *rel;         /* pointer to real matrix elements */ 
+ real *rel;         /* pointer to real matrix elements */
  real *iel;         /* pointer to complex matrix elements */
-/* 
+/*
  The matrix element (m,n) is in the ((m-1)*dim1 + n)th position of the arrays
  del or dcel, respectively.
 */
@@ -47,17 +47,17 @@ typedef struct mat_str*  mat;
 /*********************************************************************
  values for:
  mat_type
- num_type 
+ num_type
 *********************************************************************/
 
-/* 
+/*
  magic number
 */
 #define MATRIX         0xaffe
 
-/* 
+/*
  matrix types:
- Use only lower half of high bytes for mat_type, 
+ Use only lower half of high bytes for mat_type,
  i.e. 0x0FFF >= MAT_* > 0x00FF (NUM_MASK)
 */
 #define MAT_MASK       0x0F00
@@ -70,7 +70,7 @@ typedef struct mat_str*  mat;
 
 /*
  block types:
- Use only high half of high bytes for mat_type, 
+ Use only high half of high bytes for mat_type,
 i.e. 0xFFFF >= BLK_* > 0x0FFF (NUM_MASK)
 */
 

@@ -17,22 +17,22 @@
 
 
 mat matgausinv(mat A)
-	 
+
 /*
 C  GH/07.03.90
-C	  FUNCTIONAL DESCRIPTION:	
-C	  
+C	  FUNCTIONAL DESCRIPTION:
+C
 C	     MATRIX INVERSION (REAL)
-C	  
+C
 C	  DUMMY ARGUMENTS:
-C	  
+C
 C	     A   INPUT AND OUTPUT, INVERTED MATRIX (OVERWRITTEN)
 C            X   WORKING SPACE (MODIFIED DURING INVERSION)
 C	     ND  DIMENSION OF MATRICES
 C            NFLAG .LT.0: ERROR HAPPENED
 C
-C	     H   FOR INTEMEDIATE STORAGE (FOR ND .LE.100 ) 
-C	  
+C	     H   FOR INTEMEDIATE STORAGE (FOR ND .LE.100 )
+C
 C	    [specification_statement]...
 
 
@@ -49,7 +49,7 @@ int n;
 int i_r, i_c, i_i;
 
 real dumi, dumr, aux;
- 
+
 real *ptrr1, *ptr_end;
 real *invr, *invi;
 
@@ -116,7 +116,7 @@ C  DOWN:
 
    for( i_c=i_r+1;i_c <= n; i_c ++)
    {
-     if (CABSRI(RMATEL(i_c,i_r,A), IMATEL(i_c,i_r,A)) > 
+     if (CABSRI(RMATEL(i_c,i_r,A), IMATEL(i_c,i_r,A)) >
          CABSRI(RMATEL(i_r,i_r,A), IMATEL(i_r,i_r,A)) )
 /*
   change rows i_c and i_r in A and Minv
@@ -156,8 +156,8 @@ C  DOWN:
      aux = CAB2RI(dumr, dumi);
      dumr /= aux;
      dumi /= -aux;
-     
-     
+
+
      for( i_i = 1; i_i <= n; i_i ++)
      {
        aux = RMATEL(1,i_i,Minv)*dumr - IMATEL(1,i_i,Minv)*dumi;
@@ -172,9 +172,9 @@ C  DOWN:
 
    for( i_c=i_r+1; i_c <= n; i_c ++)
    {
-     dumr = RMATEL(i_c,i_r+1,A) - RMATEL(i_r,i_r+1,A)*RMATEL(i_c,i_r,A) + 
+     dumr = RMATEL(i_c,i_r+1,A) - RMATEL(i_r,i_r+1,A)*RMATEL(i_c,i_r,A) +
                                   IMATEL(i_r,i_r+1,A)*IMATEL(i_c,i_r,A);
-     dumi = IMATEL(i_c,i_r+1,A) - IMATEL(i_r,i_r+1,A)*RMATEL(i_c,i_r,A) - 
+     dumi = IMATEL(i_c,i_r+1,A) - IMATEL(i_r,i_r+1,A)*RMATEL(i_c,i_r,A) -
                                   RMATEL(i_r,i_r+1,A)*IMATEL(i_c,i_r,A);
      if( (dumr == 0.) && (dumi == 0.) ) dumr = 1.;
      aux = CAB2RI(dumr, dumi);
@@ -183,9 +183,9 @@ C  DOWN:
 
      for( i_i=i_r+1; i_i<= n; i_i ++)
      {
-       RMATEL(i_c,i_i, A) -= RMATEL(i_r,i_i,A)*RMATEL(i_c,i_r,A) + 
+       RMATEL(i_c,i_i, A) -= RMATEL(i_r,i_i,A)*RMATEL(i_c,i_r,A) +
                              IMATEL(i_c,i_i,A)*IMATEL(i_c,i_r,A);
-       IMATEL(i_c,i_i, A) -= IMATEL(i_r,i_i,A)*RMATEL(i_c,i_r,A) + 
+       IMATEL(i_c,i_i, A) -= IMATEL(i_r,i_i,A)*RMATEL(i_c,i_r,A) +
                              RMATEL(i_c,i_i,A)*IMATEL(i_c,i_r,A);
 
        aux = RMATEL(i_c,i_i, A)*dumr - IMATEL(i_c,i_i, A)*dumi;
@@ -194,13 +194,13 @@ C  DOWN:
      }
      for( i_i=i_r+1; i_i<= n; i_i ++)
      {
-       RMATEL(i_c,i_i, Minv) -= RMATEL(i_r,i_i,Minv)*RMATEL(i_c,i_r,A) + 
+       RMATEL(i_c,i_i, Minv) -= RMATEL(i_r,i_i,Minv)*RMATEL(i_c,i_r,A) +
                                 IMATEL(i_c,i_i,Minv)*IMATEL(i_c,i_r,A);
-       IMATEL(i_c,i_i, Minv) -= IMATEL(i_r,i_i,Minv)*RMATEL(i_c,i_r,A) + 
+       IMATEL(i_c,i_i, Minv) -= IMATEL(i_r,i_i,Minv)*RMATEL(i_c,i_r,A) +
                                 RMATEL(i_c,i_i,Minv)*IMATEL(i_c,i_r,A);
 
        aux = RMATEL(i_c,i_i, Minv)*dumr - IMATEL(i_c,i_i, Minv)*dumi;
-       IMATEL(i_c,i_i, Minv) = 
+       IMATEL(i_c,i_i, Minv) =
              RMATEL(i_c,i_i, Minv)*dumi + IMATEL(i_c,i_i, Minv)*dumr;
        RMATEL(i_c,i_i, Minv) = aux;
      }
@@ -229,12 +229,12 @@ C  DOWN:
    {
      dumr = RMATEL(i_c,i_r-1,A);
      dumi = IMATEL(i_c,i_r-1,A);
-     
+
      if( (dumr == 0.) && (dumi == 0.) ) dumr = 1.;
      aux = CAB2RI(dumr, dumi);
      dumr /= aux;
      dumi /= -aux;
- 
+
      for( i_i=i_c; i_i <= i_r-1; i_i ++)
      {
        aux = RMATEL(i_c,i_i,A)*dumr - IMATEL(i_c,i_i,A)*dumi;
@@ -244,13 +244,13 @@ C  DOWN:
 
      for( i_i=1; i_i <= n; i_i ++)
      {
-       RMATEL(i_c,i_i, Minv) -= RMATEL(i_r,i_i,Minv)*RMATEL(i_c,i_r,A) + 
+       RMATEL(i_c,i_i, Minv) -= RMATEL(i_r,i_i,Minv)*RMATEL(i_c,i_r,A) +
                                 IMATEL(i_c,i_i,Minv)*IMATEL(i_c,i_r,A);
-       IMATEL(i_c,i_i, Minv) -= IMATEL(i_r,i_i,Minv)*RMATEL(i_c,i_r,A) + 
+       IMATEL(i_c,i_i, Minv) -= IMATEL(i_r,i_i,Minv)*RMATEL(i_c,i_r,A) +
                                 RMATEL(i_c,i_i,Minv)*IMATEL(i_c,i_r,A);
 
        aux = RMATEL(i_c,i_i, Minv)*dumr - IMATEL(i_c,i_i, Minv)*dumi;
-       IMATEL(i_c,i_i, Minv) = 
+       IMATEL(i_c,i_i, Minv) =
              RMATEL(i_c,i_i, Minv)*dumi + IMATEL(i_c,i_i, Minv)*dumr;
        RMATEL(i_c,i_i, Minv) = aux;
      }

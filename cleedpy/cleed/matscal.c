@@ -7,7 +7,7 @@ Changes:
   GH/12.04.95 - Creation
 
 *********************************************************************/
-#include <math.h>   
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -38,8 +38,8 @@ mat matscal( mat Mr, mat Mi, real num_r, real num_i )
 
 {
 
-/********************************************************************* 
-  check input matrix 
+/*********************************************************************
+  check input matrix
 *********************************************************************/
 
 /* check validity of the input matrices */
@@ -61,8 +61,8 @@ mat matscal( mat Mr, mat Mi, real num_r, real num_i )
 
  Mr = matcop(Mr, Mi);
 
-/********************************************************************* 
-  Perform multiplication 
+/*********************************************************************
+  Perform multiplication
 *********************************************************************/
 #ifdef CONTROL
   fprintf(STDCTR," (matscal) start multiplication \n");
@@ -73,7 +73,7 @@ mat matscal( mat Mr, mat Mi, real num_r, real num_i )
  real matrix
 */
    case (NUM_REAL):
-   { 
+   {
     if( num_i == 0.)         /* num is real */
     {
       register real *ptr_end;
@@ -124,7 +124,7 @@ mat matscal( mat Mr, mat Mi, real num_r, real num_i )
     for( ptrr = Mr->rel + 1, ptri = Mr->iel + 1,
          ptr_end = Mr->rel + Mr->cols*Mr->rows;
          ptrr <= ptr_end; ptrr ++, ptri ++)
-    { 
+    {
       faux  = *ptrr * num_r - *ptri * num_i;   /* real part */
       *ptri = *ptrr * num_i + *ptri * num_r;   /* imaginary part */
       *ptrr = faux;

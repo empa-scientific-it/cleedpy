@@ -1,9 +1,9 @@
 /*********************************************************************
-  GH/21.04.95 
+  GH/21.04.95
   file contains functions:
 
   ms_ymat_set            (21.04.95)
-     Create the transformation matrix from angular momentum space 
+     Create the transformation matrix from angular momentum space
      into k-space (Ylm(k)) for a given beam set.
 
 Changes:
@@ -55,12 +55,12 @@ mat ms_ymat_set ( mat Ymat, int l_max, struct beam_str *beams, int set)
 
    k / (l,m) (0,0)     (-1,1)    (0,1)   (1,1)   (-2,2) ....
 
-   k1       Y00(k1)   Y-11(k1)  Y01(k1) 
-   k2       Y00(k2)   Y-11(k2)  Y01(k2) 
-   k3       Y00(k3) 
-   ...                                     Y(l,m)(ki) 
+   k1       Y00(k1)   Y-11(k1)  Y01(k1)
+   k2       Y00(k2)   Y-11(k2)  Y01(k2)
+   k3       Y00(k3)
+   ...                                     Y(l,m)(ki)
 
-   
+
 
 *************************************************************************/
 {
@@ -76,8 +76,8 @@ real *ptr_r, *ptr_i, *ptr_end;
 /**************************************************************************
   Check beam list for number of beams in current set (n_beams).
 **************************************************************************/
- for( i_beams = 0, n_beams = 0; 
-      (beams + i_beams)->k_par != F_END_OF_LIST; i_beams ++) 
+ for( i_beams = 0, n_beams = 0;
+      (beams + i_beams)->k_par != F_END_OF_LIST; i_beams ++)
   {
     if((beams + i_beams)->set == set) n_beams ++;
   }
@@ -87,7 +87,7 @@ real *ptr_r, *ptr_i, *ptr_end;
 #endif
 
 /**************************************************************************
-  Allocate memory for Ymat 
+  Allocate memory for Ymat
 **************************************************************************/
  ll_max = (l_max + 1)*(l_max + 1);
  Ymat = matalloc( Ymat, n_beams, ll_max, NUM_COMPLEX );
@@ -99,15 +99,15 @@ real *ptr_r, *ptr_i, *ptr_end;
 
  size = ll_max*sizeof(real);
 
- for ( i_beams = 0, off = 1; 
+ for ( i_beams = 0, off = 1;
       (beams + i_beams)->k_par != F_END_OF_LIST;
        i_beams ++, off += ll_max)
  {
    if( (beams + i_beams)->set == set)
    {
 #ifdef CONTROL
-     fprintf(STDCTR,"(ms_ymat_set): cos(th): (%.3f %.3f), phi: %.3f\n", 
-             (beams+i_beams)->cth_r, 
+     fprintf(STDCTR,"(ms_ymat_set): cos(th): (%.3f %.3f), phi: %.3f\n",
+             (beams+i_beams)->cth_r,
              (beams+i_beams)->cth_i, (beams+i_beams)->phi);
 #endif
 
@@ -116,7 +116,7 @@ real *ptr_r, *ptr_i, *ptr_end;
      memcpy( Ymat->rel+off, Ylm->rel+1, size);
      memcpy( Ymat->iel+off, Ylm->iel+1, size);
    }
- } 
+ }
 
  return(Ymat);
 }

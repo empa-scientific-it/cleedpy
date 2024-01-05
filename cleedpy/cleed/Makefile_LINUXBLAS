@@ -21,9 +21,9 @@ LIBDIR = .
 OPT = -O2
 # OPT = -O3 -march=native
 CCOMP = gcc
-CFLAGSSUB = -g -c $(OPT) -I$(INCLUDEDIR) -L$(LIBDIR) 
+CFLAGSSUB = -g -c $(OPT) -I$(INCLUDEDIR) -L$(LIBDIR)
 CFLAGS = -g $(OPT) -I$(INCLUDEDIR) -L$(LIBDIR)
-LDFLAGS = -lm -lblas -llapack 
+LDFLAGS = -lm -lblas -llapack
 #============================================================================
 #  header files
 #
@@ -32,7 +32,7 @@ FILES.h = $(INCLUDEDIR)/stddef.h \
 #===========================================================================
 #  subroutines  for matrix operations
 #
-# complex library 
+# complex library
 CPLOBJ =  cribasfun.o
 
 # basic qm functions
@@ -71,7 +71,7 @@ MATOBJ =  matabs.o     \
           matsqmod.o   \
           mattrace.o   \
           mattrans.o   \
-          matwrite.o   
+          matwrite.o
 
 # input for LEED programs
 INPOBJ =  linpbullayer.o \
@@ -84,13 +84,13 @@ INPOBJ =  linpbullayer.o \
           linpshowbop.o
 
           # lreadpar.o
-          # lwritepar.o 
-          # linpmatlm.o 
+          # lwritepar.o
+          # linpmatlm.o
 
 # output for LEED programs
 OUTOBJ =  loutbmlist.o \
           louthead.o   \
-          loutint.o 
+          loutint.o
 
 # beams:
 BEAMOBJ = lbmgen.o    \

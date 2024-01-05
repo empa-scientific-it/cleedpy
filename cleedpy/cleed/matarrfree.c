@@ -1,11 +1,11 @@
 /*********************************************************************
   GH/20.01.95
-  
-  matarrfree 
+
+  matarrfree
      free a complete array of matrices.
 
   Changes:
-  
+
   GH/20.01.95 - Create
 
 *********************************************************************/
@@ -26,11 +26,11 @@ int matarrfree(mat M)
 /*********************************************************************
 
   Free a complete array of matrices previously allocated by matarralloc.
-  
+
   INPUT
     mat M - pointer to a matrix array (terminated by blk_type = BLK_END).
 
-  RETURN VALUE: 
+  RETURN VALUE:
     return value: 1 if successful, 0 if failed.
 
 *********************************************************************/
@@ -40,7 +40,7 @@ int i_mat;
 /*********************************************************************
   Check the validity of the pointer M
 *********************************************************************/
- 
+
  if ( matcheck(M) < 1)
  {
 #ifdef ERROR
@@ -54,8 +54,8 @@ int i_mat;
   allocated for the single matrices.
   Finally free the array itself.
 *********************************************************************/
- 
- for(i_mat = 0; 
+
+ for(i_mat = 0;
      ( (M+i_mat)->mag_no == MATRIX) && ( (M+i_mat)->blk_type == BLK_ARRAY);
      i_mat ++)
    matfree(M+i_mat);

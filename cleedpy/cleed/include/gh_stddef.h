@@ -84,8 +84,8 @@ GH/10.07.10: include <stdlib.h> and <string.h> to avoid compiler warnings
  macros:
 *********************************************************************/
 
-#define MAX(x,y)  ((x)>(y))?(x):(y) 
-#define MIN(x,y)  ((x)<(y))?(x):(y) 
+#define MAX(x,y)  ((x)>(y))?(x):(y)
+#define MIN(x,y)  ((x)<(y))?(x):(y)
 #define SQUARE(x) (x)*(x)
 
 #define ODD(n)    ((n)%2)

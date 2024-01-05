@@ -47,7 +47,7 @@ int ms_bravl_nd ( mat *p_Tpp, mat *p_Tmm, mat *p_Rpm, mat *p_Rmp,
 
  INPUT:
 
-   mat * p_Tpp, p_Tmm, p_Rpm p_Rmp - (output) pointers to Bravais layer 
+   mat * p_Tpp, p_Tmm, p_Rpm p_Rmp - (output) pointers to Bravais layer
               diffraction matrices in k-space:
               Tpp  k(+) -> k(+) (transmission matrix)
               Tmm  k(-) -> k(-) (transmission matrix)
@@ -127,7 +127,7 @@ mat Maux;
 /*************************************************************************
  Preset often used values: i_type, l_max, n_beams
 *************************************************************************/
- 
+
  Maux = NULL;
 
  t_type = (layer->atoms)->t_type;
@@ -137,7 +137,7 @@ mat Maux;
  for(n_beams = 0; (beams + n_beams)->k_par != F_END_OF_LIST; n_beams ++);
 
 #ifdef CONTROL
- fprintf(STDCTR,"(ms_bravl): l_max = %d, No of beams = %d, atom type = %d\n", 
+ fprintf(STDCTR,"(ms_bravl): l_max = %d, No of beams = %d, atom type = %d\n",
          l_max, n_beams, i_type);
 #endif
 
@@ -160,14 +160,14 @@ mat Maux;
 
 /*************************************************************************
  Check if the current beam set was used in the previous call.
- - if not, recalculate lattice sum, scattering matrix, and spherical 
+ - if not, recalculate lattice sum, scattering matrix, and spherical
    harmonics.
  - if yes, reuse lattice sum, scattering matrix, and spherical
    harmonics and recalculate the (lm) scattering matrix only if the
    atom type has changed.
 *************************************************************************/
 
- if( (old_eng     != v_par->eng_r) || 
+ if( (old_eng     != v_par->eng_r) ||
      (old_set     != beams->set)   ||
      (old_n_beams != n_beams)      ||
      (old_l_max   != l_max)           )
@@ -200,10 +200,10 @@ mat Maux;
 /* Yin_m: Y*(k-) for reflection matrix. */
    Yin_m = ms_yp_yxm(Yin_m, Yout_p);
 
-  /********************************************************************** 
-   Loop over k' (exit beams: rows of Yout_p): 
-    - Multiply with factor i 8 PI^2 / (|k|*A*k'_z) 
-    - i_beams is (row number - 1) and equal to the index of exit beams 
+  /**********************************************************************
+   Loop over k' (exit beams: rows of Yout_p):
+    - Multiply with factor i 8 PI^2 / (|k|*A*k'_z)
+    - i_beams is (row number - 1) and equal to the index of exit beams
   **********************************************************************/
 
    pref_i = 8.*PI*PI / (beams->k_r[0] * layer->rel_area);
@@ -212,28 +212,28 @@ mat Maux;
    ptr_i = Yout_p->iel + 1;
    for(i_beams = 0; i_beams < Yout_p->rows; i_beams ++)
    {
-     cri_mul(&faux_r, &faux_i, 0., pref_i, 
+     cri_mul(&faux_r, &faux_i, 0., pref_i,
              (beams+i_beams)->Akz_r, (beams+i_beams)->Akz_i);
      for(i_c = 0; i_c < Yout_p->cols; i_c ++, ptr_r ++, ptr_i ++ )
      {
-       cri_mul(ptr_r, ptr_i, *ptr_r, *ptr_i, faux_r, faux_i); 
+       cri_mul(ptr_r, ptr_i, *ptr_r, *ptr_i, faux_r, faux_i);
      }
    }  /* i_beams */
 
    ptr_r = Yout_m->rel + 1;
-   ptr_i = Yout_m->iel + 1; 
+   ptr_i = Yout_m->iel + 1;
    for(i_beams = 0; i_beams < Yout_m->rows; i_beams ++)
-   { 
-     cri_mul(&faux_r, &faux_i, 0., pref_i, 
-             (beams+i_beams)->Akz_r, (beams+i_beams)->Akz_i); 
+   {
+     cri_mul(&faux_r, &faux_i, 0., pref_i,
+             (beams+i_beams)->Akz_r, (beams+i_beams)->Akz_i);
      for(i_c = 0; i_c < Yout_m->cols; i_c ++, ptr_r ++, ptr_i ++ )
-     { 
+     {
        cri_mul(ptr_r, ptr_i, *ptr_r, *ptr_i, faux_r, faux_i);
      }
    }  /* i_beams */
 
  }
- else 
+ else
  {
   /*************************************************************************
    The current beam set was used already in the previous call: only
@@ -262,7 +262,7 @@ mat Maux;
 
    } /* if i_type */
  }
- 
+
 
 /**********************************************************************
  Matrix product Yout (exit beams) * Tii * Yin (inc. beams)
@@ -288,16 +288,16 @@ mat Maux;
    (*p_Tpp)->rel[i_c] += 1.;
    (*p_Tmm)->rel[i_c] += 1.;
  }
- 
+
 /**********************************************************************
-  Update energy, beam_set, and beam_num, l_max, i_type 
+  Update energy, beam_set, and beam_num, l_max, i_type
 **********************************************************************/
    old_eng = v_par->eng_r;
    old_set = beams->set;
    old_n_beams = n_beams;
    old_l_max = l_max;
    old_type = i_type;
-   
+
  return(1);
 } /* end of function ms_bravl_nd */
 /*======================================================================*/

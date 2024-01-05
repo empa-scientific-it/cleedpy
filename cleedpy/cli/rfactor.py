@@ -1,13 +1,15 @@
 import click
-import yaml
 import numpy as np
+import yaml
+
 from .. import rfactor
+
 
 @click.command("cli")
 @click.option("--input", "-i", help="Input file", required=True)
 def cli(input):
     """Command line interface for the rfactor tool"""
-    with open(input, "r") as f:
+    with open(input) as f:
         data = yaml.safe_load(f)
 
     y_true = np.array(data["y_true"])

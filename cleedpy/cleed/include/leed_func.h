@@ -103,8 +103,8 @@ double cpu_time(FILE *, const char *);
  Layer doubling
 *********************************************************************/
    /* LD for 2 layers */
-int ld_2lay (mat *, mat *, mat *, mat *, 
-             mat, mat, mat, mat, mat, mat, mat, mat, 
+int ld_2lay (mat *, mat *, mat *, mat *,
+             mat, mat, mat, mat, mat, mat, mat, mat,
              struct beam_str *, real *);
 mat ld_2lay_rpm (mat, mat, mat, mat, mat, mat,
              struct beam_str *, real *);
@@ -125,11 +125,11 @@ int ms_bravl_nd ( mat *, mat *, mat *, mat *,
                struct var_str *, struct layer_str *, struct beam_str *);
 int ms_bravl_sym ( mat *, mat *,
                struct var_str *, struct layer_str *, struct beam_str *);
-int ms_compl ( mat *, mat *, mat *, mat *, 
+int ms_compl ( mat *, mat *, mat *, mat *,
                struct var_str *, struct layer_str *, struct beam_str *);
-int ms_compl_nd ( mat *, mat *, mat *, mat *, 
+int ms_compl_nd ( mat *, mat *, mat *, mat *,
                struct var_str *, struct layer_str *, struct beam_str *);
-int ms_complsym ( mat *, mat *, mat *, mat *,  
+int ms_complsym ( mat *, mat *, mat *, mat *,
                struct var_str *, struct layer_str * ,struct beam_str *);
 
    /* lattice sum for one layer (lmslsumii.c) */
@@ -165,4 +165,3 @@ mat mscompksum(mat ,struct beam_str * ,struct atom_str * ,int, int, int );
 /*********************************************************************
 lower level functions
 *********************************************************************/
-

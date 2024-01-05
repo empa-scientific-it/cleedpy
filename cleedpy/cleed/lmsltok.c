@@ -1,14 +1,14 @@
 /*********************************************************************
-  GH/05.09.94 
+  GH/05.09.94
   file contains functions:
 
   ms_ltok            (06.09.94)
-     Transformation of the multiple scattering matrix from angular 
+     Transformation of the multiple scattering matrix from angular
      momentum space into k-space.
 
  Changes:
 
- GH/27.01.95 - Remove "-" from pref_i. Prefactor is now: 
+ GH/27.01.95 - Remove "-" from pref_i. Prefactor is now:
                i*8*PI^2 / (|k|*A*kz+)
 
 *********************************************************************/
@@ -33,11 +33,11 @@
 /*======================================================================*/
 /*======================================================================*/
 
-mat ms_ltok ( mat Mkk, mat Mlm, mat Ylm, mat Yxlm, 
+mat ms_ltok ( mat Mkk, mat Mlm, mat Ylm, mat Yxlm,
               struct beam_str * beams, real rel_area, real unsc)
 
 /************************************************************************
- 
+
   Transformation of the multiple scattering matrix from angular momentum
   space into k-space.
 
@@ -62,7 +62,7 @@ mat ms_ltok ( mat Mkk, mat Mlm, mat Ylm, mat Yxlm,
               conjugate transposed matrix from the opposite transformation
               using ms_ytoyx.
 
-   struct beam_str * beams - additional information about the k vectors 
+   struct beam_str * beams - additional information about the k vectors
               involvedi (in this case: (A kz)^-1).
               The order of beams must be equal to the first dimension of
               Ykl (not checked).
@@ -75,15 +75,15 @@ mat ms_ltok ( mat Mkk, mat Mlm, mat Ylm, mat Yxlm,
 
  DESIGN
 
-   Depending on the k-vectors involved in the transformation matrices Ylm 
-   and Yxlm, either a reflection (+,- or -,+) or a transmission matrix 
+   Depending on the k-vectors involved in the transformation matrices Ylm
+   and Yxlm, either a reflection (+,- or -,+) or a transmission matrix
    (+,+ or -,-) will be calculated.
 
  RETURN VALUES:
 
    NULL if failed (and EXIT_ON_ERROR is not defined)
 
-   Mkk (may be different from input parameter). The storage scheme for 
+   Mkk (may be different from input parameter). The storage scheme for
    Mkk is defined by the order of Ylm and Yxlm.
 
 *************************************************************************/
@@ -97,7 +97,7 @@ real pref_r, pref_i;
 
 mat Maux;
 
-/********************************************************************** 
+/**********************************************************************
  - Check the validity of the input matrices Mkk, Mlm, Ylm, Yxlm
    (Different requirements if FIND_Yx is defined)
  - Check arguments Ylm, Yxlm and create the missing matrix if FIND_Yx
@@ -161,11 +161,11 @@ mat Maux;
    }
  }
  if(Ylm == NULL)  /* for Yxlm == NULL already checked */
-   Ylm = ms_ytoyx(Ylm, Yxlm); 
+   Ylm = ms_ytoyx(Ylm, Yxlm);
 
 #endif /* FIND_Yx */
 
-/********************************************************************** 
+/**********************************************************************
   Calculate the matrix product Ylm(k') * M(lm,l'm') * Yl'm'(k)
 **********************************************************************/
 
@@ -175,16 +175,16 @@ mat Maux;
 */
  Mkk= matmul(Mkk,Ylm,Mlm);
  Mkk= matmul(Mkk,Mkk,Yxlm);
- 
+
 #ifdef CONTROL
  fprintf(STDCTR,"(ms_ltok): Ylm * Mlm * Yxlm = \n");
  matshow(Mkk);
 #endif
- 
-/********************************************************************** 
- Loop over k' (exit beams: rows of Mk'k): 
-  - Multiply with factor i 8 PI^2 / (|k|*A*k'_z) 
-  - i_r is (row number - 1) and equal to the index of exit beams 
+
+/**********************************************************************
+ Loop over k' (exit beams: rows of Mk'k):
+  - Multiply with factor i 8 PI^2 / (|k|*A*k'_z)
+  - i_r is (row number - 1) and equal to the index of exit beams
 **********************************************************************/
 
  pref_i = 8.*PI*PI / (beams->k_r[0] * rel_area);
@@ -193,15 +193,15 @@ mat Maux;
  ptr_i = Mkk->iel + 1;
  for(i_r = 0; i_r < Mkk->rows; i_r ++)
  {
-   cri_mul(&faux_r, &faux_i, 0., pref_i, 
+   cri_mul(&faux_r, &faux_i, 0., pref_i,
            (beams+i_r)->Akz_r, (beams+i_r)->Akz_i);
    for(i_c = 0; i_c < Mkk->cols; i_c ++, ptr_r ++, ptr_i ++ )
    {
-     cri_mul(ptr_r, ptr_i, *ptr_r, *ptr_i, faux_r, faux_i); 
+     cri_mul(ptr_r, ptr_i, *ptr_r, *ptr_i, faux_r, faux_i);
    }
  }  /* i_r */
 
-/********************************************************************** 
+/**********************************************************************
  Add unscattered beams:
 **********************************************************************/
  if(unsc != 0.)

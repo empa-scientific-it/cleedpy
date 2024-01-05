@@ -1,7 +1,7 @@
 /*********************************************************************
 GH/27.09.00
 
-include file for 
+include file for
  - current version of LEED program
 
 Changes:

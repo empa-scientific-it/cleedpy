@@ -39,7 +39,7 @@ double cpu_time(FILE * outp, const char * message)
 /************************************************************************
 
  Check elapsed cpu time.
- 
+
 INPUT:
 
  FILE * outp 1: write cpu time, elapsed cpu time since last call and memory
@@ -47,7 +47,7 @@ INPUT:
              NULL: suppress output.
 
  char * message - message written to outp together with cpu information.
- 
+
 FUNCTION CALLS:
   getrusage
 
@@ -59,11 +59,11 @@ RETURN VALUE:
 {
 double new_secs;
 static double old_secs = 0.;
-static struct rusage *r_usage = NULL;  /* stucture defined in sys/resource.h 
+static struct rusage *r_usage = NULL;  /* stucture defined in sys/resource.h
                                           and sys/time.h (timeval) */
 static char *hostname;
 
- if (r_usage == NULL) 
+ if (r_usage == NULL)
  {
    r_usage = (struct rusage *) malloc (sizeof(struct rusage));
    hostname = (char *) malloc (STRSZ * sizeof(char));
@@ -72,14 +72,14 @@ static char *hostname;
 
  getrusage ( RUSAGE_SELF, r_usage );
 
- new_secs = (double)r_usage->ru_utime.tv_sec + 
+ new_secs = (double)r_usage->ru_utime.tv_sec +
         (double)r_usage->ru_utime.tv_usec * 1.e-6;
 
  if(outp != NULL)
  {
    fprintf(outp,"%s\t", message);
    fprintf(outp,
-     "(cpu_time) total time on %s: %10.6f s, diff: %10.6f s\n", 
+     "(cpu_time) total time on %s: %10.6f s, diff: %10.6f s\n",
                 hostname, new_secs, new_secs-old_secs);
  }
  old_secs = new_secs;

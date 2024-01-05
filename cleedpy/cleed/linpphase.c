@@ -70,20 +70,20 @@ int inp_phase( char * phaseinp, real * dr, struct phs_str **p_phs_shifts )
 
  INPUT:
 
-  char * phaseinp (input)  Either full path name of phase shift file 
+  char * phaseinp (input)  Either full path name of phase shift file
          if starting with "/" or tag for type of atom (will be expanded
          into a full filename by using CLEED_PHASE and extension ".phs").
-  
+
   real * dr (input) displacement vector for thermic vibrations
-  
+
   struct phs_str **p_phs_shifts (output) phase shifts.
 
  DESIGN:
 
   The phase shifts in the input file must be for increasing energies.
   The storage scheme is:
-  
-  
+
+
 
 *********************************************************************/
 {
@@ -109,7 +109,7 @@ real faux;
 
 /***********************************************************************
   Create name of input file:
-  - If phaseinp is a full path (starting with '/'), this is used as 
+  - If phaseinp is a full path (starting with '/'), this is used as
     name of the input file.
   - Otherwise the filename is put together from CLEED_PHASE, phaseinp
     and the extension '.phs'.
@@ -133,9 +133,9 @@ real faux;
 
  if(i_phase > 0)
  {
-/* 
-  Compare filename and dr with previous phaseshifts. Return the 
-  corresponding phase shift number if the same combination has already 
+/*
+  Compare filename and dr with previous phaseshifts. Return the
+  corresponding phase shift number if the same combination has already
   been read.
 */
    for(i=0; i< i_phase; i++)
@@ -144,11 +144,11 @@ real faux;
          ( R_fabs(dr[2] - (*p_phs_shifts + i)->dr[2]) < GEO_TOLERANCE ) &&
          ( R_fabs(dr[3] - (*p_phs_shifts + i)->dr[3]) < GEO_TOLERANCE )  )
      {
-       return(i); 
+       return(i);
        break;
      }
    i_phase ++;
-   *p_phs_shifts = (struct phs_str *)realloc( 
+   *p_phs_shifts = (struct phs_str *)realloc(
                     *p_phs_shifts, (i_phase + 1) * sizeof(struct phs_str) );
  }
  else
@@ -158,7 +158,7 @@ real faux;
  }
 
 /* Terminate list of phase shifts */
-  
+
  (*(p_phs_shifts) + i_phase)->lmax = I_END_OF_LIST;
 
 
@@ -172,7 +172,7 @@ real faux;
 ********************************************************************/
 
 #ifdef CONTROL
- fprintf(STDCTR,"(inp_phase): Reading file \"%s\", i_phase = %d\n", 
+ fprintf(STDCTR,"(inp_phase): Reading file \"%s\", i_phase = %d\n",
          filename, i_phase-1);
 #endif
 
@@ -193,8 +193,8 @@ real faux;
  phs_shifts->input_file = strdup(filename);
 
 /********************************************************************
-  Read the first line of the input file which contains the number of 
-  energies to be read in (neng) and the maximum phase shift quantum 
+  Read the first line of the input file which contains the number of
+  energies to be read in (neng) and the maximum phase shift quantum
   number (lmax).
 ********************************************************************/
 
@@ -220,8 +220,8 @@ real faux;
    exit(1);
  }
 
-/* 
-  Define energy scale according to eng_type. The default is 
+/*
+  Define energy scale according to eng_type. The default is
   input in Hartree units (27.18 eV)
 */
  if( !strncmp(eng_type,"eV",2) || !strncmp(eng_type,"EV",2) )
@@ -238,17 +238,17 @@ real faux;
    fprintf(STDCTR,"(inp_phase): Energy input in Rydberg (13.59 eV)\n");
 #endif
  }
- else 
+ else
  {
    eng_scale = 1.;
 #ifdef CONTROL
    fprintf(STDCTR,"(inp_phase): Energy input in Hartree (27.18 eV)\n");
 #endif
  }
-  
 
-/******************************************************************** 
-  Read energies and phase shifts. 
+
+/********************************************************************
+  Read energies and phase shifts.
   Find max and min energy
   NB: The search for blank or '-' after reading each number is needed
   because of the FORTRAN format used for the VHT input files which does
@@ -258,12 +258,12 @@ real faux;
  phs_shifts->lmax = lmax;
  nl = lmax + 1;
 
- phs_shifts->energy = (real *)malloc( neng * sizeof(real) ); 
- phs_shifts->pshift = (real *)malloc( neng * nl * sizeof(real) ); 
- 
- 
- for( i_eng = 0; 
-     (i_eng < neng) && (fgets(linebuffer, STRSZ, inp_stream) != NULL); 
+ phs_shifts->energy = (real *)malloc( neng * sizeof(real) );
+ phs_shifts->pshift = (real *)malloc( neng * nl * sizeof(real) );
+
+
+ for( i_eng = 0;
+     (i_eng < neng) && (fgets(linebuffer, STRSZ, inp_stream) != NULL);
       i_eng ++)
  {
 #ifdef REAL_IS_DOUBLE
@@ -273,12 +273,12 @@ real faux;
    sscanf(linebuffer, "%e", phs_shifts->energy+i_eng);
 #endif
    phs_shifts->energy[i_eng] *= eng_scale;
-   
-   if (i_eng == 0) 
+
+   if (i_eng == 0)
      phs_shifts->eng_min = phs_shifts->energy[i_eng];
    else
      phs_shifts->eng_max = phs_shifts->energy[i_eng];
-   
+
    if( fgets(linebuffer, STRSZ, inp_stream) != NULL)
    {
      for( i_str = 0, i = 0; i<nl; i++)
@@ -300,20 +300,20 @@ real faux;
      break;
    }
  }
- 
+
  phs_shifts->neng = i_eng;
 
 #ifdef CONTROL
  fprintf(STDCTR,"(inp_phase): Number of energies = %d, lmax = %d\n",
          phs_shifts->neng, phs_shifts->lmax);
  fprintf(STDCTR,"\n\t  E(H)");
- for(i=0; i<nl; i++) fprintf(STDCTR,"\t  l=%2d",i); 
+ for(i=0; i<nl; i++) fprintf(STDCTR,"\t  l=%2d",i);
  fprintf(STDCTR,"\n\n");
 
  for(i_eng = 0; i_eng < phs_shifts->neng; i_eng ++)
  {
    fprintf(STDCTR,"\t%7.4f", phs_shifts->energy[i_eng]);
-   for(i=0; i<nl; i++) 
+   for(i=0; i<nl; i++)
    {
      if(phs_shifts->pshift[i_eng*nl+i] != 0.0)
        fprintf(STDCTR,"\t%7.4f", phs_shifts->pshift[i_eng*nl+i]);
@@ -331,7 +331,7 @@ real faux;
    fprintf(STDWAR,
    " *** warning (inp_phase): EOF found before reading all phase shifts:\n");
    fprintf(STDWAR,
-   "     expected energies: %3d, found: %3d, file: %s\n", 
+   "     expected energies: %3d, found: %3d, file: %s\n",
    neng, i_eng+1, filename);
  }
 #endif

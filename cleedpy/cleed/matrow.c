@@ -1,15 +1,15 @@
 /*********************************************************************
   GH/23.01.95
-  
+
   mat matrow(mat row, mat M, int row_num)
-  
+
   Extract a single row from a matrix M
 
   Changes:
   GH/23.01.95 - diagonal matrices are implemented.
 
 *********************************************************************/
-#include <math.h>  
+#include <math.h>
 #include <stdio.h>
 
 #include "mat.h"
@@ -22,7 +22,7 @@
 
 mat matrow(mat row, mat M, int row_num)
 
-/* 
+/*
   Extract a single row (row_num) from a matrix M.
 
   parameters:
@@ -30,16 +30,16 @@ mat matrow(mat row, mat M, int row_num)
   M - input matrix.
   row_num - (input) number of row.
 
-  RETURN VALUE:  
-  
+  RETURN VALUE:
+
     row
     NULL         if failed (and EXIT_ON_ERROR is not defined)
 */
 
 {
 real *ptr_r, *ptr_M, *ptr_end;
-  
-/********************************************************************* 
+
+/*********************************************************************
   Check input matrix and row number
 *********************************************************************/
 
@@ -68,7 +68,7 @@ real *ptr_r, *ptr_M, *ptr_end;
 #endif
  }
 
-/********************************************************************* 
+/*********************************************************************
   Extract row
 *********************************************************************/
 
@@ -80,10 +80,10 @@ real *ptr_r, *ptr_M, *ptr_end;
    {
      case(NUM_REAL):
      {
-       for (ptr_M = M->rel + M->cols*(row_num - 1) + 1, 
-            ptr_r = row->rel + 1, ptr_end = ptr_M + M->cols; 
+       for (ptr_M = M->rel + M->cols*(row_num - 1) + 1,
+            ptr_r = row->rel + 1, ptr_end = ptr_M + M->cols;
             ptr_M <= ptr_end; ptr_r ++, ptr_M ++)
-       { *ptr_r = *ptr_M; } 
+       { *ptr_r = *ptr_M; }
 
        break;
      } /* case REAL */
@@ -91,13 +91,13 @@ real *ptr_r, *ptr_M, *ptr_end;
      case(NUM_COMPLEX):
      {
      /* first real part */
-       for (ptr_M = M->rel + M->cols*(row_num - 1) + 1, 
+       for (ptr_M = M->rel + M->cols*(row_num - 1) + 1,
             ptr_r = row->rel + 1, ptr_end = ptr_M + M->cols;
             ptr_M <= ptr_end; ptr_r ++, ptr_M ++)
        { *ptr_r = *ptr_M; }
 
     /* now imaginary part */
-       for (ptr_M = M->iel + M->cols*(row_num - 1) + 1, 
+       for (ptr_M = M->iel + M->cols*(row_num - 1) + 1,
             ptr_r = row->iel + 1, ptr_end = ptr_M + M->cols;
             ptr_M <= ptr_end; ptr_r ++, ptr_M ++)
        { *ptr_r = *ptr_M; }
@@ -106,7 +106,7 @@ real *ptr_r, *ptr_M, *ptr_end;
      } /* case COMPLEX */
    }   /* switch */
  }     /* matrix type is not diagonal */
- 
+
  else if (M->mat_type == MAT_DIAG)
  {
    switch(M->num_type)
@@ -144,7 +144,7 @@ real *ptr_r, *ptr_M, *ptr_end;
 
  else /* neither square nor normal, nor diagonal matrix */
  {
-/********************************************************************* 
+/*********************************************************************
   matrix type is not implemented!
 *********************************************************************/
 

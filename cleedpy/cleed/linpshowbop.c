@@ -1,9 +1,9 @@
 /*********************************************************************
-GH/10.05.00 
+GH/10.05.00
   file contains function:
 
   inp_showbop
- 
+
 Changes:
 
 GH/26.07.95 - Creation.
@@ -30,7 +30,7 @@ GH/05.10.00 - changes in phase shift display
 
 /********************************************************************/
 
-int inp_showbop(struct cryst_str *bulk_par, 
+int inp_showbop(struct cryst_str *bulk_par,
                 struct cryst_str *over_par,
                 struct phs_str *phs_shifts)
 /*********************************************************************
@@ -68,16 +68,16 @@ int i,j;                      /* counter variables */
  fprintf(STDOUT,"\ta2:  (%7.4f  %7.4f)\n", bulk_par->a[2]*BOHR, bulk_par->a[4]*BOHR);
 
  fprintf(STDOUT,"\n     reciprocal lattice(1x1): \n");
- fprintf(STDOUT,"\ta1*: (%7.4f  %7.4f) A^-1\n", 
+ fprintf(STDOUT,"\ta1*: (%7.4f  %7.4f) A^-1\n",
          bulk_par->a_1[1]/BOHR, bulk_par->a_1[2]/BOHR);
- fprintf(STDOUT,"\ta2*: (%7.4f  %7.4f) A^-1\n", 
+ fprintf(STDOUT,"\ta2*: (%7.4f  %7.4f) A^-1\n",
          bulk_par->a_1[3]/BOHR, bulk_par->a_1[4]/BOHR);
 
  fprintf(STDOUT,"\nsuperstructure unit cell:\n");
- fprintf(STDOUT,"\t(%5.2f %5.2f)\tb1:  (%7.4f  %7.4f) A\n", 
+ fprintf(STDOUT,"\t(%5.2f %5.2f)\tb1:  (%7.4f  %7.4f) A\n",
          bulk_par->m_super[1], bulk_par->m_super[2],
          bulk_par->b[1]*BOHR, bulk_par->b[3]*BOHR);
- fprintf(STDOUT,"\t(%5.2f %5.2f)\tb2:  (%7.4f  %7.4f) A\n", 
+ fprintf(STDOUT,"\t(%5.2f %5.2f)\tb2:  (%7.4f  %7.4f) A\n",
          bulk_par->m_super[3], bulk_par->m_super[4],
          bulk_par->b[2]*BOHR, bulk_par->b[4]*BOHR);
 
@@ -99,7 +99,7 @@ int i,j;                      /* counter variables */
  {
    fprintf(STDOUT,"\t%s", *(bulk_par->comments + i));
  }
- 
+
  fprintf(STDOUT,"\ncomments (overlayer):\n");
 
  for( i=0; *(over_par->comments + i) != NULL; i++)
@@ -150,7 +150,7 @@ int i,j;                      /* counter variables */
 *********************************************************************/
 
  fprintf(STDOUT,"\nbulk atoms (%d layers):\n", bulk_par->nlayers);
- 
+
  fprintf(STDOUT,"\n<-\torg: (%7.4f  %7.4f  %7.4f) A\n\n",
           bulk_par->layers[bulk_par->nlayers-1].vec_to_next[1]*BOHR,
           bulk_par->layers[bulk_par->nlayers-1].vec_to_next[2]*BOHR,
@@ -168,11 +168,11 @@ int i,j;                      /* counter variables */
    for( j = 0; j < bulk_par->layers[i].natoms; j ++)
    {
      fprintf(STDOUT,"\tpos: (%7.4f  %7.4f  %7.4f) A",
-             bulk_par->layers[i].atoms[j].pos[1]*BOHR, 
-             bulk_par->layers[i].atoms[j].pos[2]*BOHR, 
+             bulk_par->layers[i].atoms[j].pos[1]*BOHR,
+             bulk_par->layers[i].atoms[j].pos[2]*BOHR,
              bulk_par->layers[i].atoms[j].pos[3]*BOHR);
      fprintf(STDOUT,"\tlayer No: %d/B atom type: %d\n",
-             bulk_par->layers[i].atoms[j].layer, 
+             bulk_par->layers[i].atoms[j].layer,
              bulk_par->layers[i].atoms[j].type);
    }
 
@@ -198,16 +198,16 @@ int i,j;                      /* counter variables */
    fprintf(STDOUT,
            "(%d)\t%s \n\t%d energies, lmax = %d, sqrt(<dr^2>_T) = %.3f A, ",
            i,
-           (phs_shifts+i)->input_file, 
-           (phs_shifts+i)->neng, 
+           (phs_shifts+i)->input_file,
+           (phs_shifts+i)->neng,
            (phs_shifts+i)->lmax,
            R_sqrt( (phs_shifts+i)->dr[0] ) *BOHR);
 
-   if ((phs_shifts+i)->t_type == T_DIAG) 
+   if ((phs_shifts+i)->t_type == T_DIAG)
      fprintf(STDOUT,"diagonal T\n");
-   else if ((phs_shifts+i)->t_type == T_NOND) 
+   else if ((phs_shifts+i)->t_type == T_NOND)
      fprintf(STDOUT,"non-diagonal T\n");
-   else 
+   else
      fprintf(STDOUT,"unknown T type\n");
  }
 

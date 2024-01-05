@@ -1,11 +1,11 @@
 /*********************************************************************
   GH/15.08.94
-  
+
   mattrans
      Transpose and conjugate a matrix
 
   Changes:
-  
+
 *********************************************************************/
 
 #include <stdio.h>
@@ -27,15 +27,15 @@ mat matconj(mat Mt, mat M)
 /*********************************************************************
 
   Transpose a matrix
-  
+
   INPUT
     mat Mt
     mat M
 
   DESIGN
     mat-types: MAT_DIAG, MAT_NORMAL, MAT_SQUARE.
-     
-  RETURN VALUE: 
+
+  RETURN VALUE:
     pointer to the matrix (mat) (if successful)
     NULL else.
 
@@ -62,7 +62,7 @@ mat Maux;
  First diagonal matrices
  A diagonal matrix needs just to be conjugated
 */
- if (M->mat_type == MAT_DIAG) 
+ if (M->mat_type == MAT_DIAG)
  {
    switch(M->num_type)
    {
@@ -88,7 +88,7 @@ mat Maux;
          *ptr_o = - (*ptr_o);
        }
        return(Mt);
-       break;       
+       break;
      }  /* NUM_COMPLEX */
    }  /* switch M->num_type */
  }  /* if diagonal */
@@ -119,7 +119,7 @@ mat Maux;
    */
        Maux = matcop(NULL,M);
        Mt = matalloc(Mt, Maux->cols, Maux->rows, Maux->num_type);
-   /* 
+   /*
      rel: only transposition
    */
        ptr_o_end = Maux->rel;
@@ -134,7 +134,7 @@ mat Maux;
          }
        } /* for i_r */
 
-   /* 
+   /*
      iel: transposition and conjugation
    */
        ptr_o_end = Maux->iel;

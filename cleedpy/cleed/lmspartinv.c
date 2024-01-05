@@ -1,5 +1,5 @@
 /*********************************************************************
-  GH/07.08.95 
+  GH/07.08.95
   file contains functions:
 
   ms_partinv
@@ -31,7 +31,7 @@ mat ms_partinv ( mat Minv, mat Mbg, int first_atoms, int l_max)
 /************************************************************************
 
  DESCRIPTION:
- 
+
    Invert giant scattering matrix by partitioning.
 
  INPUT:
@@ -62,32 +62,32 @@ mat ms_partinv ( mat Minv, mat Mbg, int first_atoms, int l_max)
         Q = -(UL^-1)*UR * S
         P = (UL^-1) + (UL^-1)*UR * S * LL*(UL^-1)
 
- If the first (first_atoms) atoms are in the same plane parallel to the 
+ If the first (first_atoms) atoms are in the same plane parallel to the
  surface, the upper left submatrix UL (dimension: first_atoms *(l_max +1)^2)
  can be blockdiagonalized into two blocks with even (l1+m1), (l2+m2)
- (dimension: first_atoms * (l_max + 1)*(l_max + 2)/2) and odd (l1+m1), 
- (l2+m2) (dimension: first_atoms * (l_max +1 ) * l_max/2). 
+ (dimension: first_atoms * (l_max + 1)*(l_max + 2)/2) and odd (l1+m1),
+ (l2+m2) (dimension: first_atoms * (l_max +1 ) * l_max/2).
  Thus, UL can be inverted by inverting the two blocks which requires less
- cpu time. There are no savings in the other matrix operations of the above 
- formulae, therefore this method saves more time the more atoms are in the 
+ cpu time. There are no savings in the other matrix operations of the above
+ formulae, therefore this method saves more time the more atoms are in the
  same plane.
 
    * Special *
 
  First UL is decomposed into two matrices with even (l1+m1), (l2+m2), Maux_a
- and odd (l1+m1), (l2+m2), Maux_b. Maux_a and Maux_b are inverted separately 
+ and odd (l1+m1), (l2+m2), Maux_b. Maux_a and Maux_b are inverted separately
  and reinserted into UL which has now become (UL^-1).
 
  If first_atoms *(l_max +1)^2 is equal to the dimensions of Mbg (i.e. all
  atoms are in the same plane) (UL^-1) is identical to the inverse of Mbg and
- the function will return (UL^-1). If {first_atoms *(l_max +1)^2} is smaller 
+ the function will return (UL^-1). If {first_atoms *(l_max +1)^2} is smaller
  than the dimensions of Mbg (i.e. not all atoms are in the same plane) S, R,
- Q, and P are calculated according to the above formulae, whereby 
- Maux_a = LL*(UL^-1) and Maux_b = (UL^-1)*UR are stored as intermediate 
+ Q, and P are calculated according to the above formulae, whereby
+ Maux_a = LL*(UL^-1) and Maux_b = (UL^-1)*UR are stored as intermediate
  results in order to be reused.
 
  FUNCTION CALLS:
- 
+
   matalloc
   matfree
   matcheck
@@ -135,7 +135,7 @@ mat UL, UR, LL, LR;
  Maux_a = matalloc( Maux_a, iaux, iaux, NUM_COMPLEX);
  iaux = first_atoms * (l_max +1 ) * l_max/2;
  Maux_b = matalloc( Maux_b, iaux, iaux, NUM_COMPLEX);
- 
+
 /*************************************************************************
  Loop over (l1,m1),(l2,m2): Set up  Maux_a and Maux_b.
 
@@ -184,7 +184,7 @@ mat UL, UR, LL, LR;
 #ifdef CONTROL_X
  fprintf(STDCTR,"(ms_partinv): UL, Maux_a/od: \n");
 #endif
- 
+
 /*************************************************************************
  Matrix inversion: (Maux_a/od)^-1
 *************************************************************************/
@@ -195,7 +195,7 @@ mat UL, UR, LL, LR;
 #ifdef CONTROL_X
  fprintf(STDCTR,"(ms_partinv): (Maux_b)^-1: \n");
 #endif
- 
+
 /*************************************************************************
   Copy (Maux_a)^-1 and (Maux_b)^-1 back into UL in the natural order.
 *************************************************************************/
@@ -222,7 +222,7 @@ mat UL, UR, LL, LR;
                  *ptr_2 = Maux_b->iel[iod2];
                  iod2++;
                }
-               else 
+               else
                {
                  *ptr_1 = 0.;
                  *ptr_2 = 0.;
@@ -236,7 +236,7 @@ mat UL, UR, LL, LR;
                  *ptr_2 = Maux_a->iel[iev2];
                  iev2++;
                }
-               else 
+               else
                {
                  *ptr_1 = 0.;
                  *ptr_2 = 0.;
@@ -251,7 +251,7 @@ mat UL, UR, LL, LR;
 
 /*************************************************************************
   If all the atoms are in the same plane (i.e. first_atoms * (l_max + 1)^2
-  is equal to the dimension of Mbg) the inversion is already complete. 
+  is equal to the dimension of Mbg) the inversion is already complete.
 => Return here.
 *************************************************************************/
 
@@ -276,7 +276,7 @@ mat UL, UR, LL, LR;
 
  Mbg = (UL UR)  Minv = (Mbg)^-1 = (P Q)
        (LL LR)                    (R S)
-      
+
  where:
         S = (LR - (LL*UL^-1)*UR )^-1
         R = -S*(LL*UL^-1)
@@ -303,8 +303,8 @@ mat UL, UR, LL, LR;
                  LL->rows,LL->cols, LR->rows,LR->cols);
 #endif
 
-/*  
-  Maux_a = (LL*UL^-1) 
+/*
+  Maux_a = (LL*UL^-1)
   Maux_b = (LL*UL^-1)*UR ) = Maux_a * UR
 */
 
@@ -322,18 +322,18 @@ mat UL, UR, LL, LR;
 /*
    Maux_b = -(LR - (LL*UL^-1)*UR) = Maux_b - LR (first real then imag. part)
    LR = Maux_b^-1 = -S
-*/ 
+*/
 
 #ifdef CONTROL_X
  fprintf(STDCTR,"(ms_partinv): LR\n");
 #endif
 
  iaux = LR->cols * LR->rows;
- for(ptr_1 = LR->rel+1, ptr_2 = Maux_b->rel+1, ptr_end = LR->rel+iaux; 
+ for(ptr_1 = LR->rel+1, ptr_2 = Maux_b->rel+1, ptr_end = LR->rel+iaux;
      ptr_1 <= ptr_end; ptr_1 ++, ptr_2 ++)
  { *ptr_2 -= *ptr_1; }
-   
- for(ptr_1 = LR->iel+1, ptr_2 = Maux_b->iel+1, ptr_end = LR->iel+iaux; 
+
+ for(ptr_1 = LR->iel+1, ptr_2 = Maux_b->iel+1, ptr_end = LR->iel+iaux;
      ptr_1 <= ptr_end; ptr_1 ++, ptr_2 ++)
  { *ptr_2 -= *ptr_1; }
 
@@ -355,7 +355,7 @@ mat UL, UR, LL, LR;
  UR = matmul(UR, Maux_b, LR);
 
 /*
-  P -> UL = (UL^-1) + (UL^-1)*UR * S * (LL*UL^-1) 
+  P -> UL = (UL^-1) + (UL^-1)*UR * S * (LL*UL^-1)
           = UL - Maux_b * LL
 */
 
@@ -364,12 +364,12 @@ mat UL, UR, LL, LR;
 #endif
 
  Maux_b = matmul(Maux_b, Maux_b, LL);
- 
+
  iaux = UL->cols * UL->rows;
  for(ptr_1 = UL->rel+1, ptr_2 = Maux_b->rel+1, ptr_end = UL->rel+iaux;
      ptr_1 <= ptr_end; ptr_1 ++, ptr_2 ++)
  { *ptr_1 -= *ptr_2; }
-  
+
  for(ptr_1 = UL->iel+1, ptr_2 = Maux_b->iel+1, ptr_end = UL->iel+iaux;
      ptr_1 <= ptr_end; ptr_1 ++, ptr_2 ++)
  { *ptr_1 -= *ptr_2; }
@@ -384,8 +384,8 @@ mat UL, UR, LL, LR;
  iaux = LR->cols * LR->rows;
  for(ptr_1 = LR->rel+1, ptr_2 = LR->iel+1, ptr_end = LR->rel+iaux;
      ptr_1 <= ptr_end; ptr_1 ++, ptr_2 ++)
- { 
-   *ptr_1 = -*ptr_1; 
+ {
+   *ptr_1 = -*ptr_1;
    *ptr_2 = -*ptr_2;
  }
 

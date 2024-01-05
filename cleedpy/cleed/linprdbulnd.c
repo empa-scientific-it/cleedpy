@@ -1,9 +1,9 @@
 /*********************************************************************
-GH/29.09.00 
+GH/29.09.00
   file contains function:
 
   inp_rdbul
- 
+
 Changes:
 
 GH/17.08.94 - insert REAL_IS_DOUBLE and REAL_IS_FLOAT for sscanf.
@@ -48,7 +48,7 @@ GH/29.09.00 - calculate dr2 for dmt input in function inp_debtemp
 
 /********************************************************************/
 
-int inp_rdbul_nd (struct cryst_str **p_bulk_par, 
+int inp_rdbul_nd (struct cryst_str **p_bulk_par,
                   struct phs_str **p_phs_shifts,
                   char *filename)
 /*********************************************************************
@@ -56,15 +56,15 @@ int inp_rdbul_nd (struct cryst_str **p_bulk_par,
 
   DESIGN
 
-  Letters 'e' - 'k' are reserved as identifiers for parameter input 
+  Letters 'e' - 'k' are reserved as identifiers for parameter input
   through function inp_rdpar
 
   currently recognized identifier:
-  
+
   'a1','a2','a3': lattice vectors of bulk unit cell
   'b1','b2': superstructure unit cell.
   'c': comment
-  
+
   'm1','m2': superstructure matrix.
   'pb': postion and type of bulk atoms.
   'vi','vr': imag. and real part of optical potential.
@@ -84,7 +84,7 @@ int inp_rdbul_nd (struct cryst_str **p_bulk_par,
 FILE *inp_stream;
 
 /* input buffers */
-char linebuffer[STRSZ];  
+char linebuffer[STRSZ];
 char phaseinp[STRSZ];
 char whatnext[STRSZ];
 
@@ -100,7 +100,7 @@ real faux;                    /* dummy variable */
 real a1[4], a2[4], a3[4];     /* vectors: 1=x, 2=y, 3=z, 0 is not used */
 real vaux[4];                 /* dummy vector */
 
-struct cryst_str *bulk_par;   /* use *bulk_par instead of the pointer 
+struct cryst_str *bulk_par;   /* use *bulk_par instead of the pointer
                                  p_bulk_par */
 
 struct atom_str atom_aux;     /* used for sorting atoms */
@@ -112,8 +112,8 @@ struct atom_str * atoms_rd;   /* this vector of structure atom_str is
 /********************************************************************
   If bulk_par or phs_shifts is NULL: allocate memory and copy back to;
 *********************************************************************/
- if (*p_bulk_par == NULL) 
-   bulk_par = *p_bulk_par = 
+ if (*p_bulk_par == NULL)
+   bulk_par = *p_bulk_par =
                 (struct cryst_str *)malloc( sizeof(struct cryst_str) );
 
 /********************************************************************
@@ -158,7 +158,7 @@ struct atom_str * atoms_rd;   /* this vector of structure atom_str is
 /********************************************************************
   Open and Read input file
 ********************************************************************/
- if( (inp_stream = fopen(filename, "r")) == NULL) 
+ if( (inp_stream = fopen(filename, "r")) == NULL)
  {
 #ifdef ERROR
    fprintf(STDERR,
@@ -169,12 +169,12 @@ struct atom_str * atoms_rd;   /* this vector of structure atom_str is
 #else
   return(-1);
 #endif
- } 
+ }
 
 #ifdef CONTROL
  fprintf(STDCTR,"(inp_rdbul): Reading file \"%s\"\n",filename);
 #endif
- while ( fgets(linebuffer, STRSZ, inp_stream) != NULL) 
+ while ( fgets(linebuffer, STRSZ, inp_stream) != NULL)
  {
 #ifdef CONTROL_X
    fprintf(STDCTR,"%s", linebuffer);
@@ -184,13 +184,13 @@ struct atom_str * atoms_rd;   /* this vector of structure atom_str is
    switch( *(linebuffer+i_str) )
    {
      case ('a'): case ('A'):
-   /*********************************** 
+   /***********************************
      input of bulk unit cell parameters
    ***********************************/
      {
        switch( *(linebuffer+i_str+1) )
        {
-         case('1'): 
+         case('1'):
          {
 #ifdef REAL_IS_DOUBLE
            if( sscanf(linebuffer+i_str+3," %lf %lf %lf", a1+1, a1+2, a1+3) < 2)
@@ -200,7 +200,7 @@ struct atom_str * atoms_rd;   /* this vector of structure atom_str is
 #endif
            {
 #ifdef ERROR
-             fprintf(STDERR, 
+             fprintf(STDERR,
                "*** error (inp_rdbul): need at least x/y coordinates of a1\n");
 #endif
 #ifdef EXIT_ON_ERROR
@@ -210,10 +210,10 @@ struct atom_str * atoms_rd;   /* this vector of structure atom_str is
 #endif
            }
            for(i=1; i<=3; i++) a1[i] /= BOHR;
-           break; 
+           break;
          } /* a1 */
 
-         case('2'): 
+         case('2'):
          {
 #ifdef REAL_IS_DOUBLE
            if( sscanf(linebuffer+i_str+3," %lf %lf %lf", a2+1, a2+2, a2+3) < 2)
@@ -221,9 +221,9 @@ struct atom_str * atoms_rd;   /* this vector of structure atom_str is
 #ifdef REAL_IS_FLOAT
            if( sscanf(linebuffer+i_str+3," %f %f %f", a2+1, a2+2, a2+3) < 2)
 #endif
-           { 
+           {
 #ifdef ERROR
-             fprintf(STDERR, 
+             fprintf(STDERR,
                "*** error (inp_rdbul): need at least x/y coordinates of a2\n");
 #endif
 #ifdef EXIT_ON_ERROR
@@ -233,10 +233,10 @@ struct atom_str * atoms_rd;   /* this vector of structure atom_str is
 #endif
            }
            for(i=1; i<=3; i++) a2[i] /= BOHR;
-           break; 
+           break;
          } /* a2 */
 
-         case('3'): 
+         case('3'):
          {
 #ifdef REAL_IS_DOUBLE
            sscanf(linebuffer+i_str+3 ," %lf %lf %lf", a3+1, a3+2, a3+3);
@@ -245,7 +245,7 @@ struct atom_str * atoms_rd;   /* this vector of structure atom_str is
            sscanf(linebuffer+i_str+3 ," %f %f %f", a3+1, a3+2, a3+3);
 #endif
            for(i=1; i<=3; i++) a3[i] /= BOHR;
-           break; 
+           break;
          } /* a3 */
        }
        break;
@@ -261,7 +261,7 @@ struct atom_str * atoms_rd;   /* this vector of structure atom_str is
          case('1'):
          {
 #ifdef REAL_IS_DOUBLE
-           if( sscanf(linebuffer+i_str+3," %lf %lf", 
+           if( sscanf(linebuffer+i_str+3," %lf %lf",
                (bulk_par->b)+1, (bulk_par->b)+3 ) < 2)
 #endif
 #ifdef REAL_IS_FLOAT
@@ -312,21 +312,21 @@ struct atom_str * atoms_rd;   /* this vector of structure atom_str is
      } /* case 'b' */
 
      case ('c'): case ('C'):
-   /*********************************** 
+   /***********************************
      input of comments to be stored
    ***********************************/
      {
-       bulk_par->comments = ( char * * ) realloc( 
-                           bulk_par->comments, (i_com+2) * sizeof(char *) ); 
+       bulk_par->comments = ( char * * ) realloc(
+                           bulk_par->comments, (i_com+2) * sizeof(char *) );
 
        *(bulk_par->comments + i_com) = (char *)calloc(
-            strlen(filename) + strlen(linebuffer) + 2 - i_str, 
+            strlen(filename) + strlen(linebuffer) + 2 - i_str,
             sizeof(char));
        *(bulk_par->comments + i_com+1) = NULL;
 
        sprintf(*(bulk_par->comments + i_com), "(%s): %s",
                filename, linebuffer+i_str+2);
-       
+
        i_com ++;
        break;
      } /* case 'c' */
@@ -341,21 +341,21 @@ struct atom_str * atoms_rd;   /* this vector of structure atom_str is
        {
          case('1'): {
 #ifdef REAL_IS_DOUBLE
-           sscanf(linebuffer+i_str+3 ," %lf %lf", 
+           sscanf(linebuffer+i_str+3 ," %lf %lf",
                   bulk_par->m_recip+1, bulk_par->m_recip+2);
 #endif
 #ifdef REAL_IS_FLOAT
-           sscanf(linebuffer+i_str+3 ," %f %f", 
+           sscanf(linebuffer+i_str+3 ," %f %f",
                   bulk_par->m_recip+1, bulk_par->m_recip+2);
 #endif
            break; }
          case('2'): {
 #ifdef REAL_IS_DOUBLE
-           sscanf(linebuffer+i_str+3 ," %lf %lf", 
+           sscanf(linebuffer+i_str+3 ," %lf %lf",
                   bulk_par->m_recip+3, bulk_par->m_recip+4);
 #endif
 #ifdef REAL_IS_FLOAT
-           sscanf(linebuffer+i_str+3 ," %f %f", 
+           sscanf(linebuffer+i_str+3 ," %f %f",
                   bulk_par->m_recip+3, bulk_par->m_recip+4);
 #endif
            break; }
@@ -364,7 +364,7 @@ struct atom_str * atoms_rd;   /* this vector of structure atom_str is
      } /* case 'm' */
 
      case ('p'): case ('P'):
-   /*********************************** 
+   /***********************************
      input of atom positions and types
      for bulk through 'pb':
    ***********************************/
@@ -382,7 +382,7 @@ struct atom_str * atoms_rd;   /* this vector of structure atom_str is
          break;
        }
 
-       atoms_rd = ( struct atom_str *) realloc( 
+       atoms_rd = ( struct atom_str *) realloc(
                    atoms_rd, (i_atoms+2) * sizeof(struct atom_str) );
 
 #ifdef REAL_IS_DOUBLE
@@ -391,22 +391,22 @@ struct atom_str * atoms_rd;   /* this vector of structure atom_str is
 #ifdef REAL_IS_FLOAT
        iaux = sscanf(linebuffer+i_str+3 ," %s %f %f %f %s %f %f %f",
 #endif
-              phaseinp, 
-              atoms_rd[i_atoms].pos+1, 
-              atoms_rd[i_atoms].pos+2, 
+              phaseinp,
+              atoms_rd[i_atoms].pos+1,
+              atoms_rd[i_atoms].pos+2,
               atoms_rd[i_atoms].pos+3,
               whatnext, vaux+1, vaux+2, vaux+3);
 
        for(i=1; i<=3; i++) atoms_rd[i_atoms].pos[i] /= BOHR;
-       
+
      /**********************************
        Input of phaseshifts and displacements due to thermal vibrations:
 
        Eventually, the vector vaux will contain
 
          vaux[0] = <dr^2> = <dx^2> + <dy^2> + <dz^2>;
-         vaux[1] = sqrt(<dx^2>), 
-         vaux[2] = sqrt(<dy^2>), 
+         vaux[1] = sqrt(<dx^2>),
+         vaux[2] = sqrt(<dy^2>),
          vaux[3] = sqrt(<dz^2>),
 
        In the case of isotropic vibrations
@@ -428,7 +428,7 @@ struct atom_str * atoms_rd;   /* this vector of structure atom_str is
              vaux[0] *= vaux[0];
            }
 
-     /* 
+     /*
         Input of root mean square displacements for each direction:
         use isotropic average for diagonal t matrix
      */
@@ -440,7 +440,7 @@ struct atom_str * atoms_rd;   /* this vector of structure atom_str is
              vaux[0] = SQUARE(vaux[1]) + SQUARE(vaux[2]) + SQUARE(vaux[3]);
            }
 
-     /* 
+     /*
         Input of root mean square displacements for each direction:
         no average for non-diagonal t matrix.
      */
@@ -452,15 +452,15 @@ struct atom_str * atoms_rd;   /* this vector of structure atom_str is
              vaux[0] = SQUARE(vaux[1]) + SQUARE(vaux[2]) + SQUARE(vaux[3]);
            }
 
-     /* 
+     /*
         Input of Debye temperature, atomic mass and temperature:
           vaux[1] = Debye temperature
           vaux[2] = atomic mass
-          vaux[3] = temperature (has to be specified only for the first atom; 
+          vaux[3] = temperature (has to be specified only for the first atom;
                     if not specified, DEF_TEMP K is used)
 
           <r^2> is calculated in inp_debtemp
-        
+
      */
          else if( ( !strncmp(whatnext, "dmt", 3) ) && (iaux >= 7) )
            {
@@ -482,7 +482,7 @@ struct atom_str * atoms_rd;   /* this vector of structure atom_str is
 */
 
 #ifdef CONTROL_X
-             fprintf(STDCTR, "(inp_rdbul): temp = %.1f dr = %.3f\n", 
+             fprintf(STDCTR, "(inp_rdbul): temp = %.1f dr = %.3f\n",
              bulk_par->temp, vaux[1] * SQRT3*BOHR );
 #endif
            }
@@ -500,8 +500,8 @@ struct atom_str * atoms_rd;   /* this vector of structure atom_str is
        }
 
      /* input of atomic phase shifts */
-       atoms_rd[i_atoms].type = inp_phase_nd(phaseinp, vaux, 
-                                            atoms_rd[i_atoms].t_type, 
+       atoms_rd[i_atoms].type = inp_phase_nd(phaseinp, vaux,
+                                            atoms_rd[i_atoms].t_type,
                                             p_phs_shifts);
        bulk_par->ntypes = MAX(atoms_rd[i_atoms].type+1, bulk_par->ntypes);
 
@@ -510,7 +510,7 @@ struct atom_str * atoms_rd;   /* this vector of structure atom_str is
      } /* case 'p' */
 
      case ('v'): case ('V'):
-   /*********************************** 
+   /***********************************
      input of optical potentials
    ***********************************/
      {
@@ -531,7 +531,7 @@ struct atom_str * atoms_rd;   /* this vector of structure atom_str is
 #ifdef WARNING
              fprintf(STDWAR, "* warning (inp_rdbul):");
              fprintf(STDWAR,
-               "Vi must be positive, use the negative value of input %.1f\n", 
+               "Vi must be positive, use the negative value of input %.1f\n",
                bulk_par->vi*HART);
 #endif
            }
@@ -562,22 +562,22 @@ struct atom_str * atoms_rd;   /* this vector of structure atom_str is
      } /* case 'v' */
 
    /***********************************
-     comments not to be stored and 
+     comments not to be stored and
      new line characters
    ***********************************/
-     case ('#'): case ('\n'): case('\r'): 
+     case ('#'): case ('\n'): case('\r'):
    /***********************************
      identifiers used in inp_rdpar
    ***********************************/
-     case ('e'): case ('E'): 
-     case ('f'): case ('F'): 
-     case ('i'): case ('I'): 
-     case ('l'): case ('L'): 
+     case ('e'): case ('E'):
+     case ('f'): case ('F'):
+     case ('i'): case ('I'):
+     case ('l'): case ('L'):
      { break; }
 
-     default: 
+     default:
    /***********************************
-     default: print warning for not 
+     default: print warning for not
               recognized key words
    ***********************************/
      {
@@ -586,13 +586,13 @@ struct atom_str * atoms_rd;   /* this vector of structure atom_str is
   "* warning (inp_rdbul): could not interpret line \n\t%s\t(in file \"%s\")\n",
        linebuffer, filename);
 #endif
-       break; 
+       break;
      }
    } /* switch linebuffer */
  }   /* while: read input file */
- 
+
  close(inp_stream);
-  
+
 /************************************************************************
  END OF INPUT
  Check the number of bulk atoms. Exit if zero
@@ -601,7 +601,7 @@ struct atom_str * atoms_rd;   /* this vector of structure atom_str is
  {
 #ifdef ERROR
    fprintf(STDERR,
-   "*** error (inp_rdbul): could not find any bulk atoms (i_atoms = %d)\n", 
+   "*** error (inp_rdbul): could not find any bulk atoms (i_atoms = %d)\n",
    i_atoms);
 #endif
 #ifdef EXIT_ON_ERROR
@@ -612,10 +612,10 @@ struct atom_str * atoms_rd;   /* this vector of structure atom_str is
  }
 
 /************************************************************************
- Make shure that the basis vectors for the bulk unit cell specified 
+ Make shure that the basis vectors for the bulk unit cell specified
  through a1, a2, a3 form a right-handed system with a3 pointing into
  the crystal (i.e. a3[3] < 0).
- If not: change the directions and the order of a1, a2, a3. 
+ If not: change the directions and the order of a1, a2, a3.
 
  Store a1 and a2 and their inverse values in bul_par.a / bul_par.a_1
  2x2 - matrices are stored as:  m[1]  m[2]
@@ -638,9 +638,9 @@ struct atom_str * atoms_rd;   /* this vector of structure atom_str is
  }
 
 /* check the direction of a3 */
- if( a3[3] > 0.0 ) a3[3] = - a3[3]; 
+ if( a3[3] > 0.0 ) a3[3] = - a3[3];
 
-/* 
+/*
    Check the angle between a1 and a2 (1: must be >= pi/2, i.e. a1*a2 < 0).
    if not: take a1 and -a2 as basic vectors and modify transformation matrix.
 */
@@ -650,8 +650,8 @@ struct atom_str * atoms_rd;   /* this vector of structure atom_str is
    bulk_par->m_trans[2] = - bulk_par->m_trans[2];
    bulk_par->m_trans[4] = - bulk_par->m_trans[4];
  }
-/* 
-   Check the angle between a1 and a2 (2: must be < pi, i.e. a1*a2 > 0) 
+/*
+   Check the angle between a1 and a2 (2: must be < pi, i.e. a1*a2 > 0)
    if not: exchange a1 and a2 and modify transformation matrix.
 */
  if( (a1[1] * a2[2] - a1[2] * a2[1]) < 0.0)
@@ -659,11 +659,11 @@ struct atom_str * atoms_rd;   /* this vector of structure atom_str is
    faux = a2[1]; a2[1] = a1[1]; a1[1] = faux;
    faux = a2[2]; a2[2] = a1[2]; a1[2] = faux;
 
-   faux = bulk_par->m_trans[1]; 
+   faux = bulk_par->m_trans[1];
    bulk_par->m_trans[1] = bulk_par->m_trans[2];
    bulk_par->m_trans[2] = faux;
 
-   faux = bulk_par->m_trans[3]; 
+   faux = bulk_par->m_trans[3];
    bulk_par->m_trans[3] = bulk_par->m_trans[4];
    bulk_par->m_trans[4] = faux;
  }
@@ -684,7 +684,7 @@ struct atom_str * atoms_rd;   /* this vector of structure atom_str is
 
 /************************************************************************
  Superstructure:
- 
+
  - The superstructure matrix in the input files is defined with respect to
    the unmodified unit cell vectors a:
    b = m_super * a => b = m_super * m_trans * a_prg
@@ -695,11 +695,11 @@ struct atom_str * atoms_rd;   /* this vector of structure atom_str is
 
  if( R_hypot(bulk_par->b[1], bulk_par->b[3]) < GEO_TOLERANCE)
  /*
-   There was no input of superstructure lattice vectors 
+   There was no input of superstructure lattice vectors
    => use matrix to calculate them.
  */
  {
-   bulk_par->m_super[1] = bulk_par->m_recip[1] * bulk_par->m_trans[1] + 
+   bulk_par->m_super[1] = bulk_par->m_recip[1] * bulk_par->m_trans[1] +
                           bulk_par->m_recip[2] * bulk_par->m_trans[3];
    bulk_par->m_super[2] = bulk_par->m_recip[1] * bulk_par->m_trans[2] +
                           bulk_par->m_recip[2] * bulk_par->m_trans[4];
@@ -707,12 +707,12 @@ struct atom_str * atoms_rd;   /* this vector of structure atom_str is
                           bulk_par->m_recip[4] * bulk_par->m_trans[3];
    bulk_par->m_super[4] = bulk_par->m_recip[3] * bulk_par->m_trans[2] +
                           bulk_par->m_recip[4] * bulk_par->m_trans[4];
-/* 
-   Calculate superstructure lattice vectors b_t = m*a_t 
+/*
+   Calculate superstructure lattice vectors b_t = m*a_t
      b1x = b[1], b2x = b[2]
      b1y = b[3], b2y = b[4]
 */
- 
+
    bulk_par->b[1] = bulk_par->m_super[1] * bulk_par->a[1] +
                     bulk_par->m_super[2] * bulk_par->a[2];
    bulk_par->b[3] = bulk_par->m_super[1] * bulk_par->a[3] +
@@ -746,14 +746,14 @@ struct atom_str * atoms_rd;   /* this vector of structure atom_str is
    Check the matrix for noninteger elements
 */
 
- if( 
+ if(
   (R_fabs(bulk_par->m_super[1]-R_nint(bulk_par->m_super[1])) > GEO_TOLERANCE) ||
   (R_fabs(bulk_par->m_super[2]-R_nint(bulk_par->m_super[2])) > GEO_TOLERANCE) ||
   (R_fabs(bulk_par->m_super[3]-R_nint(bulk_par->m_super[3])) > GEO_TOLERANCE) ||
   (R_fabs(bulk_par->m_super[4]-R_nint(bulk_par->m_super[4])) > GEO_TOLERANCE) )
  {
 #ifdef ERROR
-  fprintf(STDERR, 
+  fprintf(STDERR,
           "*** error (inp_rdbul): superstructure is not commensurate \n");
 #endif
 #ifdef EXIT_ON_ERROR
@@ -782,16 +782,16 @@ struct atom_str * atoms_rd;   /* this vector of structure atom_str is
  }
 
 #ifdef CONTROL_X
-   fprintf(STDCTR,"M_super: %5.2f %5.2f\n", 
+   fprintf(STDCTR,"M_super: %5.2f %5.2f\n",
                    bulk_par->m_super[1], bulk_par->m_super[2]);
-   fprintf(STDCTR,"         %5.2f %5.2f\n", 
+   fprintf(STDCTR,"         %5.2f %5.2f\n",
                    bulk_par->m_super[3], bulk_par->m_super[4]);
    fprintf(STDCTR,"b1: %5.2f %5.2f\n", bulk_par->b[1]*BOHR,bulk_par->b[3]*BOHR);
    fprintf(STDCTR,"b2: %5.2f %5.2f\n", bulk_par->b[2]*BOHR,bulk_par->b[4]*BOHR);
 #endif
 
-/* 
-   area of superstructure unit cell in multiples of the (1x1) unit cell 
+/*
+   area of superstructure unit cell in multiples of the (1x1) unit cell
    = det(m_super)
 */
  faux = bulk_par->m_super[1] * bulk_par->m_super[4] -
@@ -807,17 +807,17 @@ struct atom_str * atoms_rd;   /* this vector of structure atom_str is
  bulk_par->m_recip[4] = +faux * bulk_par->m_super[1];
 
 #ifdef CONTROL_X
-   fprintf(STDCTR,"M_recip: %5.2f %5.2f\n", 
+   fprintf(STDCTR,"M_recip: %5.2f %5.2f\n",
                    bulk_par->m_recip[1], bulk_par->m_recip[2]);
-   fprintf(STDCTR,"         %5.2f %5.2f\n", 
+   fprintf(STDCTR,"         %5.2f %5.2f\n",
                    bulk_par->m_recip[3], bulk_par->m_recip[4]);
    fprintf(STDCTR,"area_sup: %5.2f\n", bulk_par->rel_area_sup);
 #endif
 
-/* 
+/*
   Calculate reciprocal superstructure vectors: b_1 = 2PI * b^-1
     b*1x = b_1[1], b*1y = b_1[2]
-    b*2x = b_1[3], b*2y = b_1[4] 
+    b*2x = b_1[3], b*2y = b_1[4]
 */
 
  faux = 2*PI/(bulk_par->b[1]*bulk_par->b[4] - bulk_par->b[2]*bulk_par->b[3]);
@@ -828,7 +828,7 @@ struct atom_str * atoms_rd;   /* this vector of structure atom_str is
  bulk_par->b_1[4] = +faux * bulk_par->b[1];
 
 /************************************************************************
- Move all atomic positions specified in atoms.pos into the 2-dim bulk unit 
+ Move all atomic positions specified in atoms.pos into the 2-dim bulk unit
  cell specified through a1 and a2:
 
  The vector x = A_1*pos must only have components between 0 and 1.
@@ -837,11 +837,11 @@ struct atom_str * atoms_rd;   /* this vector of structure atom_str is
 
  for(i = 0; i < i_atoms; i ++ )
  {
-   vaux[1] = (atoms_rd[i].pos[1] * bulk_par->a_1[1] + 
+   vaux[1] = (atoms_rd[i].pos[1] * bulk_par->a_1[1] +
               atoms_rd[i].pos[2] * bulk_par->a_1[2]) / (2. * PI);
-   vaux[2] = (atoms_rd[i].pos[1] * bulk_par->a_1[3] + 
+   vaux[2] = (atoms_rd[i].pos[1] * bulk_par->a_1[3] +
               atoms_rd[i].pos[2] * bulk_par->a_1[4]) / (2. * PI);
-   
+
    if( vaux[1] < 0.) iaux = (int) vaux[1] - 1;
    else              iaux = (int) vaux[1];
    {
@@ -855,9 +855,9 @@ struct atom_str * atoms_rd;   /* this vector of structure atom_str is
      atoms_rd[i].pos[1] -= iaux*bulk_par->a[2];
      atoms_rd[i].pos[2] -= iaux*bulk_par->a[4];
    }
- } 
+ }
 /************************************************************************
-  Sort the atoms specified through atoms.pos according to their z 
+  Sort the atoms specified through atoms.pos according to their z
   coordinates (largest z first).
 *************************************************************************/
 
@@ -887,9 +887,9 @@ struct atom_str * atoms_rd;   /* this vector of structure atom_str is
       fprintf(STDWAR,
       "                       bulk unit cell and will not be considered:\n");
       for(j = i; j < i_atoms; j ++)
-        fprintf(STDWAR," %s \t %7.4f  %7.4f  %7.4f\n", phaseinp, 
-                        atoms_rd[j].pos[1]*BOHR, 
-                        atoms_rd[j].pos[2]*BOHR, 
+        fprintf(STDWAR," %s \t %7.4f  %7.4f  %7.4f\n", phaseinp,
+                        atoms_rd[j].pos[1]*BOHR,
+                        atoms_rd[j].pos[2]*BOHR,
                         atoms_rd[j].pos[3]*BOHR);
 #endif
       break;
@@ -898,7 +898,7 @@ struct atom_str * atoms_rd;   /* this vector of structure atom_str is
  i_atoms = i;
  atoms_rd[i_atoms].type = I_END_OF_LIST;
  bulk_par->natoms = i_atoms;
- 
+
 /************************************************************************
  - Distribute the atoms to layers.
  - Find the minimum interlayer distance.
@@ -911,14 +911,14 @@ struct atom_str * atoms_rd;   /* this vector of structure atom_str is
  bulk_par->dmin = R_fabs(bulk_par->layers[0].vec_from_last[3]);
  for(i=0; i < bulk_par->nlayers - 1 /* origin is not relevant */; i++)
  {
-   bulk_par->dmin = 
+   bulk_par->dmin =
             MIN(bulk_par->dmin, R_fabs(bulk_par->layers[i].vec_to_next[3]) );
  }
 
 #ifdef CONTROL_X
  printf("***********************(inp_rdbul)***********************\n");
  printf("potentials:\n");
- printf("\tvr: %7.4f eV  vi: %7.4f eV\n", 
+ printf("\tvr: %7.4f eV  vi: %7.4f eV\n",
         (bulk_par->vr)*HART, (bulk_par->vi)*HART);
 
  printf("\nbulk unit cell:\n");
@@ -926,15 +926,15 @@ struct atom_str * atoms_rd;   /* this vector of structure atom_str is
  printf("\ta2:  (%7.4f  %7.4f  %7.4f) A\n", a2[1]*BOHR, a2[2]*BOHR, a2[3]*BOHR);
  printf("\ta3:  (%7.4f  %7.4f  %7.4f) A\n", a3[1]*BOHR, a3[2]*BOHR, a3[3]*BOHR);
  printf("\n     reciprocal lattice: \n");
- printf("\ta1*: (%7.4f  %7.4f) A^-1\n", 
+ printf("\ta1*: (%7.4f  %7.4f) A^-1\n",
          bulk_par->a_1[1]/BOHR, bulk_par->a_1[2]/BOHR);
- printf("\ta2*: (%7.4f  %7.4f) A^-1\n", 
+ printf("\ta2*: (%7.4f  %7.4f) A^-1\n",
          bulk_par->a_1[3]/BOHR, bulk_par->a_1[4]/BOHR);
  printf("\nsuperstructure unit cell:\n");
- printf("\t(%5.2f %5.2f)\tb1:  (%7.4f  %7.4f) A\n", 
+ printf("\t(%5.2f %5.2f)\tb1:  (%7.4f  %7.4f) A\n",
          bulk_par->m_super[1], bulk_par->m_super[2],
          bulk_par->b[1]*BOHR, bulk_par->b[3]*BOHR);
- printf("\t(%5.2f %5.2f)\tb2:  (%7.4f  %7.4f) A\n", 
+ printf("\t(%5.2f %5.2f)\tb2:  (%7.4f  %7.4f) A\n",
          bulk_par->m_super[3], bulk_par->m_super[4],
          bulk_par->b[2]*BOHR, bulk_par->b[4]*BOHR);
 
@@ -947,12 +947,12 @@ struct atom_str * atoms_rd;   /* this vector of structure atom_str is
          bulk_par->b_1[3]/BOHR, bulk_par->b_1[4]/BOHR);
 
  printf("\npositions(bulk):\n");
- 
+
  for(i=0; i < bulk_par->nlayers; i++)
  {
-   printf("\n->\tvec: (%7.4f  %7.4f  %7.4f) A\n\n", 
+   printf("\n->\tvec: (%7.4f  %7.4f  %7.4f) A\n\n",
            bulk_par->layers[i].vec_from_last[1]*BOHR,
-           bulk_par->layers[i].vec_from_last[2]*BOHR, 
+           bulk_par->layers[i].vec_from_last[2]*BOHR,
            bulk_par->layers[i].vec_from_last[3]*BOHR );
 
    if( bulk_par->layers[i].periodic == 0 ) printf("np:");
@@ -960,18 +960,18 @@ struct atom_str * atoms_rd;   /* this vector of structure atom_str is
 
    for( j = 0; j < bulk_par->layers[i].natoms; j ++)
    {
-     printf("\tpos: (%7.4f  %7.4f  %7.4f) A\tlayer: %d type: %d atom: %d\n", 
-             bulk_par->layers[i].atoms[j].pos[1]*BOHR, 
-             bulk_par->layers[i].atoms[j].pos[2]*BOHR, 
+     printf("\tpos: (%7.4f  %7.4f  %7.4f) A\tlayer: %d type: %d atom: %d\n",
+             bulk_par->layers[i].atoms[j].pos[1]*BOHR,
+             bulk_par->layers[i].atoms[j].pos[2]*BOHR,
              bulk_par->layers[i].atoms[j].pos[3]*BOHR,
-             bulk_par->layers[i].atoms[j].layer, 
+             bulk_par->layers[i].atoms[j].layer,
              bulk_par->layers[i].atoms[j].type, j);
    }
  }
 
- printf("\n->\tvec: (%7.4f  %7.4f  %7.4f) A\n\n", 
+ printf("\n->\tvec: (%7.4f  %7.4f  %7.4f) A\n\n",
           bulk_par->layers[bulk_par->nlayers-1].vec_to_next[1]*BOHR,
-          bulk_par->layers[bulk_par->nlayers-1].vec_to_next[2]*BOHR, 
+          bulk_par->layers[bulk_par->nlayers-1].vec_to_next[2]*BOHR,
           bulk_par->layers[bulk_par->nlayers-1].vec_to_next[3]*BOHR );
 
  printf("M_trans:\n");
@@ -985,13 +985,13 @@ struct atom_str * atoms_rd;   /* this vector of structure atom_str is
  }
 
  fprintf(STDCTR,"phase shifts:\n");
- fprintf(STDCTR,"\t%d different sets of phase shifts used:\n", 
+ fprintf(STDCTR,"\t%d different sets of phase shifts used:\n",
          bulk_par->ntypes);
  for(i_c = 0; i_c < bulk_par->ntypes; i_c ++)
    fprintf(STDCTR,"\t(%d) %s (%d energies, lmax = %d)\tV<dr^2>_T = %.3f A^2\n",
            i_c,
-           (*(p_phs_shifts)+i_c)->input_file, 
-           (*(p_phs_shifts)+i_c)->neng, 
+           (*(p_phs_shifts)+i_c)->input_file,
+           (*(p_phs_shifts)+i_c)->neng,
            (*(p_phs_shifts)+i_c)->lmax,
            R_sqrt( (*(p_phs_shifts)+i_c)->dr[0] ) *BOHR);
 

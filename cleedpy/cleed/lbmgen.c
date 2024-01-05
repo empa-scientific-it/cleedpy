@@ -1,6 +1,6 @@
 /*********************************************************************
-  GH/02.09.97 
-  WB/27.02.98 
+  GH/02.09.97
+  WB/27.02.98
   file contains function:
 
   bm_gen
@@ -34,35 +34,35 @@ WB/27.02.98 - change eng_max to eng_max - vr when calculating k_max
 #define K_TOLERANCE 0.0001                        /* tolerance of k_par */
 #endif
 
-int bm_gen(struct beam_str ** p_beams, struct cryst_str *c_par, 
+int bm_gen(struct beam_str ** p_beams, struct cryst_str *c_par,
            struct var_str *v_par, real eng_max)
 
 /************************************************************************
 
  Set up a list of all beams used within the energy loop.
- 
+
  INPUT:
 
-  struct beam_str ** p_beams - (output) pointer to the list of beams to be 
+  struct beam_str ** p_beams - (output) pointer to the list of beams to be
                 included at the current energy.
   struct cryst_str *c_par - all necessary structural parameters (for details
                 see "leed_def.h").
-  struct var_str *v_par - all necessary parameters that change during the 
+  struct var_str *v_par - all necessary parameters that change during the
                 energy loop (for details see "leed_def.h").
-                used: 
+                used:
                 real vr - real part of optical potential
                 real theta, phi - incident k-vector.
-                real epsilon - parameter determining the cutoff radius for 
-                k_par. (maximum amplitude which can propagate between two 
+                real epsilon - parameter determining the cutoff radius for
+                k_par. (maximum amplitude which can propagate between two
                 layers).
   real eng_max - maximum energy in the energy loop (in Hartree).
 
  DESIGN:
- 
-  The order of the output list is: 
+
+  The order of the output list is:
     - increasing modulus of momentum transfer k_par (lowest k_par first)
     - increasing 1st index (lowest 1st index first for the same k_par)
-    - increasing 2nd index (lowest 2nd index first for the same 1st index 
+    - increasing 2nd index (lowest 2nd index first for the same 1st index
       and k_par)
 
  RETURN VALUE:
@@ -162,14 +162,14 @@ struct beam_str *bm_off;
 #endif
 
 /**********************************************************************
-  Determine number of beam sets (n_set) 
+  Determine number of beam sets (n_set)
   and offsets (store in bm_off)
-  Each beam set is represented exactly once within the first BZ 
-  (i.e. within the diamond: (0,0)(1,0)(0,1)(1,1)) 
+  Each beam set is represented exactly once within the first BZ
+  (i.e. within the diamond: (0,0)(1,0)(0,1)(1,1))
   => raster through the first BZ and store all fractional
      order beams in the array bm_off.
 **********************************************************************/
- 
+
  n_set = (int) R_nint(c_par->rel_area_sup);
  bm_off = (struct beam_str *)calloc(n_set, sizeof(struct beam_str));
 
@@ -179,7 +179,7 @@ struct beam_str *bm_off;
  (bm_off+0)->k_r[2] = 0.;
 
 #ifdef CONTROL_X
-     fprintf(STDCTR,"(bm_gen): set %d: %5.2f %5.2f (%5.2f %5.2f)\n", 
+     fprintf(STDCTR,"(bm_gen): set %d: %5.2f %5.2f (%5.2f %5.2f)\n",
              0, (bm_off)->ind_1, (bm_off)->ind_2,
              (bm_off)->k_r[1], (bm_off)->k_r[2]);
 #endif
@@ -189,7 +189,7 @@ struct beam_str *bm_off;
  {
    k_x = n1*m11 + n2*m21;
    k_y = n1*m12 + n2*m22;
-   if( (k_x >= 0.) && (k_x + K_TOLERANCE < 1.) && 
+   if( (k_x >= 0.) && (k_x + K_TOLERANCE < 1.) &&
        (k_y >= 0.) && (k_y + K_TOLERANCE < 1.) &&
        (R_hypot(k_x, k_y) > K_TOLERANCE)          )
    {
@@ -201,7 +201,7 @@ struct beam_str *bm_off;
      i_set ++;
    }
  } /* for n1,n2 */
- 
+
 #ifdef WARNING
  if( i_set != n_set)
  {
@@ -215,8 +215,8 @@ struct beam_str *bm_off;
   Find the beams within the radius defined by k_max
   - determine boundaries for beam indices n1 and n2
   - loop over beam indices.
-*********************************************************/ 
- 
+*********************************************************/
+
 /* a1 = length of g1 */
  a1 = R_hypot(g1_x, g1_y);
 /* a2 = length of g2 */
@@ -247,14 +247,14 @@ struct beam_str *bm_off;
   Loop over beam sets
 **********************************************************************/
 
- for(i_set = 0, i_beams = 0, offset = 0; 
-     i_set < n_set; 
+ for(i_set = 0, i_beams = 0, offset = 0;
+     i_set < n_set;
      i_set ++, offset = i_beams)
  {
   /*********************************************************
     Find the beams within the radius defined by k_max
     (loop over beam indices)
-  *********************************************************/ 
+  *********************************************************/
    for(n1 = -n1_max; n1 <= n1_max; n1 ++)
    for(n2 = -n2_max; n2 <= n2_max; n2 ++)
    {
@@ -292,9 +292,9 @@ struct beam_str *bm_off;
   /*********************************************************
     1st pass: Sort the beams according to the parallel component
     (i.e. smallest k_par first)
-  *********************************************************/ 
+  *********************************************************/
 #ifdef CONTROL
- fprintf(STDCTR,"(bm_gen): SORTING %2d beams in set %d:\n", 
+ fprintf(STDCTR,"(bm_gen): SORTING %2d beams in set %d:\n",
                 i_beams - offset, i_set);
 #endif
    for(n1 = offset; n1 < i_beams; n1 ++)
@@ -313,11 +313,11 @@ struct beam_str *bm_off;
   /*********************************************************
     2nd pass: Sort the beams according to the 1st and 2nd index
     (i.e. smallest indices first)
-  *********************************************************/ 
+  *********************************************************/
    for(n1 = offset; n1 < i_beams; n1 ++)
    {
-     for(n2 = n1+1; 
-         fabs( (beams + n2)->k_par - (beams + n1)->k_par ) < K_TOLERANCE; 
+     for(n2 = n1+1;
+         fabs( (beams + n2)->k_par - (beams + n1)->k_par ) < K_TOLERANCE;
          n2++)
      {
        if((beams + n2)->ind_1 < (beams + n1)->ind_1 )

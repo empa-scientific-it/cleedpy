@@ -1,12 +1,12 @@
 /*********************************************************************
-  GH/10.07.95 
+  GH/10.07.95
   file contains functions:
 
   ms_tmat_ij
 
    Create the matrix product of a scattering matrix for a single Bravais
-   layer "i" Tii and propagator matrix to another lattice "j" Gij used in 
-   the combined space method to compute the matrix for scattering between 
+   layer "i" Tii and propagator matrix to another lattice "j" Gij used in
+   the combined space method to compute the matrix for scattering between
    two (or more) periodic planes of scatterers.
 Changes:
 GH/01.02.95 - Creation
@@ -35,26 +35,26 @@ mat ms_tmat_ij ( mat Gij, mat Llm, mat Tii, int l_max /* arguments */ )
 /************************************************************************
 
  DESCRIPTION
- 
+
    Create the matrix product of a scattering matrix for a single Bravais
-   layer "i" Tii and propagator matrix to another lattice "j" Gij used in 
-   the combined space method to compute the matrix for scattering between 
+   layer "i" Tii and propagator matrix to another lattice "j" Gij used in
+   the combined space method to compute the matrix for scattering between
    two (or more) periodic planes of scatterers.
 
 
  INPUT:
 
    mat Gij  - (output) multiple scattering matrix in (l,m)-space.
-   mat Llm  - (input) lattice sum: 
+   mat Llm  - (input) lattice sum:
 
-              Llm =  (-1)^m * 4 PI * Ylm (cos(theta) = 0, phi = 0) * 
+              Llm =  (-1)^m * 4 PI * Ylm (cos(theta) = 0, phi = 0) *
                      * sum(R) [ H(1)l(k*|R|) * exp( i(-kin*R + m*phi(R)) ) ]
 
               (in natural order: (l,m) = (0,0); (-1,1); (0,1); (1,1); ...)
 
    mat Tii  - (input) Scattering matrix for the single periodic layer of type
               "i" (not used at the moment)
-              
+
               Tii is produced by ms_tmat_ii
 
    int l_max - max angular momentum quantum number.
@@ -73,13 +73,13 @@ mat ms_tmat_ij ( mat Gij, mat Llm, mat Tii, int l_max /* arguments */ )
    Multiply with Tii from l.h.s.
 
  FUNCTION CALLS:
-  
+
   cg    - C.G. coefficients
   mat*  - matrix library
 
  RETURN VALUE:
 
-Gij 
+Gij
 
 NULL if failed (and EXIT_ON_ERROR is not defined)
 
@@ -99,7 +99,7 @@ real sign;
 
 /*************************************************************************
  Check the input matrices Llm and Tii
- Make sure that the C.G. coefficients are available 
+ Make sure that the C.G. coefficients are available
  (by calling mk_cg_coef)
 *************************************************************************/
  if (matcheck(Llm) < 1)
@@ -154,7 +154,7 @@ real sign;
 
  -Gij(l1,m1; l2,m2) = -S[ Lij(l3,m3) * C(l1,m1,l2,m2,l3,m3)]
 
-    L(l3,m3) = lattice sum 
+    L(l3,m3) = lattice sum
              = -8 PI * i^(l+1) *
                sum(P) [ Ylm (rj-ri+P) * H(1)l(k*|rj-ri+P|) * exp( i(-kin*P)]
     C(l3,m3,l1,m1,l2,m2) = C.G. coefficients.
@@ -170,14 +170,14 @@ real sign;
      {
        for(m2 = -l2; m2 <= l2; m2 ++, off_ij ++ )
        {
-     /* 
+     /*
        Loop over l3 (inner-most loop): calculate the elements of Gij
 
         - l3_min: l3 >= |m3|, |l2-l1|.
         - Only even (l1 + l2 + l3) lead to nonzero C.G.-coefficients
           => if (l1 + l2 + l3_min) is odd, increment l3_min by 1.
           => increment l3 by 2 in the inner loop.
-        - The sign (-1)^(m2+1) is due to different definitions of C.G.C's 
+        - The sign (-1)^(m2+1) is due to different definitions of C.G.C's
           and the "-" in front of the summation.
      */
 /*
@@ -185,7 +185,7 @@ real sign;
 */
          m3 = m2 - m1;
 
-         l3_min = MAX(abs(-m3), abs(l2-l1)); 
+         l3_min = MAX(abs(-m3), abs(l2-l1));
          l3_min += (l1 + l2 + l3_min)%2;
          l3_max = l2+l1;
 
@@ -202,14 +202,14 @@ real sign;
 
            faux_r = sign*cg(l3,+m3, l2,+m2, l1,-m1);
 /*
-           printf("%2d %2d %2d %2d %2d %2d : %.5f\n", 
+           printf("%2d %2d %2d %2d %2d %2d : %.5f\n",
                    l1,m1, l2,m2, l3,m3, faux_r);
 */
            Gij->rel[off_ij] += Llm->rel[i3] * faux_r;
            Gij->iel[off_ij] += Llm->iel[i3] * faux_r;
 
          /*
-           l3 is incremented by 2 
+           l3 is incremented by 2
            => i3 is incremented by 2*(l3+1) + 2*(l3+2) = 4*l3 + 6
            sign = -sign;
          */

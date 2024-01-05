@@ -26,7 +26,7 @@ include file for SEARCH program.
 #include "nrr.h"              /* "real" numerical receipes */
 
 /*********************************************************************
- End of include file 
+ End of include file
 *********************************************************************/
 
 #endif /* DLA_H */

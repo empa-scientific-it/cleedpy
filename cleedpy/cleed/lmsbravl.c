@@ -43,7 +43,7 @@ int ms_bravl ( mat *p_Tpp, mat *p_Rpm,
 
  INPUT:
 
-   mat * p_Tpp, p_Rpm - (output) pointers to composite layer diffraction 
+   mat * p_Tpp, p_Rpm - (output) pointers to composite layer diffraction
               matrices in k-space.
               Tpp  k(+) -> k(+) and k(-) -> k(-) (transmission matrix)
               Rpm  k(-) -> k(+) and k(+) -> k(-) (reflection matrix)
@@ -109,7 +109,7 @@ static int old_l_max = I_END_OF_LIST;
 /*************************************************************************
  Preset often used values: i_type, l_max, n_beams
 *************************************************************************/
- 
+
  i_type = (layer->atoms)->type;
 
  l_max = v_par->l_max;
@@ -117,20 +117,20 @@ static int old_l_max = I_END_OF_LIST;
  for(n_beams = 0; (beams + n_beams)->k_par != F_END_OF_LIST; n_beams ++);
 
 #ifdef CONTROL
- fprintf(STDCTR,"(ms_bravl): l_max = %d, No of beams = %d, atom type = %d\n", 
+ fprintf(STDCTR,"(ms_bravl): l_max = %d, No of beams = %d, atom type = %d\n",
          l_max, n_beams, i_type);
 #endif
 
 /*************************************************************************
  Check if the current beam set was used in the previous call.
- - if not, recalculate lattice sum, scattering matrix, and spherical 
+ - if not, recalculate lattice sum, scattering matrix, and spherical
    harmonics.
  - if yes, reuse lattice sum, scattering matrix, and spherical
    harmonics and recalculate the (lm) scattering matrix only if the
    atom type has changed.
 *************************************************************************/
 
- if( (old_eng     != v_par->eng_r) || 
+ if( (old_eng     != v_par->eng_r) ||
      (old_set     != beams->set)   ||
      (old_n_beams != n_beams)      ||
      (old_l_max   != l_max)           )
@@ -144,7 +144,7 @@ static int old_l_max = I_END_OF_LIST;
    old_set = beams->set;
    old_n_beams = n_beams;
    old_l_max = l_max;
-   
+
 /* calculate lattice sum */
    Llm = ms_lsum_ii ( Llm, beams->k_r[0], beams->k_i[0], beams->k_r,
                       layer->a_lat, 2*l_max, v_par->epsilon );
@@ -159,10 +159,10 @@ static int old_l_max = I_END_OF_LIST;
 /* Yin_m: Y*(k-) for reflection matrix. */
    Yin_m = ms_yp_yxm(Yin_m, Yout);
 
-  /********************************************************************** 
-   Loop over k' (exit beams: rows of Yout): 
-    - Multiply with factor i 8 PI^2 / (|k|*A*k'_z) 
-    - i_beams is (row number - 1) and equal to the index of exit beams 
+  /**********************************************************************
+   Loop over k' (exit beams: rows of Yout):
+    - Multiply with factor i 8 PI^2 / (|k|*A*k'_z)
+    - i_beams is (row number - 1) and equal to the index of exit beams
   **********************************************************************/
 
    pref_i = 8.*PI*PI / (beams->k_r[0] * layer->rel_area);
@@ -171,11 +171,11 @@ static int old_l_max = I_END_OF_LIST;
    ptr_i = Yout->iel + 1;
    for(i_beams = 0; i_beams < Yout->rows; i_beams ++)
    {
-     cri_mul(&faux_r, &faux_i, 0., pref_i, 
+     cri_mul(&faux_r, &faux_i, 0., pref_i,
              (beams+i_beams)->Akz_r, (beams+i_beams)->Akz_i);
      for(i_c = 0; i_c < Yout->cols; i_c ++, ptr_r ++, ptr_i ++ )
      {
-       cri_mul(ptr_r, ptr_i, *ptr_r, *ptr_i, faux_r, faux_i); 
+       cri_mul(ptr_r, ptr_i, *ptr_r, *ptr_i, faux_r, faux_i);
      }
    }  /* i_beams */
 
@@ -184,7 +184,7 @@ static int old_l_max = I_END_OF_LIST;
   **********************************************************************/
    Gii = matmul(Gii, Yout, Gii);
  }
- else 
+ else
  {
   /*************************************************************************
    The current beam set was used already in the previous call: only
@@ -210,7 +210,7 @@ static int old_l_max = I_END_OF_LIST;
      Gii = matmul(Gii, Yout, Gii);
    }
  }
- 
+
  *p_Rpm = matmul(*p_Rpm, Gii, Yin_m);
  *p_Tpp = matmul(*p_Tpp, Gii, Yin_p);
 
@@ -219,7 +219,7 @@ static int old_l_max = I_END_OF_LIST;
  iaux = (*p_Tpp)->rows * (*p_Tpp)->cols;
  for(i_c = 1; i_c <= iaux; i_c += (*p_Tpp)->cols + 1)
    (*p_Tpp)->rel[i_c] += 1.;
- 
+
  return(1);
 } /* end of function ms_bravl */
 

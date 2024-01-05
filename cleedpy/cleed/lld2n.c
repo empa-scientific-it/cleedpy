@@ -1,5 +1,5 @@
 /*********************************************************************
-  GH/21.01.95 
+  GH/21.01.95
   file contains functions:
 
   ld_2n            (18.01.95)
@@ -36,7 +36,7 @@
 /*======================================================================*/
 
 mat ld_2n (   mat Rpm,
-              mat Tpp_a,  mat Tmm_a,  mat Rpm_a,  mat Rmp_a, 
+              mat Tpp_a,  mat Tmm_a,  mat Rpm_a,  mat Rmp_a,
               struct beam_str *beams, real *vec_aa )
 
 /************************************************************************
@@ -56,13 +56,13 @@ mat ld_2n (   mat Rpm,
    beam_str *beams - (input) information about beams.
                   used: k_r, k_i.
    real *vec_aa - (input) vector pointing from the origin of one layer a to
-                  the origin of the next layer a. The usual convention for 
+                  the origin of the next layer a. The usual convention for
                   vectors is used (x = 1, y = 2, z = 3).
 
  DESIGN:
 
    calculate the transmission and reflection matrices for 2, 4, 8, etc.
-   identical layers iteratively in function "ld_2lay" by applying Pendry's 
+   identical layers iteratively in function "ld_2lay" by applying Pendry's
    layer doubling scheme:
 
    T(n+1)++ =                (Tn++ P+) * (I - Rn+- P- Rn-+ P+)^(-1) * Tn++
@@ -72,10 +72,10 @@ mat ld_2n (   mat Rpm,
    R(n+1)+- = Rn+- + (Tn++ P+ Rn+- P-) * (I - Rn-+ P+ Rn+- P-)^(-1) * Tn--
 
 
-   Use the moduli of the coefficients of Tpp (< LD_TOLERANCE) as convergence 
+   Use the moduli of the coefficients of Tpp (< LD_TOLERANCE) as convergence
    criterion
 
-   
+
 
 
  RETURN VALUES:
@@ -117,12 +117,12 @@ mat Tpp, Tmm, Rmp;
        of electrons backscattered from the last layer.
      */
  {
-   ld_2lay( &Tpp, &Tmm, &Rpm, &Rmp, 
+   ld_2lay( &Tpp, &Tmm, &Rpm, &Rmp,
             Tpp, Tmm, Rpm, Rmp, Tpp, Tmm, Rpm, Rmp,
             beams, vec_aa);
 
-   abs_new = matabs(Tpp)/(Tpp->cols*Tpp->rows); 
-   
+   abs_new = matabs(Tpp)/(Tpp->cols*Tpp->rows);
+
 #ifdef CONTROL_X
    fprintf(STDCTR,
      "(ld_2n): No. of layers (i_layer) = %3d, abs_new = %.1e, tol = %.1e\n",
@@ -145,9 +145,9 @@ mat Tpp, Tmm, Rmp;
  matfree(Tpp);
  matfree(Tmm);
  matfree(Rmp);
- 
+
  return(Rpm);
 }
- 
+
 /*======================================================================*/
 /*======================================================================*/

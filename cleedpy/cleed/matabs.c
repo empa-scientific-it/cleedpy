@@ -1,15 +1,15 @@
 /*********************************************************************
   GH/18.01.95
-  
+
   real matabs(mat M)
-  
+
   Calculate the modulus of a matrix (sum of moduli of elements)
 
   Changes:
   GH/18.01.95 - diagonal matrices are not implemented!
 
 *********************************************************************/
-#include <math.h>  
+#include <math.h>
 #include <stdio.h>
 
 #include "mat.h"
@@ -22,15 +22,15 @@
 
 real matabs(mat M)
 
-/* 
-  Calculate the modulus of matrix M, i.e. the sum of the moduli of the 
+/*
+  Calculate the modulus of matrix M, i.e. the sum of the moduli of the
   matrix elements.
 
   parameters:
   M - input matrix
 
-  RETURN VALUE:  
-  
+  RETURN VALUE:
+
     modulus (mabs)
     -1.         if failed (and EXIT_ON_ERROR is not defined)
 */
@@ -39,8 +39,8 @@ real matabs(mat M)
 real mabs;
 real *ptr_r, *ptr_i, *ptr_end;
 long int nn;
-  
-/********************************************************************* 
+
+/*********************************************************************
   Check input matrix
 *********************************************************************/
 
@@ -57,7 +57,7 @@ long int nn;
 #endif
  }
 
-/********************************************************************* 
+/*********************************************************************
   Calculate modulus for valid matrix types
 *********************************************************************/
 
@@ -74,7 +74,7 @@ long int nn;
             ptr_r <= ptr_end; ptr_r ++)
        {
          mabs += R_fabs(*ptr_r);
-       } 
+       }
        break;
      } /* case REAL */
 
@@ -89,7 +89,7 @@ long int nn;
      } /* case COMPLEX */
    }  /* switch */
  }     /* matrix type is not diagonal */
- 
+
  else  if (M->mat_type == MAT_DIAG)
  {
    nn = M->cols;
@@ -120,7 +120,7 @@ long int nn;
  else /* not a valid matrix type */
  {
 #ifdef ERROR
-   fprintf(STDERR," *** error (matabs): %d not a valid matrix type\n", 
+   fprintf(STDERR," *** error (matabs): %d not a valid matrix type\n",
            M->mat_type);
 #endif
 #ifdef EXIT_ON_ERROR

@@ -1,9 +1,9 @@
 /*********************************************************************
-  GH/15.08.94 
+  GH/15.08.94
   file contains functions:
 
   ms_ymat            (15.08.94)
-     Create the transformation matrix from angular momentum space 
+     Create the transformation matrix from angular momentum space
      into k-space: Ylm(k).
 
 *********************************************************************/
@@ -52,12 +52,12 @@ mat ms_ymat ( mat Ymat, int l_max, struct beam_str *beams, int n_beams)
 
    k / (l,m) (0,0)     (-1,1)    (0,1)   (1,1)   (-2,2) ....
 
-   k1       Y00(k1)   Y-11(k1)  Y01(k1) 
-   k2       Y00(k2)   Y-11(k2)  Y01(k2) 
-   k3       Y00(k3) 
-   ...                                     Y(l,m)(ki) 
+   k1       Y00(k1)   Y-11(k1)  Y01(k1)
+   k2       Y00(k2)   Y-11(k2)  Y01(k2)
+   k3       Y00(k3)
+   ...                                     Y(l,m)(ki)
 
-   
+
 
 *************************************************************************/
 {
@@ -75,7 +75,7 @@ real *ptr_r, *ptr_i, *ptr_end;
 */
 
 /*
-  Allocate memory for Ymat 
+  Allocate memory for Ymat
 */
  ll_max = (l_max + 1)*(l_max + 1);
  Ymat = matalloc( Ymat, n_beams, ll_max, NUM_COMPLEX );
@@ -91,8 +91,8 @@ real *ptr_r, *ptr_i, *ptr_end;
  {
 
 #ifdef CONTROL
-   fprintf(STDCTR,"(ms_ymat): cos(th): (%.3f %.3f), phi: %.3f\n", 
-           (beams+i_beams)->cth_r, 
+   fprintf(STDCTR,"(ms_ymat): cos(th): (%.3f %.3f), phi: %.3f\n",
+           (beams+i_beams)->cth_r,
            (beams+i_beams)->cth_i, (beams+i_beams)->phi);
 #endif
 
@@ -100,10 +100,10 @@ real *ptr_r, *ptr_i, *ptr_end;
                     (beams+i_beams)->phi, l_max);
    memcpy( Ymat->rel+off, Ylm->rel+1, size);
    memcpy( Ymat->iel+off, Ylm->iel+1, size);
- } 
+ }
 
  return(Ymat);
 }
- 
+
 /*======================================================================*/
 /*======================================================================*/
