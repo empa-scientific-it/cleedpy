@@ -19,4 +19,3 @@ endif()
 
 # Link libmat with BLAS/LAPACK
 target_link_libraries(libmat ${BLAS_LIBRARIES})
-
