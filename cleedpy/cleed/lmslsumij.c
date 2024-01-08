@@ -15,7 +15,11 @@ GH/18.09.02 - change summation boundaries for n1 and n2 so that they comply
 *********************************************************************/
 
 #include <math.h>
-#include <malloc.h>
+#if defined (__MACH__)
+  #include <stdlib.h>
+#else
+  #include <malloc.h>
+#endif
 #include <stdio.h>
 
 #include "leed.h"

@@ -11,7 +11,11 @@ GH/06.04.95 - Creation - copied from ms_ymat.
 *********************************************************************/
 
 #include <math.h>
-#include <malloc.h>
+#if defined (__MACH__)
+  #include <stdlib.h>
+#else
+  #include <malloc.h>
+#endif
 #include <stdio.h>
 #include <string.h>
 

@@ -16,7 +16,11 @@ GH/20.09.95 - optional variable vi (structure var_str has changed).
 *********************************************************************/
 
 #include <math.h>
-#include <malloc.h>
+#if defined (__MACH__)
+  #include <stdlib.h>
+#else
+  #include <malloc.h>
+#endif
 #include <stdio.h>
 #include <strings.h>
 

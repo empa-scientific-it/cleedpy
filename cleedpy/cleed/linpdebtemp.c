@@ -14,7 +14,11 @@ GH/27.09.00 - bug fix in Debye Waller-Temp input
 *********************************************************************/
 
 #include <math.h>
-#include <malloc.h>
+#if defined (__MACH__)
+  #include <stdlib.h>
+#else
+  #include <malloc.h>
+#endif
 #include <stdio.h>
 #include <strings.h>
 

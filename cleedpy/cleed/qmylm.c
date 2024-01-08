@@ -26,7 +26,11 @@ GH/10.08.95 - WARNING output at the end of mk_ylm_coef.
 *********************************************************************/
 
 #include <math.h>
-#include <malloc.h>
+#if defined (__MACH__)
+  #include <stdlib.h>
+#else
+  #include <malloc.h>
+#endif
 #include <stdio.h>
 
 #include "mat.h"
