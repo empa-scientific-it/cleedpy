@@ -4,10 +4,16 @@
 #============================================================================
 .SUFFIXES: .o .c .h
 #=============================================================================
-MYPRG = $(HOME)/LEED/CLEED_BUILD
-INCLUDEDIR = $(MYPRG)/INCLUDE
+MYPRG = .
+INCLUDEDIR = $(MYPRG)/include
 LIBDIR = .
 #
+
+# GH 26/03/2020 added for openblas
+INCLUDEDIRBLAS = /opt/OpenBLAS/include/
+LIBDIRBLAS = /opt/OpenBLAS/lib/
+FLAGSBLAS = -L$(LIBDIRBLAS) -Wl,-rpath,$(LIBDIRBLAS) -lopenblas
+
 #==flags=====================================================================
 CCOMP = gcc
 OPT = -O3 -march=native
@@ -17,10 +23,6 @@ CFLAGSSUB = -g -c $(OPT) -I$(INCLUDEDIR) -I$(INCLUDEDIRBLAS) -L$(LIBDIR)
 CFLAGS = -g $(OPT) -I$(INCLUDEDIR) -I$(INCLUDEDIRBLAS)
 LDFLAGS = -lm
 
-# GH 26/03/2020 added for openblas
-INCLUDEDIRBLAS = /dls_sw/apps/openblas/0.3.9/include
-LIBDIRBLAS = /dls_sw/apps/openblas/0.3.9/lib
-FLAGSBLAS = -L$(LIBDIRBLAS) -Wl,-rpath,$(LIBDIRBLAS) -lopenblas
 
 # GH 24/03/2020 added for "homemade" CBLAS
 # INCLUDEDIRBLAS = $(MYPRG)/CBLAS/include
@@ -183,6 +185,6 @@ TMATOBJ_531 = $(CPLOBJ) \
 .c.o:   ;  $(CCOMP) $(CFLAGSSUB) $*.c
 #============================================================================
 test_nsym_lp:	test_nsym_lp.o $(TMATOBJ)
-	$(CCOMP) -o $(MYPRG)/LEED_NSYM_LP/test_nsym_lp $(CFLAGS) $(TMATOBJ) test_nsym_lp.c $(LDFLAGS) $(FLAGSBLAS)
+	$(CCOMP) -o $(MYPRG)/test_nsym_lp $(CFLAGS) $(TMATOBJ) test_nsym_lp.c $(LDFLAGS) $(FLAGSBLAS)
 	rm -f test_nsym_lp.o
 #============================================================================

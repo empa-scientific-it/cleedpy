@@ -28,7 +28,10 @@ GH/22.09.00 - add gaunt and blm
 *********************************************************************/
 
 #include <math.h>
-#include <malloc.h>
+#if !defined (__MACH__)
+  #include <malloc.h>
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 
