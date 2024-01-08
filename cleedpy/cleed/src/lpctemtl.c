@@ -16,7 +16,11 @@ GH/19.09.00 - change definition of dr2: mean square displacement.
 *********************************************************************/
 
 #include <math.h>
-#include <malloc.h>
+#if defined (__MACH__)
+  #include <stdlib.h>
+#else
+  #include <malloc.h>
+#endif
 #include <stdio.h>
 #include <strings.h>
 

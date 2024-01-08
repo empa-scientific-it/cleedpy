@@ -17,7 +17,12 @@ GH/22.09.00 - include malloc.h at the top of file
 
 #include <math.h>
 #include <stdio.h>
-#include <malloc.h>
+
+#if defined (__MACH__)
+  #include <stdlib.h>
+#else
+  #include <malloc.h>
+#endif
 
 #include "mat.h"
 /*

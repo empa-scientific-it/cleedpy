@@ -12,7 +12,11 @@ GH/02.09.97 - Add hostname
 
 *********************************************************************/
 
-#include <malloc.h>
+#if defined (__MACH__)
+  #include <stdlib.h>
+#else
+  #include <malloc.h>
+#endif
 #include <stdio.h>
 
 #include <unistd.h>
