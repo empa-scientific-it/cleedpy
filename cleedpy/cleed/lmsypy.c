@@ -21,7 +21,11 @@ GH/10.04.95 - correction in ms_yp_ym (remove offm)
 *********************************************************************/
 
 #include <math.h>
-#include <malloc.h>
+#if defined (__MACH__)
+  #include <stdlib.h>
+#else
+  #include <malloc.h>
+#endif
 #include <stdio.h>
 #include <string.h>
 

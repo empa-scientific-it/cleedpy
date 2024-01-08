@@ -11,7 +11,11 @@ GH/09.08.95 - Allocate mat_str for NULL input
 *********************************************************************/
 
 #include <stdio.h>
-#include <malloc.h>
+#if defined (__MACH__)
+  #include <stdlib.h>
+#else
+  #include <malloc.h>
+#endif
 #include "mat.h"
 
 /*

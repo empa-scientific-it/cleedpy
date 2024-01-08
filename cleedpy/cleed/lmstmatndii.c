@@ -16,7 +16,11 @@ GH/16.07.02 - fix bug cg/gaunt in summation over l3 (Gii)
 *********************************************************************/
 
 #include <math.h>
-#include <malloc.h>
+#if defined (__MACH__)
+  #include <stdlib.h>
+#else
+  #include <malloc.h>
+#endif
 #include <stdio.h>
 
 #include "leed.h"

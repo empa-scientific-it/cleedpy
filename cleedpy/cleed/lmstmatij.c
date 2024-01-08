@@ -14,7 +14,11 @@ GH/01.02.95 - Creation
 *********************************************************************/
 
 #include <math.h>
-#include <malloc.h>
+#if defined (__MACH__)
+  #include <stdlib.h>
+#else
+  #include <malloc.h>
+#endif
 #include <stdio.h>
 
 #include "leed.h"

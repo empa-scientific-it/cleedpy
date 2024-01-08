@@ -15,7 +15,7 @@ LIBDIRBLAS = /opt/OpenBLAS/lib/
 FLAGSBLAS = -L$(LIBDIRBLAS) -Wl,-rpath,$(LIBDIRBLAS) -lopenblas
 
 #==flags=====================================================================
-CCOMP = gcc
+CCOMP = gcc-13
 OPT = -O3 -march=native
 # Use this for homemade BLAS:
 # OPT = -O2

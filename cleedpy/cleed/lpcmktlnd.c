@@ -15,7 +15,9 @@ GH/16.09.00 - calculate non-diagonal t-matrix.
 *********************************************************************/
 
 #include <math.h>
-#include <malloc.h>
+#if !defined (__MACH__)
+  #include <malloc.h>
+#endif
 #include <stdio.h>
 #include <string.h>
 #include <strings.h>

@@ -16,7 +16,11 @@ WB/27.02.98 - change eng_max to eng_max - vr when calculating k_max
 *********************************************************************/
 
 #include <math.h>
-#include <malloc.h>
+#if defined (__MACH__)
+  #include <stdlib.h>
+#else
+  #include <malloc.h>
+#endif
 #include <stdio.h>
 #include <strings.h>
 
