@@ -6,4 +6,4 @@ file(GLOB CLEED_SRC "*.c")
 add_library(cleed ${CLEED_SRC})
 
 # Link libmat
-target_link_libraries(cleed libmat)
+target_link_libraries(cleed libmat m dl)

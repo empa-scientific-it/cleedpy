@@ -5,6 +5,11 @@ project(cleed VERSION 1.0 LANGUAGES C)
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED True)
 
+# Set compiler and flags
+# Only set the compiler if strictly required; by default, let CMake find the most suitable one
+#set(CMAKE_C_COMPILER "gcc-13")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -O3 -march=native")
+
 # Global include directories or compiler options here
 include_directories(include)
 

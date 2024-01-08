@@ -12,7 +12,6 @@ include_directories(/usr/include)
 
 # Find BLAS/LAPACK
 find_package(BLAS REQUIRED)
-#find_package(LAPACK REQUIRED)
 
 # Link libmat with BLAS and LAPACK
 target_link_libraries(libmat ${BLAS_LIBRARIES})
