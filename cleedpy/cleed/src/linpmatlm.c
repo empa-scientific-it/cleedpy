@@ -8,10 +8,13 @@ read matrix elements which are specified through their (lm) quantum
 numbers and store in natural order.
 
 **************************************************************/
-#include<stdio.h>
-#include<string.h>
-#include<malloc.h>
-#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#if defined (__MACH__)
+    #include <stdlib.h>
+#else
+    #include <malloc.h>
+#endif
 #include <math.h>
 
 #include <mat.h>
