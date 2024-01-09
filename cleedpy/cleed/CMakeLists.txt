@@ -5,6 +5,10 @@ project(cleed VERSION 1.0 LANGUAGES C)
 set(CMAKE_C_STANDARD 90)
 set(CMAKE_C_STANDARD_REQUIRED True)
 
+# Set the output directories
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
 # Workaround for Apple Clang
 # Disables the warning "implicit declaration of function '...' is invalid in C99"
 if(APPLE AND "${CMAKE_C_COMPILER_ID}" STREQUAL "AppleClang")
