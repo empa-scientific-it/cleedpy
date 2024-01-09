@@ -13,4 +13,4 @@ list(REMOVE_ITEM CLEED_SRC
 add_library(cleed SHARED ${CLEED_SRC})
 
 # Link libmat
-target_link_libraries(cleed libmat m dl)
+target_link_libraries(cleed mat m dl)
