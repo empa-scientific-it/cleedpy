@@ -13,7 +13,7 @@ def validate(path: Path):
         print(data)
         NonGeometricalParameters.model_validate(data)
         obj = NonGeometricalParameters(**data)
-        print(obj.bulk_layers[0].vibrational_displacement)
+        print(obj)
 
     
 

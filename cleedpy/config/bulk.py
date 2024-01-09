@@ -67,13 +67,28 @@ VibrationalDisplacementParametersVariant = (
 )
 
 
+class Position(NamedTuple):
+    x: float
+    y: float
+    z: float
+
+class OptimiziationRangeParameters(NamedTuple):
+    initial: float
+    min: float
+    max: float
+
+class PositionOptimizationParameters(BaseModel):
+    x: OptimiziationRangeParameters
+    y: OptimiziationRangeParameters
+    z: OptimiziationRangeParameters
+
 
 
 class AtomParameters(BaseModel):
     """Atom parameters for overlayers"""
 
     phase_file: str | Path
-    position: Tuple[float, float, float]
+    position: PositionOptimizationParameters | Position
     vibrational_displacement: VibrationalDisplacementParametersVariant
 
 
