@@ -1,0 +1,29 @@
+
+unit_cell:
+  a1: [1.0, 0.0, 0.0]
+  a2: [0.0, 1.0, 0.0]
+  a3: [0.0, 0.0, 1.0]
+superstructure_matrix:
+  m1: [1, 0]
+  m2: [0, 1]
+overlayers:
+  - phase_file: "a"  
+    position: [1, 2, 3]
+    vibrational_displacement: [dr1, 0.1]
+bulk_layers:
+  - phase_file: "a"  
+    position: 
+        x: [1, 2, 4]
+        y: [1, 2, 4]
+        z: [1, 2, 4]
+    vibrational_displacement: [dr1, 0.1]
+optical_potential: [0.4, 0.5]
+energy_range: 
+  initial: 0.0
+  final: 10.0
+  step: 0.1
+
+polar_incidence_angle: 0.0
+azimuthal_incidence_angle: 0.0
+epsilon: 1.0
+maximum_angular_momentum: 2
