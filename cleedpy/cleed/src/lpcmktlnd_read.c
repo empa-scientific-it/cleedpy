@@ -14,7 +14,11 @@ GH/03.05.00 - read non-diagonal t-matrix
 *********************************************************************/
 
 #include <math.h>
-#include <malloc.h>
+#if defined (__MACH__)
+    #include <stdlib.h>
+#else
+    #include <malloc.h>
+#endif
 #include <stdio.h>
 #include <string.h>
 #include <strings.h>
