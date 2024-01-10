@@ -105,12 +105,12 @@ class NonGeometricalParameters(BaseModel):
     superstructure_matrix: SuperstructureMatrix
     overlayers: list[AtomParameters]
     bulk_layers: list[AtomParameters]
-    optical_potential: Tuple[float, float]
+    optical_potential: Tuple[float, float] = (8, 4)
     energy_range: EnergyRangeParameters
-    polar_incidence_angle: float
-    azimuthal_incidence_angle: float
-    epsilon: float
-    maximum_angular_momentum: int
+    polar_incidence_angle: float = 0
+    azimuthal_incidence_angle: float = 0
+    epsilon: float = 1e-2
+    maximum_angular_momentum: int = 8
 
 
 class SearchRadiusParameters(BaseModel):
