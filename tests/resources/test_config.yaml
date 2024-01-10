@@ -27,7 +27,7 @@ polar_incidence_angle: 0.0
 azimuthal_incidence_angle: 0.0
 epsilon: 1.0
 maximum_angular_momentum: 2
-search_radius: 
+search_radius:
   - [Cu, 1.0]
 angle_search: false
 experimental_data: /d

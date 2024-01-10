@@ -92,12 +92,12 @@ class AtomParametersStructured(NamedTuple):
     vibrational_displacement: VibrationalDisplacementParametersVariant
 
 
+AtomParametersVariants = AtomParametersStructured
 
-
-AtomParametersVariants = AtomParametersStructured 
 
 class AtomParametersWrapper(BaseModel):
     atom_parameters: AtomParametersVariants
+
 
 class EnergyRangeParameters(BaseModel):
     """Energy range parameters for bulk calculations"""
