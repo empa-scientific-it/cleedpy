@@ -84,13 +84,20 @@ class PositionOptimizationParameters(BaseModel):
     z: OptimiziationRangeParameters
 
 
-class AtomParameters(BaseModel):
+class AtomParametersStructured(NamedTuple):
     """Atom parameters for overlayers"""
 
     phase_file: str | Path
     position: PositionOptimizationParameters | Position
     vibrational_displacement: VibrationalDisplacementParametersVariant
 
+
+
+
+AtomParametersVariants = AtomParametersStructured 
+
+class AtomParametersWrapper(BaseModel):
+    atom_parameters: AtomParametersVariants
 
 class EnergyRangeParameters(BaseModel):
     """Energy range parameters for bulk calculations"""
@@ -105,8 +112,8 @@ class NonGeometricalParameters(BaseModel):
 
     unit_cell: UnitCellParameters
     superstructure_matrix: SuperstructureMatrix
-    overlayers: list[AtomParameters]
-    bulk_layers: list[AtomParameters]
+    overlayers: list[AtomParametersVariants]
+    bulk_layers: list[AtomParametersVariants]
     optical_potential: tuple[float, float] = (8, 4)
     energy_range: EnergyRangeParameters
     polar_incidence_angle: float = 0
@@ -115,14 +122,14 @@ class NonGeometricalParameters(BaseModel):
     maximum_angular_momentum: int = 8
 
 
-class SearchRadiusParameters(BaseModel):
+class SearchRadiusParameters(NamedTuple):
     """Search radius parameters for bulk calculations"""
 
     phase: str | Path
     radius: float
 
 
-class RotationalSymmetryParameters(BaseModel):
+class RotationalSymmetryParameters(NamedTuple):
     """Rotational symmetry parameters for bulk calculations"""
 
     degree: int
@@ -133,7 +140,7 @@ class RotationalSymmetryParameters(BaseModel):
 class SearchParameters(BaseModel):
     unit_cell: UnitCellParameters
     superstructure_matrix: SuperstructureMatrix
-    overlayers: list[AtomParameters]
+    overlayers: list[AtomParametersVariants]
     search_radius: list[SearchRadiusParameters]
     z_range: tuple[float, float]
     parameter_variation: Literal["vertical"] | Literal["both"]
