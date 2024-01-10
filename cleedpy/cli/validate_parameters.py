@@ -4,7 +4,7 @@ import pydantic
 import typer
 import yaml
 
-from cleedpy.config.bulk import NonGeometricalParameters
+from ..config.bulk import NonGeometricalParameters
 
 
 def validate(path: Path):
