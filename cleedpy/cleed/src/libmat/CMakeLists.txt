@@ -7,15 +7,9 @@ file(GLOB LIBMAT_SOURCES "mat*.c")
 # Define the library from the collected source files
 add_library(mat SHARED ${LIBMAT_SOURCES})
 
-# Find BLAS/LAPACK
-find_package(BLAS REQUIRED)
+# Find BLAS
+find_package(OpenBLAS REQUIRED)
+include_directories(${OpenBLAS_INCLUDE_DIR})
 
-# Include directories for BLAS/LAPACK
-find_file(BLAS_HEADER "cblas.h" HINTS ${CMAKE_PREFIX_PATH})
-if(BLAS_HEADER)
-    get_filename_component(BLAS_INCLUDE_DIR ${BLAS_HEADER} DIRECTORY)
-    include_directories(${BLAS_INCLUDE_DIR})
-endif()
-
-# Link libmat with BLAS/LAPACK
-target_link_libraries(mat ${BLAS_LIBRARIES})
+# Link libmat with BLAS
+target_link_libraries(mat ${OpenBLAS_LIB})
