@@ -26,6 +26,8 @@ dependencies = [
     "numpy",
     "pyyaml",
     "scipy",
+    "pydantic",
+    "typer"
 ]
 
 [project.optional-dependencies]
