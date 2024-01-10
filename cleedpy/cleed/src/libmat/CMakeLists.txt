@@ -5,7 +5,7 @@ set(BLA_VENDOR OpenBLAS)
 file(GLOB LIBMAT_SOURCES "mat*.c")
 
 # Define the library from the collected source files
-add_library(libmat ${LIBMAT_SOURCES})
+add_library(mat SHARED ${LIBMAT_SOURCES})
 
 # Find BLAS/LAPACK
 find_package(BLAS REQUIRED)
@@ -18,4 +18,4 @@ if(BLAS_HEADER)
 endif()
 
 # Link libmat with BLAS/LAPACK
-target_link_libraries(libmat ${BLAS_LIBRARIES})
+target_link_libraries(mat ${BLAS_LIBRARIES})
