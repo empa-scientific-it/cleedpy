@@ -3,11 +3,11 @@ from pathlib import Path
 
 import typer
 
-from ..config.bulk import NonGeometricalParameters
+from ..config import NonGeometricalParameters
 
 
 def generate_schema(path: Path):
-    """Generate schema for bulk calculations"""
+    """Generate schema for the LEED calculations"""
     schema = NonGeometricalParameters.model_json_schema()
 
     with open(path, "w") as f:

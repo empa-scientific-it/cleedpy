@@ -3,11 +3,11 @@ from pathlib import Path
 import typer
 import yaml
 
-from ..config.bulk import NonGeometricalParameters
+from ..config import NonGeometricalParameters
 
 
 def validate(path: Path):
-    """Validate bulk parameters"""
+    """Validate the input parameters"""
     with open(path) as f:
         data = yaml.load(f, Loader=yaml.FullLoader)
         print(data)
