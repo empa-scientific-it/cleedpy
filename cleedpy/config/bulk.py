@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Any, Literal, NamedTuple, Tuple
+from typing import Any, Literal, NamedTuple
 
 from numpy.typing import ArrayLike
 from pydantic import BaseModel
