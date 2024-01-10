@@ -1,7 +1,6 @@
 import json
 from pathlib import Path
 
-import pydantic
 import typer
 
 from ..config.bulk import NonGeometricalParameters

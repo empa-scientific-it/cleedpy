@@ -1,6 +1,5 @@
 from pathlib import Path
 
-import pydantic
 import typer
 import yaml
 

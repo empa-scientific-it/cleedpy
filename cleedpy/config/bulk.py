@@ -21,13 +21,13 @@ class SuperstructureMatrix(BaseModel):
 
 
 class VibrationalDisplacementParameters(BaseModel):
-    type: Literal["dmt"] | Literal["dr1"] | Literal["dr3"] | Literal["nd3"]
+    version: Literal["dmt"] | Literal["dr1"] | Literal["dr3"] | Literal["nd3"]
 
 
 class DebyeTemperatureMass(NamedTuple):
     """Debye temperature and atomic mass for bulk calculations"""
 
-    type: Literal["dmt"]
+    version: Literal["dmt"]
     debye_temperature: float
     atomic_mass: float
     temperature: float
@@ -36,14 +36,14 @@ class DebyeTemperatureMass(NamedTuple):
 class RadialMeanSquareDisplacement(NamedTuple):
     """Radial mean square displacement for bulk calculations"""
 
-    type: Literal["dr1"]
+    version: Literal["dr1"]
     radial_mean_square_displacement: float
 
 
 class MeanSquareDisplacements(NamedTuple):
     """Mean square displacements for bulk calculations- along the coordinate axes"""
 
-    type: Literal["dr3"]
+    version: Literal["dr3"]
     x_mean_square_displacement: float
     y_mean_square_displacement: float
     z_mean_square_displacement: float
@@ -52,7 +52,7 @@ class MeanSquareDisplacements(NamedTuple):
 class MeanSquareDisplacementsND(NamedTuple):
     """Mean square displacements for bulk calculations along the coordinates with a non diagonal matrix"""
 
-    type: Literal["nd3"]
+    version: Literal["nd3"]
     x_mean_square_displacement: float
     y_mean_square_displacement: float
     z_mean_square_displacement: float
@@ -74,8 +74,8 @@ class Position(NamedTuple):
 
 class OptimiziationRangeParameters(NamedTuple):
     initial: float
-    min: float
-    max: float
+    start: float
+    end: float
 
 
 class PositionOptimizationParameters(BaseModel):
@@ -92,12 +92,12 @@ class AtomParametersStructured(NamedTuple):
     vibrational_displacement: VibrationalDisplacementParametersVariant
 
 
+AtomParametersVariants = AtomParametersStructured
 
-
-AtomParametersVariants = AtomParametersStructured 
 
 class AtomParametersWrapper(BaseModel):
     atom_parameters: AtomParametersVariants
+
 
 class EnergyRangeParameters(BaseModel):
     """Energy range parameters for bulk calculations"""

@@ -1,14 +1,16 @@
-from cleedpy.config.bulk import AtomParametersWrapper, SearchParameters
-import yaml
 import pkg_resources
 import pytest
-import cleedpy
+import yaml
+
+from cleedpy.config.bulk import SearchParameters
+
 
 @pytest.fixture
 def yaml_data() -> str:
-    path =  pkg_resources.resource_filename("tests", "resources/test_config.yaml")
-    with open(path, "r") as file:
+    path = pkg_resources.resource_filename("tests", "resources/test_config.yaml")
+    with open(path) as file:
         return file.read()
+
 
 def test_overlayer_parameters(yaml_data: str):
     atom = yaml.load(yaml_data, Loader=yaml.FullLoader)
