@@ -4,7 +4,7 @@ from pathlib import Path
 import pydantic
 import typer
 
-from cleedpy.config.bulk import NonGeometricalParameters
+from ..config.bulk import NonGeometricalParameters
 
 
 def generate_schema(path: Path):
