@@ -4,7 +4,7 @@ add_subdirectory(libmat)
 # Compile cleed source files
 file(GLOB CLEED_SRC "*.c")
 
-# Remove a few src files that contains duplicated symbols
+# Remove a few src files that contain duplicated symbols
 list(REMOVE_ITEM CLEED_SRC
     "${CMAKE_CURRENT_SOURCE_DIR}/linpphase.c"
     "${CMAKE_CURRENT_SOURCE_DIR}/lpcmktlnd_read.c"
