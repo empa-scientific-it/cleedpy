@@ -566,6 +566,8 @@ FILE *res_stream;
     set exit status explicitly
 ********************************************/
 
+  printf("The original code is working fine.\n");
+
   exit(0);
 
 } /* end of main */

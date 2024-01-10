@@ -68,6 +68,9 @@ int n_beams_now, n_beams_set;
 int i_set, n_set, offset;
 int i_layer;
 
+int energy_list_size, energy_index;
+real *energy_list;
+
 real energy;
 real vec[4];
 
@@ -219,7 +222,6 @@ FILE *res_stream;
   inp_rdbul_nd(&bulk, &phs_shifts, bul_file);
   inp_rdpar(&v_par, &eng, bulk, bul_file);
   inp_rdovl_nd(&over, &phs_shifts, bulk, par_file);
-  n_set = bm_gen(&beams_all, bulk, v_par, eng->fin);
 
   inp_showbop(bulk, over, phs_shifts);
 
@@ -230,7 +232,6 @@ FILE *res_stream;
   }
 
   out_head (bulk, res_stream);
-  out_bmlist(&beams_out, beams_all, eng, res_stream);
 
 /*********************************************************************
  Prepare some often used parameters.
@@ -243,14 +244,20 @@ FILE *res_stream;
   fprintf(STDCTR, "(LEED_TEMP): E_ini = %.1f, E_fin = %.1f, E_stp %.1f\n",
           eng->ini*HART, eng->fin*HART, eng->stp*HART);
 
-  fprintf(STDCTR, "(LEED_TEMP): n_set = %d\n", n_set);
+  //fprintf(STDCTR, "(LEED_TEMP): lset = %d\n", n_set);
 #endif
 
 
-  printf("Starting leed\n");
-  leed(bulk, over, phs_shifts, beams_all, beams_out, n_set, eng, v_par, res_stream);
-  printf("Finished leed\n");
+  // Construct energy list
+  energy_list_size = (eng->fin - eng->ini)/eng->stp + 1;
+  energy_list = (real *) malloc(energy_list_size * sizeof(real));
+  for (energy_index=0; energy_index<energy_list_size; energy_index++)
+  {
+    energy_list[energy_index] = eng->ini + energy_index * eng->stp;
+  }
 
+  leed(bulk, over, phs_shifts, energy_list_size, energy_list, v_par, res_stream);
+  printf("Finished leed\n");
 
 #ifdef CONTROL_IO
   fprintf(STDCTR, "(LEED): end of energy loop: close files\n");
@@ -272,6 +279,7 @@ FILE *res_stream;
     set exit status explicitly
 ********************************************/
 
+  printf("The new code is working\n");
   exit(0);
 
 } /* end of main */

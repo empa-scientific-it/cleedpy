@@ -1,23 +1,26 @@
 #include "leed.h"
 
-float ** leed(
+real ** leed(
     struct cryst_str * bulk,
     struct cryst_str *over,
     struct phs_str *phs_shifts,
-    struct beam_str *beams_all,
-    struct beam_str * beams_out,
-    int n_set,
-    struct eng_str *eng,
+    int energy_list_size,
+    real *energy_list,
     struct var_str *v_par,
     FILE *res_stream
     ){
 
     struct beams_str * beams_now=NULL;
     struct beams_str * beams_set=NULL;
+    struct beam_str * beams_out=NULL;
+    struct beam_str *beams_all=NULL;
+
     int n_beams_now, n_beams_set;
 
     int i_c, i_set, offset;
     int i_layer;
+    int energy_index;
+    int n_set;
 
     real energy;
     real vec[4];
@@ -30,10 +33,22 @@ float ** leed(
     mat Tpp=NULL, Tmm=NULL, Rpm=NULL, Rmp=NULL;
     mat Tpp_s=NULL, Tmm_s=NULL, Rpm_s=NULL, Rmp_s=NULL;
 
+    struct eng_str eng;
+
+    eng.ini = energy_list[0];
+    eng.stp = energy_list[1] - energy_list[0];
+    eng.fin = energy_list[energy_list_size-1];
+
+
+    /* Generate beams out */
+    n_set = bm_gen(&beams_all, bulk, v_par, eng.fin);
+    out_bmlist(&beams_out, beams_all, &eng, res_stream);
+
 
     /* Main Energy Loop */
-    for(energy=eng->ini; energy<eng->fin+E_TOLERANCE; energy+= eng->stp){
-        pc_update(v_par, phs_shifts, energy);
+
+    for(energy_index=0; energy_index<energy_list_size; energy_index++){
+        pc_update(v_par, phs_shifts, energy_list[energy_index]);
         n_beams_now = bm_select(&beams_now, beams_all, v_par, bulk->dmin);
 
         /*********************************************************************
