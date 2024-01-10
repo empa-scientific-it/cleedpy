@@ -36,9 +36,7 @@ class CMakeBuild(build_ext):
         build_args = ["--config", cfg]
 
         if platform.system() == "Windows":
-            cmake_args += [
-                f"-DCMAKE_LIBRARY_OUTPUT_DIRECTORY_{cfg.upper()}={ext_dir}"
-            ]
+            cmake_args += [f"-DCMAKE_LIBRARY_OUTPUT_DIRECTORY_{cfg.upper()}={ext_dir}"]
             if sys.maxsize > 2**32:
                 cmake_args += ["-A", "x64"]
             build_args += ["--", "/m"]
