@@ -34,3 +34,4 @@ experimental_data: /d
 parameter_variation: both
 rotational_symmetry: [1, 0, 0]
 z_range: [0, 1]
+minimum_interlayer_distance: 1.0

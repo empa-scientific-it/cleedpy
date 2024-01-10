@@ -149,6 +149,7 @@ class SearchParameters(BaseModel):
     polar_incidence_angle: float
     azimuthal_incidence_angle: float
     experimental_data: str | Path
+    minimum_interlayer_distance: float = 1.0
 
     def model_post_init(self, __context: Any) -> None:
         return super().model_post_init(__context)
