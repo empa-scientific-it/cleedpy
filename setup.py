@@ -71,5 +71,5 @@ setup(
             "cleed", (pl.Path(__file__).parent / "cleedpy" / "cleed").as_posix()
         )
     ],
-    cmdclass=dict(build_ext=CMakeBuild),
+    cmdclass={"build_ext": CMakeBuild},
 )
