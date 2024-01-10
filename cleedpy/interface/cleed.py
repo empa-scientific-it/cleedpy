@@ -108,7 +108,7 @@ def prepare_cleed_input() -> CleedInputs:
 
 
 def call_cleed():
-    path = Path(cleedpy.__file__).parent / "cleed" /  "build" / "lib" / "libcleed.so"
+    path = Path(cleedpy.__file__).parent / "cleed" / "build" / "lib" / "libcleed.so"
     lib = cdll.LoadLibrary(str(path))
     lib.leed
 
