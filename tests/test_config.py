@@ -2,7 +2,7 @@ import pkg_resources
 import pytest
 import yaml
 
-from cleedpy.config.bulk import SearchParameters
+from cleedpy.config import SearchParameters
 
 
 @pytest.fixture
