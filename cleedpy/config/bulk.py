@@ -148,4 +148,3 @@ class SearchParameters(BaseModel):
 
     def get_iv_curve(self) -> ArrayLike:
         """Get the IV curve from the experimental data"""
-        pass
