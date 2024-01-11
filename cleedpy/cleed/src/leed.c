@@ -35,6 +35,10 @@ real ** leed(
 
     struct eng_str eng;
 
+    // Printing stuff
+    inp_showbop(bulk, over, phs_shifts);
+    return 0;
+
     eng.ini = energy_list[0];
     eng.stp = energy_list[1] - energy_list[0];
     eng.fin = energy_list[energy_list_size-1];
@@ -234,4 +238,16 @@ real ** leed(
     }  /* end of energy loop */
 
     return iv_curves;
+}
+
+
+int my_test_function(int a, int b, struct cryst_str * bulk){
+    printf("vr: %lf\n", bulk->vr);
+    printf("vi: %lf\n", bulk->vi);
+
+    printf("\nbulk 2-dim. unit cell:\n");
+    printf("a1:  (%7.4lf  %7.4lf)\n", bulk->a[1]*BOHR, bulk->a[3]*BOHR);
+    printf("a2:  (%7.4lf  %7.4lf)\n", bulk->a[2]*BOHR, bulk->a[4]*BOHR);
+
+    return a+b;
 }

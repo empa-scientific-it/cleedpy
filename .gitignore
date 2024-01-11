@@ -213,3 +213,6 @@ dkms.conf
 
 # CMake builds
 cmake-build*/
+
+# Vscode
+.vscode/
