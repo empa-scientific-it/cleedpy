@@ -1,23 +1,22 @@
+import math
 from ctypes import POINTER, Structure, c_char_p, c_double, c_int, cdll
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Type, Union
-import math
 
 import cleedpy
+from cleedpy.config import (
+    AtomParametersStructured,
+    AtomParametersVariants,
+    DebyeTemperatureMass,
+    MeanSquareDisplacements,
+    MeanSquareDisplacementsND,
+    Position,
+    PositionOptimizationParameters,
+    RadialMeanSquareDisplacement,
+    SearchParameters,
+    VibrationalDisplacementParametersVariant,
+)
 from cleedpy.interface.Matrix import MatPtr
-from cleedpy.config import (SearchParameters, 
-                            AtomParametersStructured, 
-                            AtomParametersVariants,
-                            Position, 
-                            PositionOptimizationParameters, 
-                            VibrationalDisplacementParametersVariant,
-                            DebyeTemperatureMass,
-                            MeanSquareDisplacements,
-                            MeanSquareDisplacementsND,
-                            RadialMeanSquareDisplacement,
-                            )
-
 from cleedpy.physics import constants
 
 
@@ -126,7 +125,6 @@ def generate_energies(input: list[float]) -> list[c_double]:
     return [c_double(i) for i in input]
 
 
-
 def convert_energy_loop_variables(input: SearchParameters) -> EnergyLoopVariables:
     """
     This corresponds to the following c function: inp_rdpar
@@ -147,13 +145,14 @@ def convert_energy_loop_variables(input: SearchParameters) -> EnergyLoopVariable
     )
 
 
-
 def generate_single_atom_structure(input: AtomParametersVariants) -> Atom:
     """
     Generate a single atom for cleed from the input atom parameters
     """
     match input:
-        case AtomParametersStructured(phase_file, Position(x, y, z), vibrational_displacement):
+        case AtomParametersStructured(
+            phase_file, Position(x, y, z), vibrational_displacement
+        ):
             a = Atom()
             a.layer = 0
             a.type = 0
@@ -161,10 +160,15 @@ def generate_single_atom_structure(input: AtomParametersVariants) -> Atom:
             a.pos = (x, y, z, 0)
             a.dwf
 
-        case AtomParametersStructured(phase_file, PositionOptimizationParameters(), vibrational_displacement):
-            raise ValueError("Cleed needs a position for each atom, not an optimization range")
+        case AtomParametersStructured(
+            phase_file, PositionOptimizationParameters(), vibrational_displacement
+        ):
+            raise ValueError(
+                "Cleed needs a position for each atom, not an optimization range"
+            )
         case _:
             raise ValueError("Not implemented")
+
 
 def generate_atom_structure(input: list[AtomParametersVariants]) -> list[Atom]:
     """
@@ -173,14 +177,22 @@ def generate_atom_structure(input: list[AtomParametersVariants]) -> list[Atom]:
     """
     return [Atom() for i in input]
 
+
 def generate_crystal_structure(input: AtomParametersVariants) -> Crystal:
     match input:
-        case AtomParametersStructured(phase_file, Position(x, y, z), vibrational_displacement):
+        case AtomParametersStructured(
+            phase_file, Position(x, y, z), vibrational_displacement
+        ):
             pass
-        case AtomParametersStructured(phase_file, PositionOptimizationParameters(), vibrational_displacement):
-            raise ValueError("Cleed needs a position for each atom, not an optimization range")
+        case AtomParametersStructured(
+            phase_file, PositionOptimizationParameters(), vibrational_displacement
+        ):
+            raise ValueError(
+                "Cleed needs a position for each atom, not an optimization range"
+            )
         case _:
             raise ValueError("Not implemented")
+
 
 def call_cleed():
     path = Path(cleedpy.__file__).parent / "cleed" / "build" / "lib" / "libcleed.dylib"
