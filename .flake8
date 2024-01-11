@@ -6,3 +6,6 @@ extend-ignore =
     E203
 exclude =
     docs/source/conf.py
+
+per-file-ignores =
+    cleedpy/interface/cleed.py: F841, TRY003

@@ -3,21 +3,15 @@ from ctypes import POINTER, Structure, c_char_p, c_double, c_int, cdll
 from dataclasses import dataclass
 from pathlib import Path
 
-import cleedpy
-from cleedpy.config import (
+from ..config import (
     AtomParametersStructured,
     AtomParametersVariants,
-    DebyeTemperatureMass,
-    MeanSquareDisplacements,
-    MeanSquareDisplacementsND,
     Position,
     PositionOptimizationParameters,
-    RadialMeanSquareDisplacement,
     SearchParameters,
-    VibrationalDisplacementParametersVariant,
 )
-from cleedpy.interface.Matrix import MatPtr
-from cleedpy.physics import constants
+from ..physics import constants
+from .matrix import MatPtr
 
 
 class Atom(Structure):
@@ -121,35 +115,35 @@ class CleedInputs:
     params: EnergyLoopVariables
 
 
-def generate_energies(input: list[float]) -> list[c_double]:
-    return [c_double(i) for i in input]
+def generate_energies(inp: list[float]) -> list[c_double]:
+    return [c_double(i) for i in inp]
 
 
-def convert_energy_loop_variables(input: SearchParameters) -> EnergyLoopVariables:
+def convert_energy_loop_variables(inp: SearchParameters) -> EnergyLoopVariables:
     """
     This corresponds to the following c function: inp_rdpar
     """
     return EnergyLoopVariables(
-        eng_r=c_double(input.energy_range.initial / constants.HART),
-        eng_i=c_double(input.energy_range.final / constants.HART),
-        eng_v=c_double(input.energy_range.step / constants.HART),
-        vr=c_double(input.optical_potential[0]),
-        vi_prev=c_double(input.optical_potential[1]),
-        vi_exp=c_double(input.optical_potential[1]),
-        theta=c_double(math.radians(input.polar_incidence_angle)),
-        phi=c_double(math.radians(input.azimuthal_incidence_angle)),
+        eng_r=c_double(inp.energy_range.initial / constants.HART),
+        eng_i=c_double(inp.energy_range.final / constants.HART),
+        eng_v=c_double(inp.energy_range.step / constants.HART),
+        vr=c_double(inp.optical_potential[0]),
+        vi_prev=c_double(inp.optical_potential[1]),
+        vi_exp=c_double(inp.optical_potential[1]),
+        theta=c_double(math.radians(inp.polar_incidence_angle)),
+        phi=c_double(math.radians(inp.azimuthal_incidence_angle)),
         k_in=(c_double * 4)(0, 0, 0, 0),
-        epsilon=c_double(input.epsilon),
-        l_max=c_int(input.maximum_angular_momentum),
+        epsilon=c_double(inp.epsilon),
+        l_max=c_int(inp.maximum_angular_momentum),
         p_t1=POINTER(MatPtr),
     )
 
 
-def generate_single_atom_structure(input: AtomParametersVariants) -> Atom:
+def generate_single_atom_structure(inp: AtomParametersVariants) -> Atom:
     """
-    Generate a single atom for cleed from the input atom parameters
+    Generate a single atom for cleed from the inp atom parameters
     """
-    match input:
+    match inp:
         case AtomParametersStructured(
             phase_file, Position(x, y, z), vibrational_displacement
         ):
@@ -170,16 +164,16 @@ def generate_single_atom_structure(input: AtomParametersVariants) -> Atom:
             raise ValueError("Not implemented")
 
 
-def generate_atom_structure(input: list[AtomParametersVariants]) -> list[Atom]:
+def generate_atom_structure(inp: list[AtomParametersVariants]) -> list[Atom]:
     """
-    Generate a list of atoms for cleed from the input list of atom parameters
+    Generate a list of atoms for cleed from the inp list of atom parameters
     It also sorts the atoms by the z-coordinate
     """
-    return [Atom() for i in input]
+    return [Atom() for i in inp]
 
 
-def generate_crystal_structure(input: AtomParametersVariants) -> Crystal:
-    match input:
+def generate_crystal_structure(inp: AtomParametersVariants) -> Crystal:
+    match inp:
         case AtomParametersStructured(
             phase_file, Position(x, y, z), vibrational_displacement
         ):
@@ -195,7 +189,7 @@ def generate_crystal_structure(input: AtomParametersVariants) -> Crystal:
 
 
 def call_cleed():
-    path = Path(cleedpy.__file__).parent / "cleed" / "build" / "lib" / "libcleed.dylib"
+    path = Path(__file__).parent.parent / "cleed" / "build" / "lib" / "libcleed.dylib"
     lib = cdll.LoadLibrary(str(path))
 
     lib.my_test_function.argtypes = [c_int, c_int, POINTER(Crystal)]
