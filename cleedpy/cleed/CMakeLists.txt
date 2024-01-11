@@ -9,6 +9,9 @@ set(CMAKE_C_STANDARD_REQUIRED True)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
+# Where to find CMake modules
+list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
+
 # Workaround for Apple Clang
 # Disables the warning "implicit declaration of function '...' is invalid in C99"
 if(APPLE AND "${CMAKE_C_COMPILER_ID}" STREQUAL "AppleClang")
