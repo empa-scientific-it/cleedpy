@@ -240,14 +240,6 @@ FILE *res_stream;
   mk_cg_coef (2*v_par->l_max);
   mk_ylm_coef(2*v_par->l_max);
 
-#ifdef CONTROL
-  fprintf(STDCTR, "(LEED_TEMP): E_ini = %.1f, E_fin = %.1f, E_stp %.1f\n",
-          eng->ini*HART, eng->fin*HART, eng->stp*HART);
-
-  //fprintf(STDCTR, "(LEED_TEMP): lset = %d\n", n_set);
-#endif
-
-
   // Construct energy list
   energy_list_size = (eng->fin - eng->ini)/eng->stp + 1;
   energy_list = (real *) malloc(energy_list_size * sizeof(real));
