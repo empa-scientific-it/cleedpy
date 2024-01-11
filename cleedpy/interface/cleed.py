@@ -51,12 +51,15 @@ class Crystal(Structure):
         ("vr", c_double),
         ("vi", c_double),
         ("temp", c_double),
+        # Not used anymore
+        # From here
         ("n_rot", c_int),
         ("rot_axis", c_double * 4),
         ("n_mir", c_int),
         ("m_plane", POINTER(c_double)),
         ("alpha", POINTER(c_double)),
         ("symmetry", c_int),
+        # To here
         ("a", c_double * 5),
         ("a_1", c_double * 5),
         ("area", c_double),
@@ -180,9 +183,20 @@ def generate_crystal_structure(input: AtomParametersVariants) -> Crystal:
             raise ValueError("Not implemented")
 
 def call_cleed():
-    path = Path(cleedpy.__file__).parent / "cleed" /  "build" / "lib" / "libcleed.so"
+    path = Path(cleedpy.__file__).parent / "cleed" / "build" / "lib" / "libcleed.dylib"
     lib = cdll.LoadLibrary(str(path))
-    lib.leed
+
+    lib.my_test_function.argtypes = [c_int, c_int, POINTER(Crystal)]
+    lib.my_test_function.restype = c_int
+
+    bulk = Crystal()
+    bulk.vr = 1.0
+    bulk.vi = 2.0
+    bulk.temp = 300.0
+
+    bulk.a = (0.0, 1.0, 2.0, 3.0, 4.0)
+
+    print("Restul is ", lib.my_test_function(1, 2, bulk))
 
 
 if __name__ == "__main__":
