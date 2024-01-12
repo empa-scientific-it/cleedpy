@@ -38,9 +38,11 @@ class CMakeBuild(build_ext):
         if platform.system() == "Windows":
             cmake_args += [f"-DCMAKE_LIBRARY_OUTPUT_DIRECTORY_{cfg.upper()}={ext_dir}"]
             if sys.maxsize > 2**32:
+                # We are on a Win 64-bit system
                 cmake_args += ["-A", "x64"]
             build_args += ["--", "/m"]
         else:
+            # These flags are passed as-is to the underlying build tool (make)
             build_args += ["--", "-j2"]
 
         env = os.environ.copy()
@@ -70,6 +72,6 @@ setup(
         )
     ],
     cmdclass={"build_ext": CMakeBuild},
-    # The following line includes *any* library file found in the package directory
+    # The following includes *any* library file found in the package directory
     package_data={"cleedpy": ["**/*.dylib", "**/*.so", "**/*.dll"]},
 )
