@@ -70,4 +70,6 @@ setup(
         )
     ],
     cmdclass={"build_ext": CMakeBuild},
+    # The following line includes *any* library file found in the package directory
+    package_data={"cleedpy": ["**/*.dylib", "**/*.so", "**/*.dll"]},
 )

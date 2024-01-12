@@ -1,7 +1,8 @@
 import math
-from ctypes import POINTER, Structure, c_char_p, c_double, c_int, cdll
+import pathlib as pl
+import platform
+from ctypes import CDLL, POINTER, Structure, c_char_p, c_double, c_int, cdll
 from dataclasses import dataclass
-from pathlib import Path
 
 from ..config import (
     AtomParametersStructured,
@@ -188,9 +189,27 @@ def generate_crystal_structure(inp: AtomParametersVariants) -> Crystal:
             raise ValueError("Not implemented")
 
 
-def call_cleed():
-    path = Path(__file__).parent.parent / "cleed" / "build" / "lib" / "libcleed.dylib"
-    lib = cdll.LoadLibrary(str(path))
+def get_cleed_lib() -> CDLL:
+    LIB_PATH = pl.Path(__file__).parent.parent / "cleed" / "lib"
+
+    LIB_EXTS = {
+        "Windows": ".dll",
+        "Darwin": ".dylib",
+        "Linux": ".so",
+    }
+
+    try:
+        cleed_lib = (
+            (LIB_PATH / "libcleed").with_suffix(LIB_EXTS[platform.system()]).as_posix()
+        )
+    except KeyError:
+        raise ValueError(f"Platform {platform.system()} not supported by cleedpy")
+
+    return cdll.LoadLibrary(cleed_lib)
+
+
+def call_cleed() -> None:
+    lib = get_cleed_lib()
 
     lib.my_test_function.argtypes = [c_int, c_int, POINTER(Crystal)]
     lib.my_test_function.restype = c_int
