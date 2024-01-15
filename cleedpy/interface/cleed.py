@@ -190,9 +190,9 @@ def generate_crystal_structure(inp: AtomParametersVariants) -> Crystal:
 
 
 def get_cleed_lib() -> CDLL:
-    LIB_PATH = pl.Path(__file__).parent.parent / "cleed" / "lib"
+    lib_path = pl.Path(__file__).parent.parent / "cleed" / "lib"
 
-    LIB_EXTS = {
+    lib_exts = {
         "Windows": ".dll",
         "Darwin": ".dylib",
         "Linux": ".so",
@@ -200,10 +200,12 @@ def get_cleed_lib() -> CDLL:
 
     try:
         cleed_lib = (
-            (LIB_PATH / "libcleed").with_suffix(LIB_EXTS[platform.system()]).as_posix()
+            (lib_path / "libcleed").with_suffix(lib_exts[platform.system()]).as_posix()
         )
-    except KeyError:
-        raise ValueError(f"Platform {platform.system()} not supported by cleedpy")
+    except KeyError as err:
+        raise ValueError(
+            f"Platform {platform.system()} not supported by cleedpy"
+        ) from err
 
     return cdll.LoadLibrary(cleed_lib)
 
