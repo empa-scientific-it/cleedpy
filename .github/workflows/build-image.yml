@@ -33,4 +33,4 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ghcr.io/${{ github.repository }}/build-image:latest
+          tags: ghcr.io/${{ github.repository }}/ci-image:latest
