@@ -237,9 +237,6 @@ FILE *res_stream;
  Prepare some often used parameters.
 *********************************************************************/
 
-  mk_cg_coef (2*v_par->l_max);
-  mk_ylm_coef(2*v_par->l_max);
-
   // Construct energy list
   energy_list_size = (eng->fin - eng->ini)/eng->stp + 1;
   energy_list = (real *) malloc(energy_list_size * sizeof(real));

@@ -1,0 +1,46 @@
+unit_cell:
+  a1: [1.2450,  2.1564, 0.0]
+  a2: [1.2450, -2.1564, 0.0]
+  a3: [0.0000, 0.0000, -6.0990]
+superstructure_matrix:
+  m1: [1.0, 0]
+  m2: [0, 1.0]
+
+overlayers:
+  - phase_file: "Cu_BVH"
+    position: [0.0000, -0.0000, 6.0900]
+    vibrational_displacement: [dr3, 0.032, 0.032, 0.032]
+  - phase_file: "Ni_BVH"
+    position: [1.2450, -0.7188, 4.0600]
+    vibrational_displacement: [dr3, 0.025, 0.025, 0.025]
+  - phase_file: "Ni_BVH"
+    position: [1.2450, 0.7188, 2.0300]
+    vibrational_displacement: [dr3, 0.025, 0.025, 0.025]
+
+bulk_layers:
+  - phase_file: "Ni_BVH"
+    position: [0.0000, 0.0000,  0.0000]
+    vibrational_displacement: [dr3, 0.025, 0.025, 0.025]
+  - phase_file: "Ni_BVH"
+    position: [1.2450, -0.7188, -2.0300]
+    vibrational_displacement: [dr3, 0.025, 0.025, 0.025]
+  - phase_file: "Ni_BVH"
+    position: [1.2450, 0.7188, -4.0600]
+    vibrational_displacement: [dr3, 0.025, 0.025, 0.025]
+
+minimum_radius:
+  - name: Ni_BVH
+    radius: 0.9
+  - name: Cu_BVH
+    radius: 0.9
+
+optical_potential: [-8.00, 4.0]
+energy_range:
+  initial: 70.0
+  final: 498.0
+  step: 4.0
+
+polar_incidence_angle: 0.0
+azimuthal_incidence_angle: 0.0
+epsilon: 1.0e-2
+maximum_angular_momentum: 9

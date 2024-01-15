@@ -1,6 +1,7 @@
 from pathlib import Path
 from typing import Any, Literal, NamedTuple
 
+import yaml
 from numpy.typing import ArrayLike
 from pydantic import BaseModel
 
@@ -16,8 +17,8 @@ class UnitCellParameters(BaseModel):
 class SuperstructureMatrix(BaseModel):
     """Superstructure matrix for bulk calculations"""
 
-    m1: tuple[int, int]
-    m2: tuple[int, int]
+    m1: tuple[float, float]
+    m2: tuple[float, float]
 
 
 class VibrationalDisplacementParameters(BaseModel):
@@ -30,7 +31,6 @@ class DebyeTemperatureMass(NamedTuple):
     version: Literal["dmt"]
     debye_temperature: float
     atomic_mass: float
-    temperature: float
 
 
 class RadialMeanSquareDisplacement(NamedTuple):
@@ -107,19 +107,28 @@ class EnergyRangeParameters(BaseModel):
     step: float
 
 
-class NonGeometricalParameters(BaseModel):
+class MinimumAtomRadius(NamedTuple):
+    """Minimum atom radius for search. This is used to avoid atoms overlapping."""
+
+    name: str
+    radius: float
+
+
+class InputParameters(BaseModel):
     """Non geometrical parameters for bulk calculations"""
 
     unit_cell: UnitCellParameters
     superstructure_matrix: SuperstructureMatrix
     overlayers: list[AtomParametersVariants]
     bulk_layers: list[AtomParametersVariants]
+    minimum_radius: list[MinimumAtomRadius]
     optical_potential: tuple[float, float] = (8, 4)
     energy_range: EnergyRangeParameters
     polar_incidence_angle: float = 0
     azimuthal_incidence_angle: float = 0
     epsilon: float = 1e-2
     maximum_angular_momentum: int = 8
+    sample_temperature: float = 300.0
 
 
 class SearchRadiusParameters(NamedTuple):
@@ -156,3 +165,11 @@ class SearchParameters(BaseModel):
 
     def get_iv_curve(self) -> ArrayLike:
         """Get the IV curve from the experimental data"""
+
+
+def load_parameters(parameters_file: Path):
+    """Load the parameters file."""
+    with open(parameters_file) as f:
+        data = yaml.load(f, Loader=yaml.FullLoader)
+        InputParameters.model_validate(data)
+        return InputParameters(**data)
