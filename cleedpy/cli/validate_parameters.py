@@ -3,7 +3,7 @@ from pathlib import Path
 import typer
 import yaml
 
-from ..config import NonGeometricalParameters
+from ..config import InputParameters
 
 
 def validate(path: Path):
@@ -11,8 +11,8 @@ def validate(path: Path):
     with open(path) as f:
         data = yaml.load(f, Loader=yaml.FullLoader)
         print(data)
-        NonGeometricalParameters.model_validate(data)
-        obj = NonGeometricalParameters(**data)
+        InputParameters.model_validate(data)
+        obj = InputParameters(**data)
         print(obj)
 
 

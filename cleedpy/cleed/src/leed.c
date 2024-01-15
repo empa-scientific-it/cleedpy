@@ -36,8 +36,14 @@ real ** leed(
     struct eng_str eng;
 
     // Printing stuff
+    printf("TEST SASHA\n");
     inp_showbop(bulk, over, phs_shifts);
+    printf("END TEST SASHA\n");
     return 0;
+
+
+    mk_cg_coef (2*v_par->l_max); // Setting up Clebsh Gordan coefficients as global variables.
+    mk_ylm_coef(2*v_par->l_max); // Setting up spherical harmonics coefficients as global variables.
 
     eng.ini = energy_list[0];
     eng.stp = energy_list[1] - energy_list[0];
