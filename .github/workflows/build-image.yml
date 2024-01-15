@@ -10,7 +10,7 @@ on:
       - "Dockerfile"
 
 jobs:
-  build-and-push:
+  build-and-push-docker-image:
     runs-on: ubuntu-latest
     steps:
       - name: Check Out Repo
