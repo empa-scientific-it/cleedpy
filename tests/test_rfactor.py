@@ -1,20 +1,31 @@
-import math
-
-import numpy as np
 import pytest
-
-from cleedpy import rfactor
+import math
+import numpy as np
+from cleedpy.rfactor import r2_factor, rp_factor
+from tests.curves_helper import curve_A, curve_B, curve_C
 
 
 @pytest.mark.parametrize(
-    "y_true, y_pred, expected",
+    "the_curve, exp_curve, expected_r",
     [
-        ([1, 2, 3], [1, 2, 3], 0),
-        ([1, 2, 3], [1.1, 2.2, 3.3], 0.04666666666666666),
-        ([1.0, 2.0, 3.0], [1.0, 2.0, 5.0], 1.3333333333333333),
-    ],
+        (curve_A(), curve_B(), 1.8688830931),
+        (curve_B(), curve_C(), 0.0001429368),
+    ]
 )
-def test_mean_squer_error(y_true, y_pred, expected):
+def test_r2_factor(the_curve, exp_curve, expected_r):
     assert math.isclose(
-        expected, rfactor.mean_square_error(np.array(y_true), np.array(y_pred))
+        expected_r, r2_factor(np.array(the_curve), np.array(exp_curve)), abs_tol=5
+    )
+
+
+@pytest.mark.parametrize(
+    "the_curve, exp_curve, expected_r",
+    [
+        (curve_A(), curve_B(), 1.4898282448),
+        (curve_B(), curve_C(), 0),
+    ]
+)
+def test_rp_factor(the_curve, exp_curve, expected_r):
+    assert math.isclose(
+        expected_r, rp_factor(np.array(the_curve), np.array(exp_curve)), abs_tol=5
     )
