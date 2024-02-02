@@ -1,6 +1,8 @@
-import pytest
 import math
+
 import numpy as np
+import pytest
+
 from cleedpy.rfactor import r2_factor, rp_factor
 from tests.curves_helper import curve_A, curve_B, curve_C
 
@@ -10,7 +12,7 @@ from tests.curves_helper import curve_A, curve_B, curve_C
     [
         (curve_A(), curve_B(), 1.8688830931),
         (curve_B(), curve_C(), 0.0001429368),
-    ]
+    ],
 )
 def test_r2_factor(the_curve, exp_curve, expected_r):
     assert math.isclose(
@@ -23,7 +25,7 @@ def test_r2_factor(the_curve, exp_curve, expected_r):
     [
         (curve_A(), curve_B(), 1.4898282448),
         (curve_B(), curve_C(), 0),
-    ]
+    ],
 )
 def test_rp_factor(the_curve, exp_curve, expected_r):
     assert math.isclose(

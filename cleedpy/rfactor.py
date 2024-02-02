@@ -3,19 +3,19 @@ import numpy as np
 
 def r2_factor(theoretical_curve, experimental_curve):
     """
-        Calculates R2-factor of the curve of a specific spot (x,y) of the experiment.
-        A curve is represented by an array of (e,i) points, where e = energy and i = intensity.
+    Calculates R2-factor of the curve of a specific spot (x,y) of the experiment.
+    A curve is represented by an array of (e,i) points, where e = energy and i = intensity.
 
-        Inputs:
-            - theoretical curve: numpy array of [e,i] arrays
-            - experimental curve: numpy array of [e,i] arrays
+    Inputs:
+        - theoretical curve: numpy array of [e,i] arrays
+        - experimental curve: numpy array of [e,i] arrays
 
-        Design:
-            R2 = sqrt{ S(It - c*Ie)^2 / S(It - It_avg)^2 }
+    Design:
+        R2 = sqrt{ S(It - c*Ie)^2 / S(It - It_avg)^2 }
 
-            where:
-                c = sqrt( S|It|^2 / S|Ie|^ 2)
-                It_avg = (S It)/ dE
+        where:
+            c = sqrt( S|It|^2 / S|Ie|^ 2)
+            It_avg = (S It)/ dE
     """
 
     # [TODO] (not sure) Use the length of the shortest curve
@@ -29,11 +29,11 @@ def r2_factor(theoretical_curve, experimental_curve):
 
     # Calculate normalization factor c and It_avg
     c = np.sqrt(np.sum(It**2) / np.sum(Ie**2))
-    It_avg = np.sum(It) / It.size   # dE = number of energy steps
+    It_avg = np.sum(It) / It.size  # dE = number of energy steps
 
     # Calculate the numerator and denominator of R2
-    numerator = np.sum((It - c*Ie)**2)
-    denominator = np.sum((It - It_avg)**2)
+    numerator = np.sum((It - c * Ie) ** 2)
+    denominator = np.sum((It - It_avg) ** 2)
 
     # Calculate R2
     R2 = np.sqrt(numerator / denominator)
@@ -44,15 +44,15 @@ def r2_factor(theoretical_curve, experimental_curve):
 
 def rp_factor(theoretical_curve, experimental_curve):
     """
-        Calculates Pendry's R-factor of the curve of a specific spot (x,y) of the experiment.
-        A curve is represented by an array of (e,i) points, where e = energy and i = intensity.
+    Calculates Pendry's R-factor of the curve of a specific spot (x,y) of the experiment.
+    A curve is represented by an array of (e,i) points, where e = energy and i = intensity.
 
-        Inputs:
-            - theoretical curve: numpy array of [e,i] arrays
-            - experimental curve: numpy array of [e,i] arrays
+    Inputs:
+        - theoretical curve: numpy array of [e,i] arrays
+        - experimental curve: numpy array of [e,i] arrays
 
-        Design:
-            Rp = S(Ye - Yt)^2 / S(Ye^2 + Yt^2)
+    Design:
+        Rp = S(Ye - Yt)^2 / S(Ye^2 + Yt^2)
     """
 
     # Extract the It, Ie values for theoretical and experimental intensity
@@ -61,7 +61,7 @@ def rp_factor(theoretical_curve, experimental_curve):
 
     # Extract the Et, Ee values for theoretical and experimental energy
     Et = theoretical_curve[:, 0]
-    Ee = experimental_curve[:,0]
+    Ee = experimental_curve[:, 0]
 
     # Calculate theoretical and experimental energy steps
     step_Et = energy_step(Et)
@@ -72,7 +72,7 @@ def rp_factor(theoretical_curve, experimental_curve):
     Ye = Y_function(Ie, step_Ee)
 
     # Calculate the numerator and denominator of Rp
-    numerator = np.sum((Yt - Ye)**2 * step_Et)
+    numerator = np.sum((Yt - Ye) ** 2 * step_Et)
     denominator = np.sum(Ye**2 * step_Ee) + np.sum(Yt**2 * step_Et)
 
     # Calculate Rp
@@ -84,17 +84,17 @@ def rp_factor(theoretical_curve, experimental_curve):
 
 def Y_function(I, energy_step):
     """
-        Calculates Y for a given curve.
+    Calculates Y for a given curve.
 
-        Inputs:
-            - I: array of intensity values of the curve
-            - E: array of energy values of the curve
+    Inputs:
+        - I: array of intensity values of the curve
+        - E: array of energy values of the curve
 
-        Design:
-            Y = L / (1 + L^2 * vi^2)
+    Design:
+        Y = L / (1 + L^2 * vi^2)
 
-            where:
-                L = (I[i] - I[i-1]) / (energy_step * 0.5 * (I[i] + I[i-1]))
+        where:
+            L = (I[i] - I[i-1]) / (energy_step * 0.5 * (I[i] + I[i-1]))
     """
 
     # [TODO] constants should be defined elsewhere
@@ -108,13 +108,13 @@ def Y_function(I, energy_step):
 
 def energy_step(E):
     """
-        Calculates the pairwise energy step. Returns an array.
+    Calculates the pairwise energy step. Returns an array.
 
-        Inputs:
-            - E: array of energy values of the curve
+    Inputs:
+        - E: array of energy values of the curve
 
-        Design:
-            step = E[i] - E[i-1]
+    Design:
+        step = E[i] - E[i-1]
     """
 
     return E[1:] - E[:-1]
