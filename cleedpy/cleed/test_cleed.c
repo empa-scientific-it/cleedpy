@@ -1,51 +1,13 @@
-/*********************************************************************
-GH/05.10.00
-  file contains functions:
-
-  main
-     Main program for LEED calculations (only for bravaislayer)
-
-Changes:
-
-GH/05.10.00 - early return option (-e).
-
-
-*********************************************************************/
-
 #include <stdio.h>
 #include <string.h>
 
 #include "gh_stddef.h"
 #include "leed.h"
 
-
-
-/*
-#define CONTROL_X
-*/
-#define CONTROL_FLOW
-
-
-#define CONTROL_IO
-#define CONTROL
-#define WARNING
-#define ERROR
-
 #define CTR_NORMAL       998
 #define CTR_EARLY_RETURN 999
 
-/*======================================================================*/
-
-main(int argc, char *argv[])
-
-/*********************************************************************
- Perform a LEED calculation for anisotropic vibrations a general case
-
- INPUT:
-
- DESIGN:
-
-*********************************************************************/
+main(int argc, char *argv[])/*Perform a LEED calculation for anisotropic vibrations a general case */
 {
 struct cryst_str *bulk;
 struct cryst_str *over;
@@ -125,16 +87,13 @@ FILE *res_stream;
   {
     if(*argv[i_arg] != '-')
     {
-#ifdef ERROR
-      fprintf(STDERR,"*** error (LEED_TEMP):\tsyntax error:\n");
+      fprintf(STDERR,"*** error (LEED_TEMP):\tsyntax error: %s\n", argv[i_arg]);
       fprintf(STDERR,"\tusage: \tleed -i <par_file> -o <res_file>");
       fprintf(STDERR," [-b <bul_file> -e]\n");
-#endif
       exit(1);
     }
     else
     {
-
 /* Read parameter input file */
       if(strncmp(argv[i_arg], "-b", 2) == 0)
       {
@@ -154,13 +113,11 @@ FILE *res_stream;
       {
         i_arg++;
         strncpy(res_file, argv[i_arg], STRSZ);
-        if ((res_stream = fopen(res_file,"w")) == NULL)
+        if ((res_stream = fopen(res_file, "w")) == NULL)
         {
-#ifdef ERROR
           fprintf(STDERR,
           "*** error (LEED_TEMP): could not open output file \"%s\"\n",
           res_file);
-#endif
           exit(1);
         }
       }  /* -o */
@@ -184,10 +141,7 @@ FILE *res_stream;
 
   if(strncmp(par_file, "---", 3) == 0)
   {
-#ifdef ERROR
-    fprintf(STDERR,
-    "*** error (LEED_TEMP): no parameter input file (option -i) specified\n");
-#endif
+    fprintf(STDERR,"*** error (LEED_TEMP): no parameter input file (option -i) specified\n");
     exit(1);
   }
 
@@ -198,19 +152,10 @@ FILE *res_stream;
 
   if(strncmp(res_file, "leed.res", 8) == 0)
   {
-#ifdef WARNING
-    fprintf(STDWAR,
-            "* warning (LEED_TEMP): no output file (option -o) specified\n");
-    fprintf(STDWAR,"\toutput will be written to file \"%s\"\n", res_file);
-#endif
-
+    fprintf(STDWAR, "* warning (LEED_TEMP): no output file (option -o) specified\n\toutput will be written to file \"%s\"\n", res_file);
     if ((res_stream = fopen(res_file,"w")) == NULL)
     {
-#ifdef ERROR
-      fprintf(STDERR,
-      "*** error (LEED_TEMP): could not open output file \"%s\"\n",
-      res_file);
-#endif
+      fprintf(STDERR, "*** error (LEED_TEMP): could not open output file \"%s\"\n",res_file);
      exit(1);
     }
   }
@@ -247,28 +192,10 @@ FILE *res_stream;
 
   leed(bulk, over, phs_shifts, energy_list_size, energy_list, v_par, res_stream);
   printf("Finished leed\n");
-
-#ifdef CONTROL_IO
   fprintf(STDCTR, "(LEED): end of energy loop: close files\n");
-#endif
 
   fclose(res_stream);
 
-#ifdef CONTROL
-  fprintf(STDCTR, "\n\n(LEED):\tCORRECT TERMINATION");
-#endif
-
-/********************************************
-    Write cpu time to output
-********************************************/
-
-  cpu_time(STDCPU,"");
-
-/********************************************
-    set exit status explicitly
-********************************************/
-
-  printf("The new code is working\n");
   exit(0);
 
 } /* end of main */

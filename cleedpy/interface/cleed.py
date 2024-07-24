@@ -202,7 +202,7 @@ def call_cleed():
 
     bulk.a = (0.0, 1.0, 2.0, 3.0, 4.0)
 
-    print("Restul is ", lib.my_test_function(1, 2, bulk))
+    print("Result is ", lib.my_test_function(1, 2, bulk))
 
 
 if __name__ == "__main__":
