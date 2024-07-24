@@ -39,7 +39,7 @@ real ** leed(
     printf("TEST SASHA\n");
     inp_showbop(bulk, over, phs_shifts);
     printf("END TEST SASHA\n");
-    return 0;
+
 
 
     mk_cg_coef (2*v_par->l_max); // Setting up Clebsh Gordan coefficients as global variables.
