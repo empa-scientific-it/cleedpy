@@ -1,14 +1,15 @@
 #include "leed.h"
 
 real ** leed(
-    struct cryst_str * bulk,
-    struct cryst_str *over,
-    struct phs_str *phs_shifts,
-    int energy_list_size,
-    real *energy_list,
-    struct var_str *v_par,
-    FILE *res_stream
+    char * bul_file,
+    char * par_file,
+    char *res_file
     ){
+    struct cryst_str *bulk=NULL;
+    struct cryst_str *over=NULL;
+    struct phs_str *phs_shifts=NULL;
+    struct var_str *v_par=NULL;
+
 
     struct beams_str * beams_now=NULL;
     struct beams_str * beams_set=NULL;
@@ -21,11 +22,12 @@ real ** leed(
     int i_layer;
     int energy_index;
     int n_set;
-
+    int energy_list_size;
+    real *energy_list;
     real energy;
     real vec[4];
 
-    float **iv_curves=NULL;
+    real **iv_curves=NULL;
 
     mat R_bulk=NULL, R_tot=NULL;
     mat Amp=NULL;
@@ -33,26 +35,44 @@ real ** leed(
     mat Tpp=NULL, Tmm=NULL, Rpm=NULL, Rmp=NULL;
     mat Tpp_s=NULL, Tmm_s=NULL, Rpm_s=NULL, Rmp_s=NULL;
 
-    struct eng_str eng;
+    struct eng_str *eng=NULL;
+
+    FILE *res_stream;
+
+    // Read input parameters
+    printf("HERE %s\n", bul_file);
+    inp_rdbul_nd(&bulk, &phs_shifts, bul_file);
+    inp_rdpar(&v_par, &eng, bulk, bul_file);
+    inp_rdovl_nd(&over, &phs_shifts, bulk, par_file);
+    inp_showbop(bulk, over, phs_shifts);
+
+
+    // Construct energy list
+    energy_list_size = (eng->fin - eng->ini)/eng->stp + 1;
+    energy_list = (real *) malloc(energy_list_size * sizeof(real));
+    for (energy_index=0; energy_index<energy_list_size; energy_index++)
+    {
+        energy_list[energy_index] = eng->ini + energy_index * eng->stp;
+    }
 
     // Printing stuff
-    printf("TEST SASHA\n");
     inp_showbop(bulk, over, phs_shifts);
-    printf("END TEST SASHA\n");
 
+
+    res_stream = fopen(res_file,"w");
+
+    out_head(bulk, res_stream);
 
 
     mk_cg_coef (2*v_par->l_max); // Setting up Clebsh Gordan coefficients as global variables.
     mk_ylm_coef(2*v_par->l_max); // Setting up spherical harmonics coefficients as global variables.
 
-    eng.ini = energy_list[0];
-    eng.stp = energy_list[1] - energy_list[0];
-    eng.fin = energy_list[energy_list_size-1];
+
 
 
     /* Generate beams out */
-    n_set = bm_gen(&beams_all, bulk, v_par, eng.fin);
-    out_bmlist(&beams_out, beams_all, &eng, res_stream);
+    n_set = bm_gen(&beams_all, bulk, v_par, eng->fin);
+    out_bmlist(&beams_out, beams_all, eng, res_stream);
 
 
     /* Main Energy Loop */
@@ -242,6 +262,8 @@ real ** leed(
         out_int(Amp, beams_now, beams_out, v_par, res_stream);
 
     }  /* end of energy loop */
+
+    fclose(res_stream);
 
     return iv_curves;
 }
