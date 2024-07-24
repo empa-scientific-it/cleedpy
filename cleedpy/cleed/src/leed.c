@@ -37,7 +37,6 @@ real ** leed(
 
     // Printing stuff
     inp_showbop(bulk, over, phs_shifts);
-    return 0;
 
     eng.ini = energy_list[0];
     eng.stp = energy_list[1] - energy_list[0];
