@@ -210,20 +210,17 @@ def get_cleed_lib() -> CDLL:
     return cdll.LoadLibrary(cleed_lib)
 
 
-def call_cleed() -> None:
+def call_cleed(parameters_file, bulk_file, output_file):
     lib = get_cleed_lib()
 
-    lib.my_test_function.argtypes = [c_int, c_int, POINTER(Crystal)]
-    lib.my_test_function.restype = c_int
+    lib.leed.argtypes = [c_char_p, c_char_p, c_char_p]
+    lib.leed.restype = POINTER(POINTER(c_double))
 
-    bulk = Crystal()
-    bulk.vr = 1.0
-    bulk.vi = 2.0
-    bulk.temp = 300.0
+    result = lib.leed(
+        parameters_file.encode(), bulk_file.encode(), output_file.encode()
+    )
 
-    bulk.a = (0.0, 1.0, 2.0, 3.0, 4.0)
-
-    print("Result is ", lib.my_test_function(1, 2, bulk))
+    return result
 
 
 if __name__ == "__main__":

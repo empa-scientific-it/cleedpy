@@ -1,8 +1,8 @@
 #include "leed.h"
 
 real ** leed(
-    char * bul_file,
     char * par_file,
+    char * bul_file,
     char *res_file
     ){
     struct cryst_str *bulk=NULL;
