@@ -19,11 +19,6 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Setup cmake
-        uses: jwlawson/actions-setup-cmake@v2
-        with:
-          cmake-version: '3.27.x'
-
       - name: Install package and its dependencies
         run: |
           pip install --upgrade pip
