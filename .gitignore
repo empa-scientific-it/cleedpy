@@ -213,6 +213,7 @@ dkms.conf
 
 # CMake builds
 cmake-build*/
+cleedpy/cleed/bin/
 
 # Vscode
 .vscode/

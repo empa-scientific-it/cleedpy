@@ -3,12 +3,12 @@ from pathlib import Path
 
 import typer
 
-from ..config import NonGeometricalParameters
+from ..config import InputParameters
 
 
 def generate_schema(path: Path):
     """Generate schema for the LEED calculations"""
-    schema = NonGeometricalParameters.model_json_schema()
+    schema = InputParameters.model_json_schema()
 
     with open(path, "w") as f:
         f.write(json.dumps(schema, indent=4))
