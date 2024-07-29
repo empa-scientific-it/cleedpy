@@ -27,32 +27,19 @@ def leed_bak(inptut_file: Path):
     )
 
 
-def print_cleed_results(result):
-    """Function that prints the results of cleed.
-        The format looks as follows
-    # ####################################### #
-    #            output from CLEED            #
-    # ####################################### #
-    #vn 0.0 (test version GH/11.08.95)
-    #ts Mon Jul 29 14:47:35 2024
-    #
-    #en 108 70.000000 498.100000 4.000000
-    #bn 55
-    #bi 0 0.000000 0.000000 0
-    #bi 1 -1.000000 0.000000 0
-    #bi 2 -1.000000 1.000000 0
-    #bi 3 0.000000 -1.000000 0
-    ...
-    70.00 4.364253e-03 5.741584e-03 7.114631e-03 7.115966e-03 5.744055e-03 5.741942e-03 7.113053e-03 0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00
+CLEED_OUT_HEADER = f"""# ####################################### #
+#            output from CLEED            #
+# ####################################### #
+# vn {__version__}
+# ts {datetime.datetime.now().ctime()}
+#
+"""
 
-    """
+
+def print_cleed_results(result):
+    """Function that prints the results of cleed."""
     with open("leed.out", "w") as f:
-        f.write("# ####################################### #\n")
-        f.write("#            output from CLEED            #\n")
-        f.write("# ####################################### #\n")
-        f.write(f"#vn {__version__}\n")
-        f.write(f"#ts {datetime.datetime.now().ctime()}\n")
-        f.write("#\n")
+        f.write(CLEED_OUT_HEADER)
         energy_step = (result.energies[result.n_energies - 1] - result.energies[0]) / (
             result.n_energies - 1
         )
@@ -74,7 +61,7 @@ def print_cleed_results(result):
                     ]
                 )
             )
-            f.write(" \n")
+            f.write("\n")
 
 
 def leed(
