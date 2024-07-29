@@ -36,9 +36,9 @@ CLEED_OUT_HEADER = f"""# ####################################### #
 """
 
 
-def print_cleed_results(result):
+def print_cleed_results(result, output_file):
     """Function that prints the results of cleed."""
-    with open("leed.out", "w") as f:
+    with open(output_file, "w") as f:
         f.write(CLEED_OUT_HEADER)
         energy_step = (result.energies[result.n_energies - 1] - result.energies[0]) / (
             result.n_energies - 1
@@ -49,7 +49,7 @@ def print_cleed_results(result):
         f.write(f"#bn {result.n_beams}\n")
         for i in range(result.n_beams):
             f.write(
-                f"#bi {i} {result.beam_x[i]:.6f} {result.beam_y[i]:.6f} {result.beam_set[i]}\n"
+                f"#bi {i} {result.beam_index1[i]:.6f} {result.beam_index2[i]:.6f} {result.beam_set[i]}\n"
             )
         for i in range(result.n_energies):
             f.write(
@@ -74,9 +74,9 @@ def leed(
     ),  # noqa: B008
 ):
     """Leed CLI."""
-    result = call_cleed(parameters_file, bulk_file, output_file)
+    result = call_cleed(parameters_file, bulk_file)
 
-    print_cleed_results(result)
+    print_cleed_results(result, output_file)
 
 
 def cli():

@@ -26,23 +26,14 @@
 
 #include "leed.h"
 
-/*
-#define WARNING
-*/
-
-#define CONTROL
-#define ERROR
-
-#define EXIT_ON_ERROR
-
 
 int out_bmlist(struct beam_str ** p_beams_out,
                struct beam_str *beams_all,
                struct eng_str *eng,
                real ** index1,
                real ** index2,
-               int ** beam_set,
-               FILE * outfile)
+               int ** beam_set
+               )
 
 /************************************************************************
 
@@ -106,131 +97,92 @@ int out_bmlist(struct beam_str ** p_beams_out,
 *************************************************************************/
 {
 
-int n_beams, n_eng;
-int i_bm_all, i_bm_out;
+    int n_beams, n_eng;
+    int i_bm_all, i_bm_out;
 
-real k_max;
-real faux;
+    real k_max;
+    real faux;
 
-struct beam_str *beams_out;
+    struct beam_str *beams_out;
 
-/************************************************************************
-  Find number of beams in list beams_all (n_beams) and
-  allocate *p_beams_out = beams_out of the same size.
-************************************************************************/
+    /************************************************************************
+     Find number of beams in list beams_all (n_beams) and
+    allocate *p_beams_out = beams_out of the same size.
+    ************************************************************************/
 
- for(n_beams = 0; (beams_all + n_beams)->k_par != F_END_OF_LIST; n_beams ++)
- { ; }
-
-#ifdef CONTROL
- fprintf(STDCTR,"(out_bmlist): \tTotal No. of beams %.f eV = %d\n",
-                 eng->fin*HART, n_beams);
-#endif
-
- if (*p_beams_out == NULL)
-   *p_beams_out = beams_out = (struct beam_str *)
-                 calloc(n_beams + 1, sizeof(struct beam_str));
- else
-   *p_beams_out = beams_out = (struct beam_str *)
-                 realloc(*p_beams_out, (n_beams+1) * sizeof(struct beam_str));
-
- if(beams_out == NULL)
- {
-#ifdef ERROR
-   fprintf(STDERR," *** error (out_bmlist): allocation error.\n");
-#endif
-#ifdef EXIT_ON_ERROR
-   exit(1);
-#else
-   return(-1)
-#endif
- }
-
-/************************************************************************
-  Write appropriate beams to beams_out
-
-  k_max is the square of the maximum pareallel vector component of
-        non-evanescent wave vectors at eng->fin.
-  n_beams is set to number of output beams afterwards.
-************************************************************************/
-
- k_max =  2. * eng->fin;
-
- for(i_bm_all = 0, i_bm_out = 0; i_bm_all < n_beams; i_bm_all ++)
- {
-   if( (beams_all + i_bm_all)->k_par <= k_max )
-   {
-     memcpy( beams_out + i_bm_out,
-             beams_all + i_bm_all,
-             sizeof(struct beam_str) );
-     i_bm_out ++;
-   }
- }
-
-/* terminate list beams_out */
- (beams_out + i_bm_out)->k_par = F_END_OF_LIST;
- n_beams = i_bm_out;
-
-#ifdef CONTROL
- fprintf(STDCTR,"(out_bmlist): \tNo. of non_evanescent beams = %d\n",
-                  n_beams);
-#endif
+    for(n_beams = 0; (beams_all + n_beams)->k_par != F_END_OF_LIST; n_beams ++);
 
 
-/************************************************************************
-  Write energies, number of beams, and beams to output
+    if (*p_beams_out == NULL)
+        *p_beams_out = beams_out = (struct beam_str *) calloc(n_beams + 1, sizeof(struct beam_str));
+    else
+        *p_beams_out = beams_out = (struct beam_str *) realloc(*p_beams_out, (n_beams+1) * sizeof(struct beam_str));
 
-  "#en" energies:
-        number of energies, initial energy, final energy, energy step.
-  "#bn" number of beams
-  "#bi" beam indices:
-        number (starting from zero), 1st index, 2nd index, beam set.
+    if(beams_out == NULL)
+    {
+        fprintf(STDERR," *** error (out_bmlist): allocation error.\n");
+        exit(1);
+    }
 
-  - Count energy points (Running through the same loop0 as the main
-    program does avoids inconsistencies due to rounding errors)
-  -
-************************************************************************/
+    /************************************************************************
+     Write appropriate beams to beams_out
 
-/* energies */
- for(faux = eng->ini, n_eng = 0;
-     faux <= eng->fin;
-     faux += eng->stp, n_eng++)
- { ; }
+    k_max is the square of the maximum pareallel vector component of
+            non-evanescent wave vectors at eng->fin.
+    n_beams is set to number of output beams afterwards.
+    ************************************************************************/
 
- fprintf(outfile, "#en %d %f %f %f\n",
-                   n_eng,
-                   eng->ini*HART,
-                   eng->fin*HART,
-                   eng->stp*HART);
+    k_max =  2. * eng->fin;
 
-/* number of beams */
- fprintf(outfile, "#bn %d\n", n_beams);
+    for(i_bm_all = 0, i_bm_out = 0; i_bm_all < n_beams; i_bm_all ++)
+    {
+        if( (beams_all + i_bm_all)->k_par <= k_max )
+        {
+            memcpy(beams_out + i_bm_out, beams_all + i_bm_all, sizeof(struct beam_str) );
+            i_bm_out ++;
+        }
+    }
 
-// Allocate memory for index1 and index2
-(* index1) = (real *) calloc(n_beams, sizeof(real));
-(* index2) = (real *) calloc(n_beams, sizeof(real));
-(* beam_set) = (int *) calloc(n_beams, sizeof(int));
+    /* terminate list beams_out */
+    (beams_out + i_bm_out)->k_par = F_END_OF_LIST;
+    n_beams = i_bm_out;
 
 
-/* beam indices */
- for(i_bm_out = 0; i_bm_out < n_beams; i_bm_out ++)
- {
-   fprintf(outfile, "#bi %d %f %f %d\n",
-                     i_bm_out,
-                     (beams_out+i_bm_out)->ind_1,
-                     (beams_out+i_bm_out)->ind_2,
-                     (beams_out+i_bm_out)->set);
+    /************************************************************************
+     Write energies, number of beams, and beams to output
 
-    (* index1)[i_bm_out] = (beams_out+i_bm_out)->ind_1;
-    (* index2)[i_bm_out] = (beams_out+i_bm_out)->ind_2;
-    (* beam_set)[i_bm_out] = (beams_out+i_bm_out)->set;
- }
-/* flush output file */
- fflush(outfile);
+    "#en" energies:
+            number of energies, initial energy, final energy, energy step.
+    "#bn" number of beams
+    "#bi" beam indices:
+            number (starting from zero), 1st index, 2nd index, beam set.
 
-/* write beams_out back to pointer */
- *p_beams_out = beams_out;
+    - Count energy points (Running through the same loop0 as the main
+        program does avoids inconsistencies due to rounding errors)
+    -
+    ************************************************************************/
 
- return(n_beams);
-}  /* end of function out_bmlist */
-/************************************************************************/
+    /* energies */
+    for(faux = eng->ini, n_eng = 0; faux <= eng->fin; faux += eng->stp, n_eng++);
+
+
+    // Allocate memory for index1 and index2
+    (* index1) = (real *) calloc(n_beams, sizeof(real));
+    (* index2) = (real *) calloc(n_beams, sizeof(real));
+    (* beam_set) = (int *) calloc(n_beams, sizeof(int));
+
+
+    /* beam indices */
+    for(i_bm_out = 0; i_bm_out < n_beams; i_bm_out ++)
+    {
+        (* index1)[i_bm_out] = (beams_out+i_bm_out)->ind_1;
+        (* index2)[i_bm_out] = (beams_out+i_bm_out)->ind_2;
+        (* beam_set)[i_bm_out] = (beams_out+i_bm_out)->set;
+    }
+
+
+    /* write beams_out back to pointer */
+    *p_beams_out = beams_out;
+
+    return n_beams;
+}

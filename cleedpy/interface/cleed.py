@@ -111,8 +111,8 @@ class CleedResult(Structure):
     """Parses C structure to python class:
     struct leed_results {
         int n_beams;
-        real * beam_x;
-        real * beam_y;
+        real * beam_index1;
+        real * beam_index2;
         int * beam_set;
         int n_energies;
         real * energies;
@@ -122,8 +122,8 @@ class CleedResult(Structure):
 
     _fields_ = [
         ("n_beams", c_int),
-        ("beam_x", POINTER(c_double)),
-        ("beam_y", POINTER(c_double)),
+        ("beam_index1", POINTER(c_double)),
+        ("beam_index2", POINTER(c_double)),
         ("beam_set", POINTER(c_int)),
         ("n_energies", c_int),
         ("energies", POINTER(c_double)),
@@ -234,15 +234,13 @@ def get_cleed_lib() -> CDLL:
     return cdll.LoadLibrary(cleed_lib)
 
 
-def call_cleed(parameters_file, bulk_file, output_file):
+def call_cleed(parameters_file, bulk_file):
     lib = get_cleed_lib()
 
-    lib.leed.argtypes = [c_char_p, c_char_p, c_char_p]
+    lib.leed.argtypes = [c_char_p, c_char_p]
     lib.leed.restype = CleedResult
 
-    result = lib.leed(
-        parameters_file.encode(), bulk_file.encode(), output_file.encode()
-    )
+    result = lib.leed(parameters_file.encode(), bulk_file.encode())
 
     return result
 

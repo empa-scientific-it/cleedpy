@@ -2,8 +2,8 @@
 
 typedef struct {
     int n_beams;
-    real * beam_x;
-    real * beam_y;
+    real * beam_index1;
+    real * beam_index2;
     int * beam_set;
     int n_energies;
     real * energies;
@@ -11,11 +11,8 @@ typedef struct {
 } CleedResult;
 
 
-CleedResult leed(
-    char * par_file,
-    char * bul_file,
-    char *res_file
-    ){
+CleedResult leed(char * par_file, char * bul_file)
+{
     struct cryst_str *bulk=NULL;
     struct cryst_str *over=NULL;
     struct phs_str *phs_shifts=NULL;
@@ -45,10 +42,7 @@ CleedResult leed(
 
     struct eng_str *eng=NULL;
 
-    FILE *res_stream;
-
     // Read input parameters
-    printf("HERE %s\n", bul_file);
     inp_rdbul_nd(&bulk, &phs_shifts, bul_file);
     inp_rdpar(&v_par, &eng, bulk, bul_file);
     inp_rdovl_nd(&over, &phs_shifts, bulk, par_file);
@@ -65,12 +59,6 @@ CleedResult leed(
     // Printing stuff
     inp_showbop(bulk, over, phs_shifts);
 
-
-    res_stream = fopen(res_file,"w");
-
-    out_head(bulk, res_stream);
-
-
     mk_cg_coef (2*v_par->l_max); // Setting up Clebsh Gordan coefficients as global variables.
     mk_ylm_coef(2*v_par->l_max); // Setting up spherical harmonics coefficients as global variables.
 
@@ -79,7 +67,7 @@ CleedResult leed(
 
     /* Generate beams out */
     n_set = bm_gen(&beams_all, bulk, v_par, eng->fin);
-    results.n_beams = out_bmlist(&beams_out, beams_all, eng, &results.beam_x, &results.beam_y, &results.beam_set, res_stream);
+    results.n_beams = out_bmlist(&beams_out, beams_all, eng, &results.beam_index1, &results.beam_index2, &results.beam_set);
     results.iv_curves = (real *) calloc(results.n_energies * results.n_beams, sizeof(real));
 
     /* Main Energy Loop */
@@ -266,11 +254,9 @@ CleedResult leed(
         ********************************************/
 
         Amp = ld_potstep0(Amp, R_tot, beams_now, v_par->eng_v, vec);
-        out_int(Amp, beams_now, beams_out, v_par, res_stream, &results.iv_curves[energy_index * results.n_beams]);
+        out_int(Amp, beams_now, beams_out, v_par, &results.iv_curves[energy_index * results.n_beams]);
 
     }  /* end of energy loop */
-
-    fclose(res_stream);
 
     return results;
 }
