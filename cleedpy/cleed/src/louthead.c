@@ -26,10 +26,6 @@ GH/11.08.95
 
 #define EXIT_ON_ERROR
 
-#ifndef LEED_VERSION               /* should be defined in leed_def.h */
-#define LEED_VERSION "0.0 (test version GH/11.08.95)"
-#endif
-
 int out_head(struct cryst_str *cryst_par,
              FILE * outfile)
 
@@ -67,7 +63,7 @@ time_t t_time;
   Write version number and start time to output file
 ************************************************************************/
 
- fprintf(outfile, "#vn %s\n", LEED_VERSION);
+ fprintf(outfile, "#vn 0.0.1\n");
 
  t_time = time(NULL);
  l_time = localtime(&t_time);

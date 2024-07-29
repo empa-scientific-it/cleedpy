@@ -39,6 +39,9 @@
 int out_bmlist(struct beam_str ** p_beams_out,
                struct beam_str *beams_all,
                struct eng_str *eng,
+               real ** index1,
+               real ** index2,
+               int ** beam_set,
                FILE * outfile)
 
 /************************************************************************
@@ -203,6 +206,12 @@ struct beam_str *beams_out;
 /* number of beams */
  fprintf(outfile, "#bn %d\n", n_beams);
 
+// Allocate memory for index1 and index2
+(* index1) = (real *) calloc(n_beams, sizeof(real));
+(* index2) = (real *) calloc(n_beams, sizeof(real));
+(* beam_set) = (int *) calloc(n_beams, sizeof(int));
+
+
 /* beam indices */
  for(i_bm_out = 0; i_bm_out < n_beams; i_bm_out ++)
  {
@@ -211,6 +220,10 @@ struct beam_str *beams_out;
                      (beams_out+i_bm_out)->ind_1,
                      (beams_out+i_bm_out)->ind_2,
                      (beams_out+i_bm_out)->set);
+
+    (* index1)[i_bm_out] = (beams_out+i_bm_out)->ind_1;
+    (* index2)[i_bm_out] = (beams_out+i_bm_out)->ind_2;
+    (* beam_set)[i_bm_out] = (beams_out+i_bm_out)->set;
  }
 /* flush output file */
  fflush(outfile);

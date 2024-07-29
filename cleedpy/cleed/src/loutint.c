@@ -26,17 +26,13 @@
 #define CONTROL_ALL
 #define WARNING
 */
-#define CONTROL
+//#define CONTROL
 #define ERROR
 
 #define EXIT_ON_ERROR
 
-#ifndef INT_TOLERANCE            /* should be defined in "leed_def.h" */
-#define INT_TOLERANCE 1.e-10               /* min intensity != 0. */
-#endif
-
 int out_int(mat Amp, struct beam_str *beams_now, struct beam_str *beams_all,
-            struct var_str *par, FILE * outfile)
+            struct var_str *par, FILE * outfile, real * beam_intensities)
 
 /************************************************************************
 
@@ -79,47 +75,6 @@ real k_r;
 /*********************************************************
    Print intensities for non-evanescent beams
 *********************************************************/
-
-#ifdef CONTROL
- fprintf(STDCTR,"(out_int):\t     beam\t  intensity\n\t\t\t== %.2f eV ==\n",
-                par->eng_v*HART);
- for (i_beams_now = 0, i_out = 0; i_beams_now < Int->rows; i_beams_now ++)
- {
-   if((beams_now + i_beams_now)->k_par <= k_r)
-   {
-     if(Int->rel[i_beams_now + 1] > INT_TOLERANCE)
-       fprintf(STDCTR,"\t\t(%5.2f,%5.2f):\t  %.4e\n",
-        (beams_now + i_beams_now)->ind_1, (beams_now + i_beams_now)->ind_2,
-         Int->rel[i_beams_now + 1]);
-     else
-       fprintf(STDCTR,"\t\t(%5.2f,%5.2f):\t   < %.0e\n",
-        (beams_now + i_beams_now)->ind_1, (beams_now + i_beams_now)->ind_2,
-         INT_TOLERANCE);
-     i_out ++;
-   }
-/*  print also evnescent beams
-   else
-     fprintf(STDCTR,"\t\t(%5.2f,%5.2f):\t (evanescent)\n",
-             (beams_now + i_beams_now)->ind_1, (beams_now + i_beams_now)->ind_2,
-             Int->rel[i_beams_now + 1]);
-*/
- }
- fprintf(STDCTR,"\t\t(%d/%d)\n",i_beams_now, i_out);
-#endif
-
-#ifdef CONTROL_ALL
- fprintf(STDCTR,"\n(out_int): all beams: \n");
-
- for (i_beams_all = 0; (beams_all + i_beams_all)->k_par != F_END_OF_LIST;
-      i_beams_all ++)
- {
-   fprintf(STDCTR,"\t\t(%5.2f,%5.2f)\n",
-   (beams_all + i_beams_all)->ind_1, (beams_all + i_beams_all)->ind_2);
- }
- fprintf(STDCTR,"\t\t(%d)\n",i_beams_all);
-#endif
-
-
  fprintf(outfile,"%.2f ", par->eng_v*HART);
 
  for(i_beams_all = 0; (beams_all + i_beams_all)->k_par != F_END_OF_LIST;
@@ -130,15 +85,16 @@ real k_r;
      if( ((beams_all+i_beams_all)->ind_1 == (beams_now+i_beams_now)->ind_1) &&
          ((beams_all+i_beams_all)->ind_2 == (beams_now+i_beams_now)->ind_2)  )
      {
-       if((beams_now + i_beams_now)->k_par <= k_r)
-       {
-         if(Int->rel[i_beams_now + 1] > INT_TOLERANCE)
-           fprintf(outfile,"%.6e ", Int->rel[i_beams_now + 1]);
-         else
-           fprintf(outfile,"%.6e ",0.);
-       }
-       else
-         fprintf(outfile,"%.6e ",0.);
+        if (((beams_now+i_beams_now)->k_par <= k_r) && (Int->rel[i_beams_now + 1] > INT_TOLERANCE))
+        {
+            fprintf(outfile,"%.6e ", Int->rel[i_beams_now + 1]);
+            beam_intensities[i_beams_all] = Int->rel[i_beams_now + 1];
+        }
+        else
+        {
+            fprintf(outfile,"%.6e ",0.);
+            beam_intensities[i_beams_all] = 0.;
+        }
        break;
      }  /* if index = index */
    }  /* for i_beams_now */

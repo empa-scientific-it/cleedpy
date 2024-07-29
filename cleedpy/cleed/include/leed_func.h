@@ -92,8 +92,8 @@ int pc_mk_ms(mat * , mat *, mat *, mat *, mat *, mat *, int );
 *********************************************************************/
 int out_head(struct cryst_str *, FILE *);
 int out_head_2(struct cryst_str *, const char *, const char *, FILE *);
-int out_bmlist(struct beam_str **, struct beam_str *, struct eng_str *, FILE *);
-int out_int(mat , struct beam_str *, struct beam_str *, struct var_str *, FILE * );
+int out_bmlist(struct beam_str **, struct beam_str *, struct eng_str *, real **, real **, int **, FILE *);
+int out_int(mat , struct beam_str *, struct beam_str *, struct var_str *, FILE * , real *);
 int out_intsym(mat , struct beam_str *, struct beam_str *, struct var_str *, FILE * );
 
     /* check cpu time */
