@@ -2,6 +2,7 @@
 
 void print_phase_shift(struct phs_str phs_shift)
 {
+    int i;
     printf("Phase shift:\n");
     printf("  lmax: %d\n", phs_shift.lmax);
     printf("  neng: %d\n", phs_shift.neng);
@@ -12,7 +13,7 @@ void print_phase_shift(struct phs_str phs_shift)
     printf("  dr: %lf\n", phs_shift.dr[0]);
     printf("  input_file: %s\n", phs_shift.input_file);
     printf("  pshift: ");
-    for (int i=0; i<phs_shift.neng; i++)
+    for (i=0; i<phs_shift.neng; i++)
     {
         printf("%lf ", phs_shift.pshift[i]);
         if (i % 10 == 0)
@@ -40,7 +41,7 @@ real ** leed(
 
     int n_beams_now, n_beams_set;
 
-    int i_c, i_set, offset;
+    int i_c, i_set, offset, i;
     int i_layer;
     int energy_index;
     int n_set;
@@ -66,7 +67,7 @@ real ** leed(
     inp_rdpar(&v_par, &eng, bulk, bul_file);
     inp_rdovl_nd(&over, &phs_shifts, bulk, par_file);
     inp_showbop(bulk, over, phs_shifts);
-    for (int i=0; (phs_shifts + i)->lmax != I_END_OF_LIST; i++)
+    for (i=0; (phs_shifts + i)->lmax != I_END_OF_LIST; i++)
         print_phase_shift(phs_shifts[i]);
 
 
