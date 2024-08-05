@@ -265,8 +265,8 @@ real faux;
  phs_shifts->lmax = lmax;
  nl = lmax + 1;
 
- phs_shifts->energy = (real *)malloc( neng * sizeof(real) );
- phs_shifts->pshift = (real *)malloc( neng * nl * sizeof(real) );
+ phs_shifts->energy = (real *)calloc( neng, sizeof(real) );
+ phs_shifts->pshift = (real *)calloc( neng * nl, sizeof(real) );
 
 
  for( i_eng = 0;
