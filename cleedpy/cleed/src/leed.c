@@ -74,12 +74,15 @@ CleedResult leed(char * par_file, char * bul_file)
         print_phase_shift(phs_shifts[i]);
 
 
+
     // Construct energy list
     results.n_energies = (eng->fin - eng->ini)/eng->stp + 1;
     results.energies = (real *) malloc(results.n_energies * sizeof(real));
 
     for (energy_index=0; energy_index < results.n_energies; energy_index++)
         results.energies[energy_index] = eng->ini + energy_index * eng->stp;
+
+    eng->fin = results.energies[results.n_energies - 1];
 
     // Printing stuff
     inp_showbop(bulk, over, phs_shifts);
