@@ -234,13 +234,13 @@ def get_cleed_lib() -> CDLL:
     return cdll.LoadLibrary(cleed_lib)
 
 
-def call_cleed(parameters_file, bulk_file):
+def call_cleed(parameters_file, bulk_file, phase_path):
     lib = get_cleed_lib()
 
-    lib.leed.argtypes = [c_char_p, c_char_p]
+    lib.leed.argtypes = [c_char_p, c_char_p, c_char_p]
     lib.leed.restype = CleedResult
 
-    result = lib.leed(parameters_file.encode(), bulk_file.encode())
+    result = lib.leed(parameters_file.encode(), bulk_file.encode(), phase_path.encode())
 
     return result
 

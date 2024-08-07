@@ -34,7 +34,7 @@ void print_phase_shift(struct phs_str phs_shift)
 }
 
 
-CleedResult leed(char * par_file, char * bul_file)
+CleedResult leed(char * par_file, char * bul_file, char *phase_path)
 {
     struct cryst_str *bulk=NULL;
     struct cryst_str *over=NULL;
@@ -66,9 +66,9 @@ CleedResult leed(char * par_file, char * bul_file)
     struct eng_str *eng=NULL;
 
     // Read input parameters
-    inp_rdbul_nd(&bulk, &phs_shifts, bul_file);
+    inp_rdbul_nd(&bulk, &phs_shifts, bul_file, phase_path);
     inp_rdpar(&v_par, &eng, bulk, bul_file);
-    inp_rdovl_nd(&over, &phs_shifts, bulk, par_file);
+    inp_rdovl_nd(&over, &phs_shifts, bulk, par_file, phase_path);
     inp_showbop(bulk, over, phs_shifts);
     for (i=0; (phs_shifts + i)->lmax != I_END_OF_LIST; i++)
         print_phase_shift(phs_shifts[i]);
