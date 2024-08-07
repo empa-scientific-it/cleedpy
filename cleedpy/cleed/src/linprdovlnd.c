@@ -49,10 +49,7 @@ GH/29.09.00 - calculate dr2 for dmt input in function inp_debtemp
 
 /********************************************************************/
 
-int inp_rdovl_nd (struct cryst_str **p_over_par,
-                  struct phs_str **p_phs_shifts,
-                  struct cryst_str *bulk_par,
-                  char *filename)
+int inp_rdovl_nd (struct cryst_str **p_over_par, struct phs_str **p_phs_shifts, struct cryst_str *bulk_par, char *filename, char *phase_path)
 /*********************************************************************
   Read all the overlayer parameters that do change during a search
 
@@ -86,6 +83,7 @@ FILE *inp_stream;
 char linebuffer[STRSZ];
 char phaseinp[STRSZ];
 char whatnext[STRSZ];
+char filename_path[STRSZ];
 
 int i,j, iaux;                /* counter, dummy  variables */
 int i_c, i_str;
@@ -203,17 +201,13 @@ struct atom_str *atoms_rd;    /* this vector of structure atom_str is
        atoms_rd = ( struct atom_str *) realloc(
                    atoms_rd, (i_atoms+2) * sizeof(struct atom_str) );
 
-#ifdef REAL_IS_DOUBLE
        iaux = sscanf(linebuffer+i_str+3 ," %s %lf %lf %lf %s %lf %lf %lf",
-#endif
-#ifdef REAL_IS_FLOAT
-       iaux = sscanf(linebuffer+i_str+3 ," %s %f %f %f %s %f %f %f",
-#endif
               phaseinp,
               atoms_rd[i_atoms].pos+1,
               atoms_rd[i_atoms].pos+2,
               atoms_rd[i_atoms].pos+3,
               whatnext, vaux+1, vaux+2, vaux+3);
+       sprintf(filename_path, "%s/%s.phs", phase_path, phaseinp);
 
        for(i=1; i<=3; i++) atoms_rd[i_atoms].pos[i] /= BOHR;
 
@@ -310,9 +304,7 @@ struct atom_str *atoms_rd;    /* this vector of structure atom_str is
        }
 
      /* input of atomic phase shifts */
-       atoms_rd[i_atoms].type = inp_phase_nd(phaseinp, vaux,
-                                            atoms_rd[i_atoms].t_type,
-                                            p_phs_shifts);
+       atoms_rd[i_atoms].type = inp_phase_nd(filename_path, vaux, atoms_rd[i_atoms].t_type, p_phs_shifts);
        over_par->ntypes = MAX(atoms_rd[i_atoms].type+1, over_par->ntypes);
 
        i_atoms ++;

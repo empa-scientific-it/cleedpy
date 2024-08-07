@@ -69,12 +69,15 @@ def leed(
         "leed.inp", "--input", "-i", help="Input file with parameters"
     ),
     bulk_file: str = typer.Option(None, "--bulk", "-b", help="Bulk file"),  # noqa: B008
+    phase_path: str = typer.Option(  # noqa: B008
+        "PHASE", "--phase", "-p", help="Phase path"
+    ),
     output_file: str = typer.Option(  # noqa: B008
         "leed.out", "--output", "-o", help="Output file"
     ),  # noqa: B008
 ):
     """Leed CLI."""
-    result = call_cleed(parameters_file, bulk_file)
+    result = call_cleed(parameters_file, bulk_file, phase_path)
 
     print_cleed_results(result, output_file)
 
