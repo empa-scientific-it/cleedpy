@@ -1,5 +1,15 @@
 #include "leed.h"
 
+typedef struct {
+    int n_beams;
+    real * beam_index1;
+    real * beam_index2;
+    int * beam_set;
+    int n_energies;
+    real * energies;
+    real * iv_curves;
+} CleedResult;
+
 void print_phase_shift(struct phs_str phs_shift)
 {
     int i;
@@ -23,11 +33,9 @@ void print_phase_shift(struct phs_str phs_shift)
 
 }
 
-real ** leed(
-    char * par_file,
-    char * bul_file,
-    char *res_file
-    ){
+
+CleedResult leed(char * par_file, char * bul_file)
+{
     struct cryst_str *bulk=NULL;
     struct cryst_str *over=NULL;
     struct phs_str *phs_shifts=NULL;
@@ -41,17 +49,14 @@ real ** leed(
 
     int n_beams_now, n_beams_set;
 
+    CleedResult results;
+
     int i_c, i_set, offset, i;
     int i_layer;
     int energy_index;
     int n_set;
-    int energy_list_size;
-    real *energy_list;
     real energy;
     real vec[4];
-
-    real **iv_curves=NULL;
-
     mat R_bulk=NULL, R_tot=NULL;
     mat Amp=NULL;
 
@@ -59,8 +64,6 @@ real ** leed(
     mat Tpp_s=NULL, Tmm_s=NULL, Rpm_s=NULL, Rmp_s=NULL;
 
     struct eng_str *eng=NULL;
-
-    FILE *res_stream;
 
     // Read input parameters
     inp_rdbul_nd(&bulk, &phs_shifts, bul_file);
@@ -71,19 +74,18 @@ real ** leed(
         print_phase_shift(phs_shifts[i]);
 
 
+
     // Construct energy list
-    energy_list_size = (eng->fin - eng->ini)/eng->stp + 1;
-    energy_list = (real *) malloc(energy_list_size * sizeof(real));
-    for (energy_index=0; energy_index<energy_list_size; energy_index++)
-    {
-        energy_list[energy_index] = eng->ini + energy_index * eng->stp;
-    }
+    results.n_energies = (eng->fin - eng->ini)/eng->stp + 1;
+    results.energies = (real *) malloc(results.n_energies * sizeof(real));
 
+    for (energy_index=0; energy_index < results.n_energies; energy_index++)
+        results.energies[energy_index] = eng->ini + energy_index * eng->stp;
 
-    res_stream = fopen(res_file,"w");
+    eng->fin = results.energies[results.n_energies - 1];
 
-    out_head(bulk, res_stream);
-
+    // Printing stuff
+    inp_showbop(bulk, over, phs_shifts);
 
     mk_cg_coef (2*v_par->l_max); // Setting up Clebsh Gordan coefficients as global variables.
     mk_ylm_coef(2*v_par->l_max); // Setting up spherical harmonics coefficients as global variables.
@@ -93,13 +95,13 @@ real ** leed(
 
     /* Generate beams out */
     n_set = bm_gen(&beams_all, bulk, v_par, eng->fin);
-    out_bmlist(&beams_out, beams_all, eng, res_stream);
-
+    results.n_beams = out_bmlist(&beams_out, beams_all, eng, &results.beam_index1, &results.beam_index2, &results.beam_set);
+    results.iv_curves = (real *) calloc(results.n_energies * results.n_beams, sizeof(real));
 
     /* Main Energy Loop */
 
-    for(energy_index=0; energy_index<energy_list_size; energy_index++){
-        pc_update(v_par, phs_shifts, energy_list[energy_index]);
+    for(energy_index=0; energy_index < results.n_energies; energy_index++){
+        pc_update(v_par, phs_shifts, results.energies[energy_index]);
         n_beams_now = bm_select(&beams_now, beams_all, v_par, bulk->dmin);
 
         /*********************************************************************
@@ -280,23 +282,9 @@ real ** leed(
         ********************************************/
 
         Amp = ld_potstep0(Amp, R_tot, beams_now, v_par->eng_v, vec);
-        out_int(Amp, beams_now, beams_out, v_par, res_stream);
+        out_int(Amp, beams_now, beams_out, v_par, &results.iv_curves[energy_index * results.n_beams]);
 
     }  /* end of energy loop */
 
-    fclose(res_stream);
-
-    return iv_curves;
-}
-
-
-int my_test_function(int a, int b, struct cryst_str * bulk){
-    printf("vr: %lf\n", bulk->vr);
-    printf("vi: %lf\n", bulk->vi);
-
-    printf("\nbulk 2-dim. unit cell:\n");
-    printf("a1:  (%7.4lf  %7.4lf)\n", bulk->a[1]*BOHR, bulk->a[3]*BOHR);
-    printf("a2:  (%7.4lf  %7.4lf)\n", bulk->a[2]*BOHR, bulk->a[4]*BOHR);
-
-    return a+b;
+    return results;
 }

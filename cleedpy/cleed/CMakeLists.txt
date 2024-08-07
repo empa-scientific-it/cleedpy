@@ -29,9 +29,3 @@ include_directories(include)
 
 # Add the src directory
 add_subdirectory(src)
-
-# Build the test
-add_executable(test_cleed test_cleed.c)
-
-# Link the test
-target_link_libraries(test_cleed cleed)
