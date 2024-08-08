@@ -21,11 +21,9 @@ def test_leed(folder):
     phase_shift = script_dir / folder / "PHASE"
     result = call_cleed(str(parameter_file), str(parameter_file), str(phase_shift))
 
-    assert result.n_beams == 55
-    assert result.n_energies == 108
-
     # Read beams.txt file using numpy. The file contains 3 colums: 1st beam index (float), 2nd beam index (float), and beam set (int)
     beams = np.loadtxt(script_dir / folder / "beams.txt", dtype=float)
+    assert beams.shape[0] == result.n_beams
 
     # Compare the beam indexes from the file with the result.beam_index
     assert np.allclose(
@@ -40,6 +38,9 @@ def test_leed(folder):
     iv_curves = np.loadtxt(script_dir / folder / "iv_curves.txt", dtype=float).reshape(
         result.n_energies, result.n_beams + 1
     )
+
+    assert iv_curves.shape[0] == result.n_energies
+
     assert np.allclose(
         iv_curves[:, 0], [result.energies[i] * HART for i in range(result.n_energies)]
     )
