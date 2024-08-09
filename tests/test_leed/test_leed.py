@@ -10,6 +10,7 @@ from cleedpy.physics.constants import HART
 @pytest.mark.parametrize(
     "folder",
     [
+        "../../examples/ni111_2x2O/",
         "../../examples/cleedpy_example_intermediate/",
     ],
 )
@@ -23,6 +24,8 @@ def test_leed(folder):
 
     # Read beams.txt file using numpy. The file contains 3 colums: 1st beam index (float), 2nd beam index (float), and beam set (int)
     beams = np.loadtxt(script_dir / folder / "beams.txt", dtype=float)
+
+    # Check the number of beams
     assert beams.shape[0] == result.n_beams
 
     # Compare the beam indexes from the file with the result.beam_index
@@ -39,11 +42,15 @@ def test_leed(folder):
         result.n_energies, result.n_beams + 1
     )
 
+    # Check the number of energies
     assert iv_curves.shape[0] == result.n_energies
 
+    # Compare the energies from the file with the result.energies
     assert np.allclose(
         iv_curves[:, 0], [result.energies[i] * HART for i in range(result.n_energies)]
     )
+
+    # Compare the iv curves from the file with the result.iv_curves
     iv_curves = iv_curves[:, 1:]
     for i in range(result.n_energies):
         assert np.allclose(
