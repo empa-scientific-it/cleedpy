@@ -49,7 +49,7 @@ GH/29.09.00 - calculate dr2 for dmt input in function inp_debtemp
 
 /********************************************************************/
 
-int inp_rdovl_nd (struct cryst_str **p_over_par, struct phs_str **p_phs_shifts, struct cryst_str *bulk_par, char *filename, char *phase_path)
+int inp_rdovl_nd (struct cryst_str **p_over_par, struct phs_str **p_phs_shifts, struct cryst_str *bulk_par, char *filename, char *phase_path, int *n_phase_shifts)
 /*********************************************************************
   Read all the overlayer parameters that do change during a search
 
@@ -64,11 +64,6 @@ int inp_rdovl_nd (struct cryst_str **p_over_par, struct phs_str **p_phs_shifts, 
   'po': postion and type of overlayer atoms.
 
   The atoms are in order of increasing z before they enter inp_ovl_layer.
-
-  FUNCTION CALLS
-
-   - inp_phase_nd
-   - inp_ovl_layer
 
   RETURN VALUES
 
@@ -304,7 +299,7 @@ struct atom_str *atoms_rd;    /* this vector of structure atom_str is
        }
 
      /* input of atomic phase shifts */
-       atoms_rd[i_atoms].type = inp_phase_nd(filename_path, vaux, atoms_rd[i_atoms].t_type, p_phs_shifts);
+       atoms_rd[i_atoms].type = inp_phase_nd(filename_path, vaux, atoms_rd[i_atoms].t_type, p_phs_shifts, n_phase_shifts);
        over_par->ntypes = MAX(atoms_rd[i_atoms].type+1, over_par->ntypes);
 
        i_atoms ++;
