@@ -61,8 +61,6 @@ int inp_phase_nd( char * filename, real * dr, int t_type, struct phs_str **p_phs
     real eng_scale;
     real faux;
 
-    printf ("Inside inp_phase_nd\n");
-
     if((*i_phase) > 0)
     {
         /* Compare filename, dr, and t_type with previous phaseshifts. Return the
@@ -78,13 +76,11 @@ int inp_phase_nd( char * filename, real * dr, int t_type, struct phs_str **p_phs
                 return(i);
                 break;
             }
-
         (*i_phase) ++;
         *p_phs_shifts = (struct phs_str *)realloc(*p_phs_shifts, ((*i_phase) + 1) * sizeof(struct phs_str) );
     }
     else
     {
-
         (*i_phase) ++;
         *p_phs_shifts = (struct phs_str *) malloc( 2 * sizeof(struct phs_str) );
     }
