@@ -55,6 +55,7 @@ CleedResult leed(char * par_file, char * bul_file, char *phase_path)
     int i_layer;
     int energy_index;
     int n_set;
+    int n_phase_shifts=0;
     real energy;
     real vec[4];
     mat R_bulk=NULL, R_tot=NULL;
@@ -66,9 +67,9 @@ CleedResult leed(char * par_file, char * bul_file, char *phase_path)
     struct eng_str *eng=NULL;
 
     // Read input parameters
-    inp_rdbul_nd(&bulk, &phs_shifts, bul_file, phase_path);
+    inp_rdbul_nd(&bulk, &phs_shifts, bul_file, phase_path, &n_phase_shifts);
     inp_rdpar(&v_par, &eng, bulk, bul_file);
-    inp_rdovl_nd(&over, &phs_shifts, bulk, par_file, phase_path);
+    inp_rdovl_nd(&over, &phs_shifts, bulk, par_file, phase_path, &n_phase_shifts);
     inp_showbop(bulk, over, phs_shifts);
     for (i=0; (phs_shifts + i)->lmax != I_END_OF_LIST; i++)
         print_phase_shift(phs_shifts[i]);
