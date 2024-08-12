@@ -342,7 +342,6 @@ int inp_rdbul_nd (struct cryst_str **p_bulk_par, struct phs_str **p_phs_shifts, 
 
                 // Input of atomic phase shifts
                 atoms_rd[i_atoms].type = inp_phase_nd(filename_path, vaux, atoms_rd[i_atoms].t_type, p_phs_shifts, n_phase_shifts);
-                printf("XXXXXXXXXXX!!\n");
 
                 bulk_par->ntypes = MAX(atoms_rd[i_atoms].type+1, bulk_par->ntypes);
                 i_atoms ++;
