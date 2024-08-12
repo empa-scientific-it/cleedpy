@@ -2,11 +2,6 @@
   GH/15.07.03
   file contains function:
 
-  upd_phase
-   Update the number of phase shifts.
-  inp_phase_nd
-   Read phase shifts from an input file and store them.
-
 Changes:
 
   GH/04.07.94 - Creation
@@ -31,30 +26,8 @@ Changes:
 #include "leed.h"
 #include "leed_def.h"
 
-static int i_phase = 0;      /* number of atom types */
 
-/********************************************************************/
-
-int upd_phase( int n)
-
-/*********************************************************************
-  Update the number of phase shifts i_phase
-
-INPUT:
-  int n number i_phase will be set to.
-
-RETURN VALUE:
-  i_phase (i.e. equal to the argument)
-
-*********************************************************************/
-{
-    i_phase = n;
-    return(i_phase);
-} /* end of function upd_phase */
-
-/********************************************************************/
-
-int inp_phase_nd( char * filename, real * dr, int t_type, struct phs_str **p_phs_shifts)
+int inp_phase_nd( char * filename, real * dr, int t_type, struct phs_str **p_phs_shifts, int *i_phase)
 /*********************************************************************
 
     Read phase shifts from an input file and store them.
@@ -88,11 +61,11 @@ int inp_phase_nd( char * filename, real * dr, int t_type, struct phs_str **p_phs
     real eng_scale;
     real faux;
 
-    if(i_phase > 0)
+    if((*i_phase) > 0)
     {
         /* Compare filename, dr, and t_type with previous phaseshifts. Return the
         corresponding phase shift number if the same combination has already been read. */
-        for(i=0; i< i_phase; i++)
+        for(i=0; i< (*i_phase); i++)
             if( (!strcmp( (*p_phs_shifts + i)->input_file, filename) )         &&
                 ( R_fabs(dr[1] - (*p_phs_shifts + i)->dr[1]) < GEO_TOLERANCE ) &&
                 ( R_fabs(dr[2] - (*p_phs_shifts + i)->dr[2]) < GEO_TOLERANCE ) &&
@@ -103,21 +76,21 @@ int inp_phase_nd( char * filename, real * dr, int t_type, struct phs_str **p_phs
                 return(i);
                 break;
             }
-        i_phase ++;
-        *p_phs_shifts = (struct phs_str *)realloc(*p_phs_shifts, (i_phase + 1) * sizeof(struct phs_str) );
+        (*i_phase) ++;
+        *p_phs_shifts = (struct phs_str *)realloc(*p_phs_shifts, ((*i_phase) + 1) * sizeof(struct phs_str) );
     }
     else
     {
-        i_phase ++;
+        (*i_phase) ++;
         *p_phs_shifts = (struct phs_str *) malloc( 2 * sizeof(struct phs_str) );
     }
 
     // Terminate list of phase shifts.
 
-    (*(p_phs_shifts) + i_phase)->lmax = I_END_OF_LIST;
+    (*(p_phs_shifts) + (*i_phase))->lmax = I_END_OF_LIST;
 
 
-    phs_shifts = *(p_phs_shifts) + i_phase-1;
+    phs_shifts = *(p_phs_shifts) + (*i_phase)-1;
 
     // Write dr and t_type to phs_shifts.
     for(i=0; i<=3; i++) phs_shifts->dr[i] = dr[i];
@@ -185,7 +158,6 @@ int inp_phase_nd( char * filename, real * dr, int t_type, struct phs_str **p_phs
     phs_shifts->energy = (real *)calloc( neng, sizeof(real) );
     phs_shifts->pshift = (real *)calloc( neng * nl, sizeof(real) );
 
-
     for( i_eng = 0; (i_eng < neng) && (fgets(linebuffer, STRSZ, inp_stream) != NULL); i_eng ++)
     {
         sscanf(linebuffer, "%le", phs_shifts->energy+i_eng);
@@ -219,5 +191,5 @@ int inp_phase_nd( char * filename, real * dr, int t_type, struct phs_str **p_phs
         fprintf(STDWAR, "     expected energies: %3d, found: %3d, file: %s\n", neng, i_eng+1, filename);
     }
 
-    return(i_phase - 1);
+    return((*i_phase) - 1);
 } /* end of function inp_phase */
