@@ -4,14 +4,14 @@ import numpy as np
 import pytest
 
 from cleedpy.rfactor import r2_factor, rp_factor
-from tests.curves_helper import curve_A, curve_B, curve_C
+from tests.curves_helper import curve_a, curve_b, curve_c
 
 
 @pytest.mark.parametrize(
     "the_curve, exp_curve, expected_r",
     [
-        (curve_A(), curve_B(), 1.8688830931),
-        (curve_B(), curve_C(), 0.0001429368),
+        (curve_a(), curve_b(), 1.8688830931),
+        (curve_b(), curve_c(), 0.0001429368),
     ],
 )
 def test_r2_factor(the_curve, exp_curve, expected_r):
@@ -23,8 +23,8 @@ def test_r2_factor(the_curve, exp_curve, expected_r):
 @pytest.mark.parametrize(
     "the_curve, exp_curve, expected_r",
     [
-        (curve_A(), curve_B(), 1.4898282448),
-        (curve_B(), curve_C(), 0),
+        (curve_a(), curve_b(), 1.4898282448),
+        (curve_b(), curve_c(), 0),
     ],
 )
 def test_rp_factor(the_curve, exp_curve, expected_r):

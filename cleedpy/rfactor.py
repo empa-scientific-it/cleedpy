@@ -11,11 +11,11 @@ def r2_factor(theoretical_curve, experimental_curve):
         - experimental curve: numpy array of [e,i] arrays
 
     Design:
-        R2 = sqrt{ S(It - c*Ie)^2 / S(It - It_avg)^2 }
+        R2 = sqrt{ S(it - c*ie)^2 / S(it - it_avg)^2 }
 
         where:
-            c = sqrt( S|It|^2 / S|Ie|^ 2)
-            It_avg = (S It)/ dE
+            c = sqrt( S|it|^2 / S|ie|^ 2)
+            it_avg = (S it)/ dE
     """
 
     # [TODO] (not sure) Use the length of the shortest curve
@@ -23,23 +23,23 @@ def r2_factor(theoretical_curve, experimental_curve):
     theoretical_curve = theoretical_curve[:min_length]
     experimental_curve = experimental_curve[:min_length]
 
-    # Extract the It, Ie values for theoretical and experimental intensity
-    It = theoretical_curve[:, 1]
-    Ie = experimental_curve[:, 1]
+    # Extract the it, ie values for theoretical and experimental intensity
+    it = theoretical_curve[:, 1]
+    ie = experimental_curve[:, 1]
 
-    # Calculate normalization factor c and It_avg
-    c = np.sqrt(np.sum(It**2) / np.sum(Ie**2))
-    It_avg = np.sum(It) / It.size  # dE = number of energy steps
+    # Calculate normalization factor c and it_avg
+    c = np.sqrt(np.sum(it**2) / np.sum(ie**2))
+    it_avg = np.sum(it) / it.size  # dE = number of energy steps
 
     # Calculate the numerator and denominator of R2
-    numerator = np.sum((It - c * Ie) ** 2)
-    denominator = np.sum((It - It_avg) ** 2)
+    numerator = np.sum((it - c * ie) ** 2)
+    denominator = np.sum((it - it_avg) ** 2)
 
     # Calculate R2
-    R2 = np.sqrt(numerator / denominator)
+    r2 = np.sqrt(numerator / denominator)
 
     # [TODO] error handling: may return NaN
-    return R2
+    return r2
 
 
 def rp_factor(theoretical_curve, experimental_curve):
@@ -52,39 +52,39 @@ def rp_factor(theoretical_curve, experimental_curve):
         - experimental curve: numpy array of [e,i] arrays
 
     Design:
-        Rp = S(Ye - Yt)^2 / S(Ye^2 + Yt^2)
+        Rp = S(ye - yt)^2 / S(ye^2 + yt^2)
     """
 
-    # Extract the It, Ie values for theoretical and experimental intensity
-    It = theoretical_curve[:, 1]
-    Ie = experimental_curve[:, 1]
+    # Extract the it, ie values for theoretical and experimental intensity
+    it = theoretical_curve[:, 1]
+    ie = experimental_curve[:, 1]
 
-    # Extract the Et, Ee values for theoretical and experimental energy
-    Et = theoretical_curve[:, 0]
-    Ee = experimental_curve[:, 0]
+    # Extract the et, ee values for theoretical and experimental energy
+    et = theoretical_curve[:, 0]
+    ee = experimental_curve[:, 0]
 
     # Calculate theoretical and experimental energy steps
-    step_Et = energy_step(Et)
-    step_Ee = energy_step(Ee)
+    step_et = energy_step(et)
+    step_ee = energy_step(ee)
 
     # Calculate Y for theoretical and experimental intensity
-    Yt = Y_function(It, step_Et)
-    Ye = Y_function(Ie, step_Ee)
+    yt = y_function(it, step_et)
+    ye = y_function(ie, step_ee)
 
     # Calculate the numerator and denominator of Rp
-    numerator = np.sum((Yt - Ye) ** 2 * step_Et)
-    denominator = np.sum(Ye**2 * step_Ee) + np.sum(Yt**2 * step_Et)
+    numerator = np.sum((yt - ye) ** 2 * step_et)
+    denominator = np.sum(ye**2 * step_ee) + np.sum(yt**2 * step_et)
 
     # Calculate Rp
-    Rp = numerator / denominator
+    rp = numerator / denominator
 
     # [TODO] error handling: may return NaN
-    return Rp
+    return rp
 
 
-def Y_function(I, energy_step):
+def y_function(intensities, energy_step):
     """
-    Calculates Y for a given curve.
+    Calculates y for a given curve.
 
     Inputs:
         - I: array of intensity values of the curve
@@ -100,13 +100,13 @@ def Y_function(I, energy_step):
     # [TODO] constants should be defined elsewhere
     vi = 4
 
-    L = (I[1:] - I[:-1]) / (energy_step * 0.5 * (I[1:] + I[:-1]))
-    Y = L / (1 + L**2 * vi**2)
+    y_values = (intensities[1:] - intensities[:-1]) / (
+        energy_step * 0.5 * (intensities[1:] + intensities[:-1])
+    )
+    return y_values / (1 + y_values**2 * vi**2)
 
-    return Y
 
-
-def energy_step(E):
+def energy_step(energies):
     """
     Calculates the pairwise energy step. Returns an array.
 
@@ -117,4 +117,4 @@ def energy_step(E):
         step = E[i] - E[i-1]
     """
 
-    return E[1:] - E[:-1]
+    return energies[1:] - energies[:-1]

@@ -1,4 +1,4 @@
-def curve_A():
+def curve_a():
     return [
         [70, 0.0037557780],
         [74, 0.0013476560],
@@ -18,7 +18,7 @@ def curve_A():
     ]
 
 
-def curve_B():
+def curve_b():
     return [
         [70, 0.0101207100],
         [74, 0.0100794400],
@@ -38,7 +38,7 @@ def curve_B():
     ]
 
 
-def curve_C():
+def curve_c():
     return [
         [70, 0.0101222800],
         [74, 0.0100787500],
@@ -58,7 +58,7 @@ def curve_C():
     ]
 
 
-def curve_A_smoothed():
+def curve_a_smoothed():
     return [
         [70, 0.00258495],
         [74, 0.00182937],

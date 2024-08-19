@@ -5,24 +5,24 @@ import numpy as np
 import pytest
 
 from cleedpy.preprocessing import lorentzian_smoothing, preprocessing_loop
-from tests.curves_helper import curve_A, curve_A_smoothed, curve_B
+from tests.curves_helper import curve_a, curve_a_smoothed, curve_b
 
 
 @pytest.mark.parametrize(
     "curve, vi, expected",
     [
-        (np.array(curve_A()), 4, np.array(curve_A_smoothed())),
+        (np.array(curve_a()), 4, np.array(curve_a_smoothed())),
     ],
 )
 def test_lorentzian_smoothing(curve, vi, expected):
-    L_curve = lorentzian_smoothing(curve, vi)
+    l_curve = lorentzian_smoothing(curve, vi)
 
     x_values = curve[:, 0]
     y_values = curve[:, 1]
     plt.plot(x_values, y_values, marker="o", color="g", label="Input: Initial curve")
 
-    x_values = L_curve[:, 0]
-    y_values = L_curve[:, 1]
+    x_values = l_curve[:, 0]
+    y_values = l_curve[:, 1]
     plt.plot(x_values, y_values, marker="x", color="r", label="Output: Smoothed curve")
 
     y_min = 0
@@ -34,13 +34,13 @@ def test_lorentzian_smoothing(curve, vi, expected):
     plt.legend()
     plt.savefig("test_lorentzian_smoothing_output.png")
 
-    assert np.allclose(expected, L_curve)
+    assert np.allclose(expected, l_curve)
 
 
 @pytest.mark.parametrize(
     "the_curve, exp_curve, shift, r_factor, vi, expected",
     [
-        ([curve_A(), curve_B()], [curve_A(), curve_B()], 1, "r2_factor", 4, 0),
+        ([curve_a(), curve_b()], [curve_a(), curve_b()], 1, "r2_factor", 4, 0),
     ],
 )
 def test_preprocessing_loop(the_curve, exp_curve, shift, r_factor, vi, expected):

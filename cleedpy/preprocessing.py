@@ -1,8 +1,6 @@
 import numpy as np
 from scipy.interpolate import CubicHermiteSpline
 
-from cleedpy.rfactor import r2_factor, rp_factor
-
 
 def lorentzian_smoothing(curve, vi):
     """
@@ -18,19 +16,21 @@ def lorentzian_smoothing(curve, vi):
         The result of the convolution: a new array of [e,i] arrays
     """
 
-    E = curve[:, 0]
-    I = curve[:, 1]
-    L = []
+    energies = curve[:, 0]
+    intensities = curve[:, 1]
+    result = []
 
-    for j in range(E.size):
+    for j in range(energies.size):
         c = 0
-        L_value = 0
-        for i in range(E.size):
-            c += vi**2 / ((E[i] - E[j]) ** 2 + vi**2)
-            L_value += I[i] * vi**2 / ((E[i] - E[j]) ** 2 + vi**2)
-        L.append(L_value / c)
+        l_value = 0
+        for i in range(energies.size):
+            c += vi**2 / ((energies[i] - energies[j]) ** 2 + vi**2)
+            l_value += (
+                intensities[i] * vi**2 / ((energies[i] - energies[j]) ** 2 + vi**2)
+            )
+        result.append(l_value / c)
 
-    return np.array(list(zip(E, L)))
+    return np.array(list(zip(energies, result)))
 
 
 def preprocessing_loop(theoretical_curves, experimental_curves, shift, r_factor, vi):
@@ -97,10 +97,10 @@ def preprocessing_loop(theoretical_curves, experimental_curves, shift, r_factor,
 
     # Spline
     for i in range(len(filtered_experimental_curves)):
-        E_values = filtered_experimental_curves[i][:, 0]
-        I_values = filtered_experimental_curves[i][:, 1]
-        theoretical_E_grid = filtered_theoretical_curves[i][:, 0]
-        CubicHermiteSpline(E_values, I_values, theoretical_E_grid)
+        e_values = filtered_experimental_curves[i][:, 0]
+        i_values = filtered_experimental_curves[i][:, 1]
+        theoretical_e_grid = filtered_theoretical_curves[i][:, 0]
+        CubicHermiteSpline(e_values, i_values, theoretical_e_grid)
 
     print(globals().get(r_factor))
     return
