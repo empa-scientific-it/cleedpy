@@ -23,6 +23,7 @@ classifiers = [
 requires-python = ">=3.10"
 dependencies = [
     "click",
+    "matplotlib",
     "numpy",
     "pyyaml",
     "scipy",
