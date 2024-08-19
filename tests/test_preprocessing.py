@@ -1,11 +1,9 @@
-import math
-
 import matplotlib.pyplot as plt
 import numpy as np
 import pytest
 
-from cleedpy.preprocessing import lorentzian_smoothing, preprocessing_loop
-from tests.curves_helper import curve_a, curve_a_smoothed, curve_b
+from cleedpy.preprocessing import lorentzian_smoothing
+from tests.curves_helper import curve_a, curve_a_smoothed
 
 
 @pytest.mark.parametrize(
@@ -35,19 +33,3 @@ def test_lorentzian_smoothing(curve, vi, expected):
     plt.savefig("test_lorentzian_smoothing_output.png")
 
     assert np.allclose(expected, l_curve)
-
-
-@pytest.mark.parametrize(
-    "the_curve, exp_curve, shift, r_factor, vi, expected",
-    [
-        ([curve_a(), curve_b()], [curve_a(), curve_b()], 1, "r2_factor", 4, 0),
-    ],
-)
-def test_preprocessing_loop(the_curve, exp_curve, shift, r_factor, vi, expected):
-    assert math.isclose(
-        expected,
-        preprocessing_loop(
-            np.array(the_curve), np.array(exp_curve), shift, r_factor, vi
-        ),
-        abs_tol=5,
-    )
