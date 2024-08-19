@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=61.2"]
+requires = ["setuptools>=61.2", "cmake>=3.5"]
 build-backend = "setuptools.build_meta"
 
 
@@ -26,6 +26,8 @@ dependencies = [
     "numpy",
     "pyyaml",
     "scipy",
+    "pydantic",
+    "typer"
 ]
 
 [project.optional-dependencies]
@@ -39,6 +41,7 @@ dev = [
 [project.scripts]
 cleedpy-rfactor = "cleedpy.cli.rfactor:cli"
 cleedpy-search = "cleedpy.cli.search:cli"
+cleedpy-leed = "cleedpy.cli.leed:cli"
 
 [tool.setuptools]
 include-package-data = true

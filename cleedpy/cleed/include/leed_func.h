@@ -24,19 +24,13 @@ int inpovlay_sym(struct cryst_str *, struct atom_str *);
    /* read a matrix with specified l1 m1 l2 m2 */
 mat inp_mat_lm(mat , int , const char *);
 
-   /* read phase shifts; file linpphase.c */
-int inp_phase   ( char * , real * , struct phs_str **);
-int inp_phase_nd( char * , real * , int , struct phs_str **);
-int upd_phase( int );
-
    /* read bulk parameters; file linprdbul.c */
-int inp_rdbul   (struct cryst_str ** , struct phs_str ** , char *);
-int inp_rdbul_nd(struct cryst_str ** , struct phs_str ** , char *);
+int inp_rdbul_nd(struct cryst_str ** , struct phs_str ** , char *, char *, int *);
 int inp_rdbulsym(struct cryst_str ** , struct phs_str ** , char *);
 
    /* read overlayer parameters; file linprdovl.c */
 int inp_rdovl   (struct cryst_str ** , struct phs_str ** , struct cryst_str * , char *);
-int inp_rdovl_nd(struct cryst_str **, struct phs_str **, struct cryst_str *, char *);
+int inp_rdovl_nd(struct cryst_str **, struct phs_str **, struct cryst_str *, char *, char *, int *);
 int inp_rdovlsym(struct cryst_str ** , struct phs_str ** , struct cryst_str * , char *);
    /* read other parameters; file linprdpar.c */
 int inp_rdpar(struct var_str **, struct eng_str **, struct cryst_str * , char *);
@@ -90,11 +84,8 @@ int pc_mk_ms(mat * , mat *, mat *, mat *, mat *, mat *, int );
 /*********************************************************************
  Output
 *********************************************************************/
-int out_head(struct cryst_str *, FILE *);
-int out_head_2(struct cryst_str *, const char *, const char *, FILE *);
-int out_bmlist(struct beam_str **, struct beam_str *, struct eng_str *, FILE *);
-int out_int(mat , struct beam_str *, struct beam_str *, struct var_str *, FILE * );
-int out_intsym(mat , struct beam_str *, struct beam_str *, struct var_str *, FILE * );
+int out_bmlist(struct beam_str **, struct beam_str *, struct eng_str *, real **, real **, int **);
+int out_int(mat , struct beam_str *, struct beam_str *, struct var_str *, real *);
 
     /* check cpu time */
 double cpu_time(FILE *, const char *);
