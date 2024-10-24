@@ -2,7 +2,7 @@ import numpy as np
 from scipy.interpolate import CubicHermiteSpline
 
 
-def lorentzian_smoothing(curve, vi):
+def lorentzian_smoothing(curve, vi=4.0):
     """
     Draws a Lorentzian curve in the same grid as the given curve.
     Performs the convolution of the two curves.

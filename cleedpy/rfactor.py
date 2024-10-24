@@ -1,7 +1,10 @@
 import numpy as np
+from scipy.interpolate import CubicSpline
+
+from .preprocessing import lorentzian_smoothing
 
 
-def r2_factor(theoretical_curve, experimental_curve):
+def r2_factor(experimental_curve, theoretical_curve):
     """
     Calculates R2-factor of the curve of a specific spot (x,y) of the experiment.
     A curve is represented by an array of (e,i) points, where e = energy and i = intensity.
@@ -17,11 +20,6 @@ def r2_factor(theoretical_curve, experimental_curve):
             c = sqrt( S|it|^2 / S|ie|^ 2)
             it_avg = (S it)/ dE
     """
-
-    # [TODO] (not sure) Use the length of the shortest curve
-    min_length = min(len(theoretical_curve), len(experimental_curve))
-    theoretical_curve = theoretical_curve[:min_length]
-    experimental_curve = experimental_curve[:min_length]
 
     # Extract the it, ie values for theoretical and experimental intensity
     it = theoretical_curve[:, 1]
@@ -42,7 +40,7 @@ def r2_factor(theoretical_curve, experimental_curve):
     return r2
 
 
-def rp_factor(theoretical_curve, experimental_curve):
+def rp_factor(experimental_curve, theoretical_curve):
     """
     Calculates Pendry's R-factor of the curve of a specific spot (x,y) of the experiment.
     A curve is represented by an array of (e,i) points, where e = energy and i = intensity.
@@ -118,3 +116,71 @@ def energy_step(energies):
     """
 
     return energies[1:] - energies[:-1]
+
+
+def split_in_pairs(exp_iv, theo_iv):
+    """This function takes a complete datasets with a experimental and theoretical iv curves splits them them in pairs corresponding to the same index."""
+
+    beam_indices = np.unique(np.vstack([exp_iv, theo_iv])[:, [0, 1]], axis=0)
+
+    for indx1, indx2 in beam_indices:
+        exp_curve = exp_iv[(exp_iv[:, 0] == indx1) & (exp_iv[:, 1] == indx2)][
+            :, [-2, -1]
+        ]
+        theo_curve = theo_iv[(theo_iv[:, 0] == indx1) & (theo_iv[:, 1] == indx2)][
+            :, [-2, -1]
+        ]
+        yield exp_curve, theo_curve
+
+
+def find_common_x_axis(x1, x2):
+    min_x = max(np.min(x1), np.min(x2))
+    max_x = min(np.max(x1), np.max(x2))
+
+    x1 = x1[(x1 >= min_x) & (x1 <= max_x)]
+    x2 = x2[(x2 >= min_x) & (x2 <= max_x)]
+
+    return np.unique(np.sort(np.concatenate([x2, x1])))
+
+
+def compute_rfactor(experimental_iv, theoretical_iv, shift=0.0, rfactor_type="r2"):
+
+    r_tot = 0.0
+    rfactor = {
+        "r2": r2_factor,
+        "pendry": rp_factor,
+    }
+
+    # Looping over the pairs of experimental and theoretical curves corresponding to the same index.
+    for exp_curve, theo_curve in split_in_pairs(experimental_iv, theoretical_iv):
+        if len(exp_curve) < 1 or len(theo_curve) < 1:
+            continue
+        # Perform Lorentzian smoothing.
+        exp_curve = lorentzian_smoothing(exp_curve)
+        theo_curve = lorentzian_smoothing(exp_curve)
+
+        # Shifting the theoretical curve.
+        theo_curve[:, 0] += shift
+
+        # Finding common x axis.
+        common_x = find_common_x_axis(theo_curve[:, 0], exp_curve[:, 0])
+
+        exp_spline = CubicSpline(x=exp_curve[:, 0], y=exp_curve[:, 1])(common_x)
+        theo_spline = CubicSpline(x=theo_curve[:, 0], y=theo_curve[:, 1])(common_x)
+
+        # Uncomment for testing.
+        # import matplotlib.pyplot as plt  # noqa: E800
+        # plt.plot(theo_curve[:,0], theo_curve[:,1], 'o', label='Data Points')  # noqa: E800
+        # plt.plot(common_x, theo_spline, label='Cubic Spline')  # noqa: E800
+        # #plt.plot(exp_curve_before_smooth[:,0], exp_curve_before_smooth[:,1], label='Before smooth')  # noqa: E800
+        # plt.legend()  # noqa: E800
+        # plt.show()  # noqa: E800
+
+        r = rfactor[rfactor_type](
+            np.column_stack([common_x, exp_spline]),
+            np.column_stack([common_x, theo_spline]),
+        )
+
+        r_tot += r
+
+    return r_tot
