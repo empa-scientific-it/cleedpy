@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pytest
 
-from cleedpy.rfactor import lorentzian_smoothing, r2_factor, rp_factor
+from cleedpy import rfactor as rf
 
 
 def curve_a():
@@ -54,7 +54,7 @@ def curve_a_smoothed():
     ],
 )
 def test_lorentzian_smoothing(curve, vi, expected):
-    l_curve = lorentzian_smoothing(curve, vi)
+    l_curve = rf.lorentzian_smoothing(curve, vi)
 
     x_values = curve[:, 0]
     y_values = curve[:, 1]
@@ -76,20 +76,22 @@ def test_lorentzian_smoothing(curve, vi, expected):
     assert np.allclose(expected, l_curve)
 
 
-def test_r2_factor_other():
+def test_r2_factor():
     """Test for r2_factor with different curves."""
     x = np.arange(50, 300, 0.1)
     y = np.sin(x * np.pi / 20) ** 2 + 0.1  # The 0.1 here is to avoid zero values
 
     # Same curves should give 0.0
     assert math.isclose(
-        r2_factor(np.column_stack([x, y]), np.column_stack([x, y])), 0.0, abs_tol=1e-8
+        rf.r2_factor(np.column_stack([x, y]), np.column_stack([x, y])),
+        0.0,
+        abs_tol=1e-8,
     )
 
     # Multiplying by a constant should not change the r2 factor
     y_times_constant = y * 5
     assert math.isclose(
-        r2_factor(np.column_stack([x, y]), np.column_stack([x, y_times_constant])),
+        rf.r2_factor(np.column_stack([x, y]), np.column_stack([x, y_times_constant])),
         0,
         abs_tol=1e-8,
     )
@@ -97,7 +99,7 @@ def test_r2_factor_other():
     # Shifting x by 10 should put the maximum of one curve at the minimum of the other, so the r2 factor should be close to 2
     y_shifted = np.sin((x + 10) * np.pi / 20) ** 2 + 0.1
     assert math.isclose(
-        r2_factor(np.column_stack([x, y]), np.column_stack([x, y_shifted])),
+        rf.r2_factor(np.column_stack([x, y]), np.column_stack([x, y_shifted])),
         2,
         abs_tol=1e-2,
     )
@@ -106,7 +108,9 @@ def test_r2_factor_other():
     r_previous = 0.0
     for shift in np.arange(0.1, 10.1, 0.1):
         y_shifted = np.sin((x + shift) * np.pi / 20) ** 2 + 0.1
-        r_current = r2_factor(np.column_stack([x, y]), np.column_stack([x, y_shifted]))
+        r_current = rf.r2_factor(
+            np.column_stack([x, y]), np.column_stack([x, y_shifted])
+        )
         assert r_current > r_previous, f"R factor should increase with shift: {shift}"
         r_previous = r_current
 
@@ -116,7 +120,7 @@ def test_r2_factor_other():
         y_modulated = (
             np.sin(x * np.pi / 20) ** 2 * (1 + alpha * np.sin(x * np.pi / 100)) + 0.1
         )
-        r_current = r2_factor(
+        r_current = rf.r2_factor(
             np.column_stack([x, y]), np.column_stack([x, y_modulated])
         )
         assert (
@@ -125,20 +129,22 @@ def test_r2_factor_other():
         r_previous = r_current
 
 
-def test_rp_factor_other():
+def test_rp_factor():
     """Test for rp_factor with different curves."""
     x = np.arange(50, 300, 0.1)
     y = np.sin(x * np.pi / 20) ** 2 + 0.1  # The 0.1 here is to avoid zero values
 
     # Same curves should give 0.0
     assert math.isclose(
-        rp_factor(np.column_stack([x, y]), np.column_stack([x, y])), 0.0, abs_tol=1e-8
+        rf.rp_factor(np.column_stack([x, y]), np.column_stack([x, y])),
+        0.0,
+        abs_tol=1e-8,
     )
 
     # Multiplying by a constant should not change the rp factor
     y_times_constant = y * 5
     assert math.isclose(
-        rp_factor(np.column_stack([x, y]), np.column_stack([x, y_times_constant])),
+        rf.rp_factor(np.column_stack([x, y]), np.column_stack([x, y_times_constant])),
         0,
         abs_tol=1e-8,
     )
@@ -146,7 +152,7 @@ def test_rp_factor_other():
     # Shifting x by 10 should put the maximum of one curve at the minimum of the other, so the rp factor should be close to 2
     y_shifted = np.sin((x + 10) * np.pi / 20) ** 2 + 0.1
     assert math.isclose(
-        rp_factor(np.column_stack([x, y]), np.column_stack([x, y_shifted])),
+        rf.rp_factor(np.column_stack([x, y]), np.column_stack([x, y_shifted])),
         2,
         abs_tol=1e-1,
     )
@@ -155,7 +161,9 @@ def test_rp_factor_other():
     r_previous = 0.0
     for shift in np.arange(0.1, 10.1, 0.1):
         y_shifted = np.sin((x + shift) * np.pi / 20) ** 2 + 0.1
-        r_current = rp_factor(np.column_stack([x, y]), np.column_stack([x, y_shifted]))
+        r_current = rf.rp_factor(
+            np.column_stack([x, y]), np.column_stack([x, y_shifted])
+        )
         assert r_current > r_previous, f"Rp factor should increase with shift: {shift}"
         r_previous = r_current
 
@@ -165,7 +173,32 @@ def test_rp_factor_other():
             np.sin(x * np.pi / 20) ** 2 * (1 + alpha * np.sin(x * np.pi / 100)) + 0.1
         )
         assert math.isclose(
-            rp_factor(np.column_stack([x, y]), np.column_stack([x, y_modulated])),
+            rf.rp_factor(np.column_stack([x, y]), np.column_stack([x, y_modulated])),
             0,
             abs_tol=1e-1,
         ), f"Rp factor should be close to 0 with modulation: {alpha}"
+
+
+def test_find_common_x_axis():
+    """Test for find_common_x_axis with different curves."""
+
+    # Test with overlapping ranges
+    x1 = np.array([1, 2, 3, 4, 5])
+    x2 = np.array([3, 4, 5, 6, 7])
+    expected = np.array([3, 4, 5])
+    result = rf.find_common_x_axis(x1, x2)
+    assert np.array_equal(result, expected), f"Expected {expected}, but got {result}"
+
+    # Test with no common points
+    x1 = np.array([1, 2])
+    x2 = np.array([3, 4])
+    expected = np.array([])
+    result = rf.find_common_x_axis(x1, x2)
+    assert np.array_equal(result, expected), f"Expected {expected}, but got {result}"
+
+    # Test with overlapping ranges but different points
+    x1 = np.array([1, 2, 3, 4, 5])
+    x2 = np.array([2.4, 3.5, 4.6, 5.7, 6.8])
+    expected = np.array([2.4, 3, 3.5, 4.0, 4.6, 5])
+    result = rf.find_common_x_axis(x1, x2)
+    assert np.array_equal(result, expected), f"Expected {expected}, but got {result}"
