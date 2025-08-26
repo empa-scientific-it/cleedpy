@@ -61,7 +61,8 @@ class CMakeBuild(build_ext):
             )
             subprocess.check_call(["cmake", "--build", "."] + build_args, cwd=build_dir)
         except subprocess.CalledProcessError as err:
-            raise RuntimeError(f"CMake error: {err}") from err
+            error_message = f"CMake failed with error {err}"
+            raise RuntimeError(error_message) from err
 
 
 setup(
