@@ -1,23 +1,34 @@
-import click
 import numpy as np
-import yaml
+import typer
 
-from .. import rfactor
+from ..rfactor import compute_rfactor
 
 
-@click.command("cli")
-@click.option("--config", "-c", help="Config file", required=True)
-def cli(config):
+def rfactor(
+    experimental_iv: str = typer.Option(  # noqa: B008
+        "experimental.txt", "--experimental", "-e", help="Experimental IV curves"
+    ),
+    theoretical_iv: str = typer.Option(  # noqa: B008
+        "theoretical.txt", "--theoretical", "-t", help="Theoretical IV curves"
+    ),
+    rfactor_type: str = typer.Option(  # noqa: B008
+        "r2", "--rfactor", "-r", help="Rfactor type: r2 or pendry"
+    ),
+):
     """Command line interface for the rfactor tool"""
-    with open(config) as f:
-        data = yaml.safe_load(f)
+    exper_iv = np.loadtxt(experimental_iv)
+    theor_iv = np.loadtxt(theoretical_iv)
 
-    y_true = np.array(data["y_true"])
-    y_pred = np.array(data["y_pred"])
+    r = compute_rfactor(
+        theoretical_iv=theor_iv, experimental_iv=exper_iv, rfactor_type=rfactor_type
+    )
 
-    r_factor = rfactor.mean_square_error(y_true=y_true, y_pred=y_pred)
+    print(f"Rfactor={r}")
 
-    print(f"R factor: {r_factor}")
+
+def cli():
+    """Leed CLI."""
+    typer.run(rfactor)
 
 
 if __name__ == "__main__":
