@@ -1,7 +1,36 @@
 import numpy as np
 from scipy.interpolate import CubicSpline
 
-from .preprocessing import lorentzian_smoothing
+
+def lorentzian_smoothing(curve, vi=4.0):
+    """
+    Draws a Lorentzian curve in the same grid as the given curve.
+    Performs the convolution of the two curves.
+    The given curve is represented by an array of (e,i) points, where e = energy and i = intensity.
+
+    Inputs:
+        - curve: numpy array of [e,i] arrays
+        - vi: predefined constant representing the width
+
+    Output:
+        The result of the convolution: a new array of [e,i] arrays
+    """
+
+    energies = curve[:, 0]
+    intensities = curve[:, 1]
+    result = []
+
+    for j in range(energies.size):
+        c = 0
+        l_value = 0
+        for i in range(energies.size):
+            c += vi**2 / ((energies[i] - energies[j]) ** 2 + vi**2)
+            l_value += (
+                intensities[i] * vi**2 / ((energies[i] - energies[j]) ** 2 + vi**2)
+            )
+        result.append(l_value / c)
+
+    return np.array(list(zip(energies, result)))
 
 
 def r2_factor(experimental_curve, theoretical_curve):
@@ -27,7 +56,7 @@ def r2_factor(experimental_curve, theoretical_curve):
 
     # Calculate normalization factor c and it_avg
     c = np.sqrt(np.sum(it**2) / np.sum(ie**2))
-    it_avg = np.sum(it) / it.size  # dE = number of energy steps
+    it_avg = np.sum(it) / it.size
 
     # Calculate the numerator and denominator of R2
     numerator = np.sum((it - c * ie) ** 2)
@@ -155,15 +184,20 @@ def compute_rfactor(experimental_iv, theoretical_iv, shift=0.0, rfactor_type="r2
     for exp_curve, theo_curve in split_in_pairs(experimental_iv, theoretical_iv):
         if len(exp_curve) < 1 or len(theo_curve) < 1:
             continue
+
         # Perform Lorentzian smoothing.
         exp_curve = lorentzian_smoothing(exp_curve)
-        theo_curve = lorentzian_smoothing(exp_curve)
+        theo_curve = lorentzian_smoothing(theo_curve)
 
         # Shifting the theoretical curve.
         theo_curve[:, 0] += shift
 
         # Finding common x axis.
         common_x = find_common_x_axis(theo_curve[:, 0], exp_curve[:, 0])
+
+        # If no common points - skip the curve.
+        if len(common_x) == 0:
+            continue
 
         exp_spline = CubicSpline(x=exp_curve[:, 0], y=exp_curve[:, 1])(common_x)
         theo_spline = CubicSpline(x=theo_curve[:, 0], y=theo_curve[:, 1])(common_x)
