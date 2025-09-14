@@ -199,6 +199,6 @@ def test_find_common_x_axis():
     # Test with overlapping ranges but different points
     x1 = np.array([1, 2, 3, 4, 5])
     x2 = np.array([2.4, 3.5, 4.6, 5.7, 6.8])
-    expected = np.array([3, 4.0, 5])
+    expected = np.array([3, 4, 5])
     result = rf.find_common_x_axis(reference_grid=x1, other_grid=x2)
     assert np.array_equal(result, expected), f"Expected {expected}, but got {result}"
