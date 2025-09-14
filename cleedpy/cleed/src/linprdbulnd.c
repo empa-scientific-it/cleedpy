@@ -262,8 +262,6 @@ int inp_rdbul_nd (struct cryst_str **p_bulk_par, struct phs_str **p_phs_shifts, 
                 }
 
                 atoms_rd = ( struct atom_str *) realloc(atoms_rd, (i_atoms+2) * sizeof(struct atom_str));
-                printf("HEREHRHERHEHREHR!!\n");
-
 
                 iaux = sscanf(linebuffer+i_str+3 ," %s %lf %lf %lf %s %lf %lf %lf",
                     phaseinp,

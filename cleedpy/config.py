@@ -1,9 +1,42 @@
 from pathlib import Path
 from typing import Any, Literal, NamedTuple
 
+import jinja2
 import yaml
 from numpy.typing import ArrayLike
 from pydantic import BaseModel
+
+OLD_FORMAT_TEMPLATE = jinja2.Template(
+    """
+c: {{ system_name }}
+a1: {{ "%10.4f"|format(unit_cell.a1[0]) }} {{ "%10.4f"|format(unit_cell.a1[1]) }} {{ "%10.4f"|format(unit_cell.a1[2]) }}
+a2: {{ "%10.4f"|format(unit_cell.a2[0]) }} {{ "%10.4f"|format(unit_cell.a2[1]) }} {{ "%10.4f"|format(unit_cell.a2[2]) }}
+a3: {{ "%10.4f"|format(unit_cell.a3[0]) }} {{ "%10.4f"|format(unit_cell.a3[1]) }} {{ "%10.4f"|format(unit_cell.a3[2]) }}
+m1: {{ "%4.1f"|format(superstructure_matrix.m1[0]) }} {{ "%4.1f"|format(superstructure_matrix.m1[1]) }}
+m2: {{ "%4.1f"|format(superstructure_matrix.m2[0]) }} {{ "%4.1f"|format(superstructure_matrix.m2[1]) }}
+{% for ov in overlayers -%}
+po: {{ "%-6s"|format(ov.phase_file) }} {{ "%10.4f"|format(ov.position[0]) }} {{ "%10.4f"|format(ov.position[1]) }} {{ "%10.4f"|format(ov.position[2]) }} {{ ov.vibrational_displacement[0] }} {{ "%6.3f"|format(ov.vibrational_displacement[1]) }} {{ "%6.3f"|format(ov.vibrational_displacement[2]) }} {{ "%6.3f"|format(ov.vibrational_displacement[3]) }}
+{% endfor -%}
+{% for r in minimum_radius -%}
+rm: {{ "%-6s"|format(r.name) }} {{ "%5.2f"|format(r.radius) }}
+{% endfor -%}
+zr: {{ "%4.2f"|format(1.60) }}  {{ "%4.2f"|format(7.00) }}   {# <- if zr is fixed, or make a variable if needed #}
+sz: 1
+sr: 3 0.0 0.0
+vr: {{ "%8.2f"|format(optical_potential[0]) }}
+vi: {{ "%8.2f"|format(optical_potential[1]) }}
+{% for bl in bulk_layers -%}
+pb: {{ "%-6s"|format(bl.phase_file) }} {{ "%10.4f"|format(bl.position[0]) }} {{ "%+10.4f"|format(bl.position[1]) }} {{ "%+10.4f"|format(bl.position[2]) }} {{ bl.vibrational_displacement[0] }} {{ "%6.3f"|format(bl.vibrational_displacement[1]) }} {{ "%6.3f"|format(bl.vibrational_displacement[2]) }} {{ "%6.3f"|format(bl.vibrational_displacement[3]) }}
+{% endfor -%}
+ei: {{ "%6.1f"|format(energy_range.initial) }}
+ef: {{ "%6.1f"|format(energy_range.final) }}
+es: {{ "%6.1f"|format(energy_range.step) }}
+it: {{ "%4.1f"|format(polar_incidence_angle) }}
+ip: {{ "%4.1f"|format(azimuthal_incidence_angle) }}
+ep: {{ "%9.1e"|format(epsilon) }}
+lm: {{ maximum_angular_momentum }}
+"""
+)
 
 
 class UnitCellParameters(BaseModel):
@@ -84,7 +117,7 @@ class PositionOptimizationParameters(BaseModel):
     z: OptimiziationRangeParameters
 
 
-class AtomParametersStructured(NamedTuple):
+class AtomParametersStructured(BaseModel):
     """Atom parameters for overlayers"""
 
     phase_file: str | Path
@@ -107,7 +140,7 @@ class EnergyRangeParameters(BaseModel):
     step: float
 
 
-class MinimumAtomRadius(NamedTuple):
+class MinimumAtomRadius(BaseModel):
     """Minimum atom radius for search. This is used to avoid atoms overlapping."""
 
     name: str
@@ -117,6 +150,7 @@ class MinimumAtomRadius(NamedTuple):
 class InputParameters(BaseModel):
     """Non geometrical parameters for bulk calculations"""
 
+    system_name: str
     unit_cell: UnitCellParameters
     superstructure_matrix: SuperstructureMatrix
     overlayers: list[AtomParametersVariants]

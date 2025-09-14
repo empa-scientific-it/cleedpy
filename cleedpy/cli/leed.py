@@ -3,7 +3,7 @@ from pathlib import Path
 
 import typer
 
-from ..config import load_parameters
+from ..config import OLD_FORMAT_TEMPLATE, load_parameters
 from ..interface.cleed import call_cleed
 from ..physics.constants import BOHR_TO_ANGSTROM, HART
 from ..preprocess import extract_bulk_parameters, transform_cells
@@ -68,7 +68,6 @@ def leed(
     parameters_file: str = typer.Option(  # noqa: B008
         "leed.inp", "--input", "-i", help="Input file with parameters"
     ),
-    bulk_file: str = typer.Option(None, "--bulk", "-b", help="Bulk file"),  # noqa: B008
     phase_path: str = typer.Option(  # noqa: B008
         "PHASE", "--phase", "-p", help="Phase path"
     ),
@@ -77,7 +76,17 @@ def leed(
     ),  # noqa: B008
 ):
     """Leed CLI."""
-    result = call_cleed(parameters_file, bulk_file, phase_path)
+
+    # If file format is yaml, convert to old format
+    parameters_file = Path(parameters_file)
+    if parameters_file.suffix in [".yml", ".yaml"]:
+        config = load_parameters(parameters_file)
+        old_format = OLD_FORMAT_TEMPLATE.render(**config.model_dump())
+        parameters_file = parameters_file.with_suffix(".inp")
+        with open(parameters_file, "w") as f:
+            f.write(old_format)
+
+    result = call_cleed(str(parameters_file), str(parameters_file), phase_path)
 
     print_cleed_results(result, output_file)
 

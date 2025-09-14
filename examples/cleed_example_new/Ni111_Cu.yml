@@ -1,3 +1,4 @@
+system_name: Ni(111)
 unit_cell:
   a1: [1.2450,  2.1564, 0.0]
   a2: [1.2450, -2.1564, 0.0]
@@ -22,10 +23,10 @@ bulk_layers:
     position: [0.0000, 0.0000,  0.0000]
     vibrational_displacement: [dr3, 0.025, 0.025, 0.025]
   - phase_file: "Ni_BVH"
-    position: [1.2450, -0.7188, -2.0300]
+    position: [1.2450, -0.7188, -2.0330]
     vibrational_displacement: [dr3, 0.025, 0.025, 0.025]
   - phase_file: "Ni_BVH"
-    position: [1.2450, 0.7188, -4.0600]
+    position: [1.2450, 0.7188, -4.0660]
     vibrational_displacement: [dr3, 0.025, 0.025, 0.025]
 
 minimum_radius:
