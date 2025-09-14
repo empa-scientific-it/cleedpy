@@ -186,19 +186,19 @@ def test_find_common_x_axis():
     x1 = np.array([1, 2, 3, 4, 5])
     x2 = np.array([3, 4, 5, 6, 7])
     expected = np.array([3, 4, 5])
-    result = rf.find_common_x_axis(x1, x2)
+    result = rf.find_common_x_axis(reference_grid=x1, other_grid=x2)
     assert np.array_equal(result, expected), f"Expected {expected}, but got {result}"
 
     # Test with no common points
     x1 = np.array([1, 2])
     x2 = np.array([3, 4])
     expected = np.array([])
-    result = rf.find_common_x_axis(x1, x2)
+    result = rf.find_common_x_axis(reference_grid=x1, other_grid=x2)
     assert np.array_equal(result, expected), f"Expected {expected}, but got {result}"
 
     # Test with overlapping ranges but different points
     x1 = np.array([1, 2, 3, 4, 5])
     x2 = np.array([2.4, 3.5, 4.6, 5.7, 6.8])
-    expected = np.array([2.4, 3, 3.5, 4.0, 4.6, 5])
-    result = rf.find_common_x_axis(x1, x2)
+    expected = np.array([3, 4, 5])
+    result = rf.find_common_x_axis(reference_grid=x1, other_grid=x2)
     assert np.array_equal(result, expected), f"Expected {expected}, but got {result}"
