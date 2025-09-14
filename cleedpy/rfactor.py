@@ -162,14 +162,14 @@ def split_in_pairs(exp_iv, theo_iv):
         yield exp_curve, theo_curve
 
 
-def find_common_x_axis(x1, x2):
-    min_x = max(np.min(x1), np.min(x2))
-    max_x = min(np.max(x1), np.max(x2))
+def find_common_x_axis(reference_grid, other_grid):
+    min_x = max(np.min(reference_grid), np.min(other_grid))
+    max_x = min(np.max(reference_grid), np.max(other_grid))
 
-    x1 = x1[(x1 >= min_x) & (x1 <= max_x)]
-    x2 = x2[(x2 >= min_x) & (x2 <= max_x)]
-
-    return np.unique(np.sort(np.concatenate([x2, x1])))
+    reference_grid = reference_grid[
+        (reference_grid >= min_x) & (reference_grid <= max_x)
+    ]
+    return reference_grid
 
 
 def compute_rfactor(experimental_iv, theoretical_iv, shift=0.0, rfactor_type="r2"):
@@ -193,7 +193,7 @@ def compute_rfactor(experimental_iv, theoretical_iv, shift=0.0, rfactor_type="r2
         theo_curve[:, 0] += shift
 
         # Finding common x axis.
-        common_x = find_common_x_axis(theo_curve[:, 0], exp_curve[:, 0])
+        common_x = find_common_x_axis(exp_curve[:, 0], theo_curve[:, 0])
 
         # If no common points - skip the curve.
         if len(common_x) == 0:
