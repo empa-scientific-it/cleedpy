@@ -1,12 +1,12 @@
-   
+ 
 
 
 
 **An Introduction to CLEED**
 
-... and (almost) everything else  
-you need to know about carrying out  
-structural analysis by LEED  
+... and (almost) everything else
+you need to know about carrying out
+structural analysis by LEED
 
 **Georg Held**
 
@@ -18,7 +18,7 @@ structural analysis by LEED
 
 This manual is still very much work in progress. It is a compilation of notes, lectures, and instructions that I have written over the years and I have been adding and correcting whenever I find a little time. Some of the non-essential introductory chapters are still incomplete or missing. This is information that can be found in most textbooks that cover LEED. The description of the input files for the CLEED package, however, as well as the instructions for installation, should be complete and accurate. If you spot any errors or omissions, please let me know.
 
-   
+ 
 Georg Held (georg.held.@.diamond.ac.uk)
 
 # Introduction: History and Principles
@@ -665,7 +665,7 @@ The search parameters are not necessarily identical with the Cartesian coordinat
 \left( \begin{array}{c}
 x_1 \\ y_1 \\ z_1 \\ \vdots  \\ z_{Na} \\ x_{ang} \\ y_{ang}
 \end{array} \right)
-= 
+=
 \left( \begin{array}{c}
 x_{1,0} \\ y_{1,0} \\ z_{1,0} \\ \vdots  \\ z_{Na,0} \\ x_{ang,0} \\ y_{ang,0}
 \end{array} \right)
@@ -728,10 +728,10 @@ The general calling syntax of the LEED program is:
 
 The first argument, `-i <parameter file>`, specifying the parameter input file is the only mandatory. The file contains all the geometric and non–geometric parameters needed for the LEED calculations. A sample file is shown in Table [tab_prg_inp_par]. Alternatively the input can be split into two files, the parameter file and a bulk parameter file. The latter file (`-b <bulk parameter file>`) contains all the parameters which are not varied during the optimisation. Consequently, the search program has to produce only the parameter file containing the optimised atom positions of the overlayer in each iteration step of an automated search.
 
-`-o <results file>`  
+`-o <results file>`
 specifies the file name where the beam intensities will be written to. If this argument is not used, the results will be written to the file `leed.res`. Any existing files with the same name as the results file will be overwritten.
 
-`-r <storage file>` and `-w <storage file>`  
+`-r <storage file>` and `-w <storage file>`
 specify files where the bulk reflexion matrices can be read from (`-r`) or written to (`-w`). This feature can be used in order to save computer time. It is, however, only recomended for very time consuming bulk matrix calculations, i.e. when the bulk unit cells contain more than one atom.
 
 #### UNIX–Environment
@@ -797,10 +797,10 @@ The meaning and the syntax of the parameter specifiers is (`n`: integer number, 
 
 <div class="description">
 
-`a1:`, `a2:`, `a3:` `f f f`  
+`a1:`, `a2:`, `a3:` `f f f`
 Lattice vectors of the three–dimensional bulk unit cell (x, y, z in Å). a1 and a2 are parallel to the surface plane, i.e. they define the two–dimensional $`(1\times 1)`$ unit cell. a3 must contain a component perpendicular to the surface. For the symmetrised program version a3 must not have any parallel components. In some cases (e.g. fcc lattice) a non–primitive bulk unit cell must be used in order to fulfill this condition.
 
-`m1:`, `m2:` `f f`  
+`m1:`, `m2:` `f f`
 Super structure matrix defining the relationship between the superstructure lattice vectors b1 and b2 and the $`(1\times 1)`$ lattice vectors a1 and a2:
 ``` math
 \begin{array}{lcl}
@@ -809,16 +809,16 @@ Super structure matrix defining the relationship between the superstructure latt
 \end{array}
 ```
 
-`vr:` `f`  
+`vr:` `f`
 Real part of optical potential (in eV).
 
-`vi:` `f`  
+`vi:` `f`
 Imaginary part of optical potential (in eV).
 
-`po:` `<phasestring> f f f ccc f {f f} `  
-Atom parameters in overlayer (super structure unit cell):  
-`<phasestring>`: Name of phase shift file. It can either be specified by the full path (starting with a leading slash ’/’, as in `/home/CLEED/PHASE/Ru.phs`) or by the file name body (no leading ’/’, e.g. `O_H2O`) which will then be expanded into `CLEED_PHASE/<phasestring>.phs` by using the environment variable `CLEED_PHASE`. If `CLEED_PHASE = /home/CLEED/PHASE` in the current example, the input of `O_H2O` is equivalent to `/home/CLEED/PHASE/O_H2O.phs`.  
-`f f f`: atom position x, y, z (in Å);  
+`po:` `<phasestring> f f f ccc f {f f} `
+Atom parameters in overlayer (super structure unit cell):
+`<phasestring>`: Name of phase shift file. It can either be specified by the full path (starting with a leading slash ’/’, as in `/home/CLEED/PHASE/Ru.phs`) or by the file name body (no leading ’/’, e.g. `O_H2O`) which will then be expanded into `CLEED_PHASE/<phasestring>.phs` by using the environment variable `CLEED_PHASE`. If `CLEED_PHASE = /home/CLEED/PHASE` in the current example, the input of `O_H2O` is equivalent to `/home/CLEED/PHASE/O_H2O.phs`.
+`f f f`: atom position x, y, z (in Å);
 `ccc f {f f}`: three character specifier for input of vibrational displacements:
 
 <div class="description">
@@ -841,28 +841,28 @@ will be calculated and used inside the program.
 
 
 
-`pb:` `<phasestring> f f f ccc f {f f} `  
+`pb:` `<phasestring> f f f ccc f {f f} `
 Atom parameters in bulk layers ($`(1\times 1)`$ unit cell); for syntax see `po:`.
 
-`ei:` `f`  
+`ei:` `f`
 First energy in energy loop for which intensities are calculated (in eV).
 
-`ef:` `f`  
+`ef:` `f`
 Last energy in loop (in eV).
 
-`es:` `f`  
+`es:` `f`
 Energy step in loop (in eV).
 
-`it:` `f`  
+`it:` `f`
 Polar angle of incidence with respect to surface normal ($`0^\circ \leq \vartheta < 90^\circ`$ ).
 
-`ip:` `f`  
+`ip:` `f`
 Azimuthal angle of incidence with respect to x–axis ($`0^\circ \leq \varphi < 360^\circ`$).
 
-`ep:` `f`  
+`ep:` `f`
 Epsilon: criterion for convergence of lattice sums and layer doubling.
 
-`lm:` `n`  
+`lm:` `n`
 Maximum angular momentum quantum number ($`l_{max}`$).
 
 
@@ -1158,45 +1158,45 @@ All necessary Clebsh–Gordan coefficients (or Gaunt’s coefficients) up to $`l
 
 <div class="description">
 
-`double cg(int l1, int m1, int l2, int m2, int l3, int m3)`  
+`double cg(int l1, int m1, int l2, int m2, int l3, int m3)`
 returns the value of the integral described in Slater’s book:
 ``` math
 (-1)^{m_2}
 \int Y_{l_1 m_1}(\Omega)  Y_{l_2 m_2}^\ast(\Omega)  Y_{l_3 m_3}(\Omega) d\Omega
 ```
-Allowed (non–zero) values:  
-$`0 \leq l_1     \leq 2 \cdot l_{max}, \;\; 0 \leq l_{2,3} \leq l_{max}`$;  
-$`m_1 =  m_2 + m_3 \;\; \Leftrightarrow \;\; m_1 -  m_2 - m3 = 0`$,  
-$`|l_2 - l_3| \leq l_1 \leq l_2 + l_3`$;  
-Transformations:  
+Allowed (non–zero) values:
+$`0 \leq l_1     \leq 2 \cdot l_{max}, \;\; 0 \leq l_{2,3} \leq l_{max}`$;
+$`m_1 =  m_2 + m_3 \;\; \Leftrightarrow \;\; m_1 -  m_2 - m3 = 0`$,
+$`|l_2 - l_3| \leq l_1 \leq l_2 + l_3`$;
+Transformations:
 $`cg(l_1, m_1, l_2, m_2, l_3, m_3) =
  cg(l_1, m_1, l_3, m_3, l_2, m_2) =
  cg(l_2, m_2, l_1, m_1, l_3,-m_3)`$
 
-`double blm(int l1, int m1, int l2, int m2, int l3, int m3)`  
+`double blm(int l1, int m1, int l2, int m2, int l3, int m3)`
 returns the value of the integral used in Pendry’s book:
 ``` math
 \int Y_{l_1 m_1}(\Omega)  Y_{l_2 m_2}(\Omega)  Y_{l_3 m_3}(\Omega) d\Omega
 ```
-Allowed (non–zero) values:  
-$`0 \leq l_2     \leq 2 \cdot l_{max}, \;\; 0 \leq l_{1,3} \leq l_{max}`$;  
-$`m_1 +  m_2 + m_3 = 0`$,  
-$`|l_1 - l_3| \leq l_2 \leq l_1 + l_3`$;  
-Transformations:  
+Allowed (non–zero) values:
+$`0 \leq l_2     \leq 2 \cdot l_{max}, \;\; 0 \leq l_{1,3} \leq l_{max}`$;
+$`m_1 +  m_2 + m_3 = 0`$,
+$`|l_1 - l_3| \leq l_2 \leq l_1 + l_3`$;
+Transformations:
 $`blm(l_1, m_1, l_2, m_2, l_3, m_3) =
  cg(l_2, -m_2, l_1, m_1, l_3, m_3)`$
 
-`double gaunt(int l1, int m1, int l2, int m2, int l3, int m3)`  
+`double gaunt(int l1, int m1, int l2, int m2, int l3, int m3)`
 returns Gaunt’s integral:
 ``` math
 (-1)^{m_3}
 \int Y_{l_1 m_1}(\Omega)  Y_{l_2 m_2}(\Omega)  Y_{l_3 m_3}^\ast(\Omega) d\Omega
 ```
-Allowed (non–zero) values:  
-$`0 \leq l_2     \leq 2 \cdot l_{max}, \;\; 0 \leq l_{1,3} \leq l_{max}`$;  
-$`m_3 = m_1 + m_2 \;\; \Leftrightarrow \;\; m_1 + m_2 - m_3 = 0`$,  
-$`|l_2 - l_3| \leq l_1 \leq l_2 + l_3`$;  
-Transformations:  
+Allowed (non–zero) values:
+$`0 \leq l_2     \leq 2 \cdot l_{max}, \;\; 0 \leq l_{1,3} \leq l_{max}`$;
+$`m_3 = m_1 + m_2 \;\; \Leftrightarrow \;\; m_1 + m_2 - m_3 = 0`$,
+$`|l_2 - l_3| \leq l_1 \leq l_2 + l_3`$;
+Transformations:
 $`gaunt(l_1, m_1, l_2, m_2, l_3, m_3) =
  cg(l_2, m_2, l_1, -m_1, l_3,m_3)`$
 
@@ -1394,31 +1394,31 @@ The options `-c <control file>` and `-t <theoretical file>` are mandatory for no
 
 <div class="description">
 
-`-a <ID flag>`  
+`-a <ID flag>`
 defines whether only the average R factor is calculated (argument `average`, default) or partial R factors for each subset of IV curves sharing a common ID number (argument `all`). Only the first two characters of the argument are significant.
 
-`-c <control file>`   
+`-c <control file>`
 specifies the control file which defines the correlation between experimental and theoretical IV curves. A sample control file is shown in Table [tab_rfac_ctr].
 
-`-h`  
+`-h`
 causes the program to show a short list of arguments.
 
-`-o <output file>`   
+`-o <output file>`
 specifies the output file where the R factor values are written to (default: standard output).
 
-`-r <R factor>`   
+`-r <R factor>`
 specifies the R factor to be calculated. Valid arguments are: `r1` ($`R_1`$), `r2` ($`R_2`$), `rb` ($`R_{B1}`$ and $`R_{B2}`$), and `rp` ($`R_P`$, default)
 
-`-s <shift1,shift2,shift3>`   
+`-s <shift1,shift2,shift3>`
 defines the range (arguments `shift1` and `shift2`) and step width (`shift3`) of energy shifts between experimental and theoretical IV curves.
 
-`-t <theoretical file>`   
+`-t <theoretical file>`
 specifies the file containing the theoretical IV curves, i.e. the results file from the LEED program.
 
-`-v <optical potential>`   
+`-v <optical potential>`
 specifies the value of the optical potential $`V_{0i}`$ used in the evaluation of Pendry’s R–factor (default: 4 eV).
 
-`-w <IV output file>`   
+`-w <IV output file>`
 causes the program to write all normalised IV curves as energy/intensity pairs to separate files so that they can be plotted. `<IV output file>` specifies the body of the file names to which the letters `e` (experimental) or `t` (theoretical) and the number of the pair of curves is added.
 
 
@@ -1569,10 +1569,10 @@ Each parameter or set of parameters, respectively, is specified by two letters a
 
 <div class="description">
 
-`a1:`, `a2:` `f f f`  
+`a1:`, `a2:` `f f f`
 Lattice vectors of the two–dimensional $`(1\times 1)`$ unit cell (x, y, z in Å). a1 and a2 have to be parallel to the surface plane. Note `a1:` and `a2:` can also be specified in the `<project>.bul` input file. If they are found in both, the input from `<project>.inp` overwrites the input from `<project>.bul`.
 
-`m1:`, `m2:` `f f`  
+`m1:`, `m2:` `f f`
 Super structure matrix defining the relationship between the superstructure lattice vectors b1 and b2 and the $`(1\times 1)`$ lattice vectors a1 and a2:
 ``` math
 \begin{array}{lcl}
@@ -1582,28 +1582,28 @@ Super structure matrix defining the relationship between the superstructure latt
 ```
 Note `m1:` and `m2:` can also be specified in the `<project>.bul` input file. If they are found in both, the input from `<project>.inp` overwrites the input from `<project>.bul`.
 
-`po:` `<phasestring> f f f ccc f {f f} `  
+`po:` `<phasestring> f f f ccc f {f f} `
 Atom parameters in overlayer (super structure unit cell): same syntax as for the LEED program, see chapter [sec_leed_inp].
 
-`rm:` `<phasestring> f`  
+`rm:` `<phasestring> f`
 Minimum radius of atoms specified by `<phasestring>`. If the distance between two atoms is smaller than the sum of their miniumum radii, an additional number is added to the actual R factor in order to repell the search from this un–physical geometry.
 
-`zr:` `f f`  
+`zr:` `f f`
 $`z`$–range. The atoms are forced to stay within this range of $`z`$ coordinates. If an atom exceeds this range, an additional number is added to the actual R factor in order to repell the search from this un–physical geometry.
 
-`sz:` `n`  
+`sz:` `n`
 Variation of vertical parameters (1) or vertical and lateral parameters (0) in agreement with the specified symmetry.
 
-`sr:` `n f f`  
+`sr:` `n f f`
 Rotational symmetry: degree (n–fold axis), position of axis (x, y in Å).
 
-`sa:` `n`  
+`sa:` `n`
 Switch angle search on (1)/off (0).
 
-`it:` `f`  
+`it:` `f`
 Polar angle of incidence (start value). Only used if `sa: 1`;will overwrite `it:` parameter in `*.bul` file. Note `it:` can also be specified in the `<project>.bul` input file. If it is found in both, the input from `<project>.inp` overwrites the input from `<project>.bul`.
 
-`ip:` `f`  
+`ip:` `f`
 Azimuthal angle of incidence (start value). will overwrite `ip:` parameter in `*.bul` file. Note `it:` can also be specified in the `<project>.bul` input file. If it is found in both, the input from `<project>.inp` overwrites the input from `<project>.bul`.
 
 
@@ -1616,10 +1616,10 @@ A much more flexible way of introducing constraints to the search is shown in Ta
 
 <div class="description">
 
-`spn:` `n`  
+`spn:` `n`
 defines the number of parameters to be optimised in the search. The relationship between the parameters and the coordinates is defined through the parameters following `spp: - <x/y/z>`. `spn:` must be specified before the list of atoms.
 
-`spp: - <x/y/z>` `f f f .... ` (number of parameters defined by `spn:`  
+`spp: - <x/y/z>` `f f f .... ` (number of parameters defined by `spn:`
 defines the relationship between the search parameters being optimised and the coordinates of the last atom defined in the input file.
 
 
@@ -1731,10 +1731,10 @@ The environment variable `CDOM_LEED` specifies the program which is used to calc
 
 <div class="description">
 
-`dr:` `n`  
+`dr:` `n`
 Degree of rotational symmetry. `n` can have the values 1, 2, 3, 4, or 6. Any other value will generate an error message. The default value is 1 (if no rotation symmetry is specified).
 
-`dm:` `c/cc`  
+`dm:` `c/cc`
 Mirror plane. The character string following `dm:` can either be `n` (no mirror plane), `x` (mirror plane along the $`x`$-axis), `y` (mirror plane along the $`y`$-axis), or `xy` (mirror plane $`45^\circ`$ from the the $`x`$-axis). The default value is `n` (no mirror plane)
 
 
@@ -1767,10 +1767,10 @@ Additional information that needs to be specified in the `<project>.bul` and/or 
 
 <div class="description">
 
-`sa:` `n`  
+`sa:` `n`
 The number of angles of incidence for which data sets are used in the analysis.
 
-`itp:` ` n f f`  
+`itp:` ` n f f`
 An integer number associated with each data set (1, 2, up to the number specified through `sa:`) taken at certain angle of incidence; the polar angle $`\theta`$ (with respect to the surface normal) and the azimuthal angle $`\varphi`$ (with respect to the $`x`$-axis) of this set.
 
 
@@ -1851,7 +1851,7 @@ We use the example given in `CLEED_DIS/EXAMPLES/NIO`. The directory contains all
 
 The LEED-IV program can be called from outside the search by
 
-`...CLEED_DIS/BIN/cleed_nsym -i Ni111_2x2O.par -b Ni111_2x2O.bul`  
+`...CLEED_DIS/BIN/cleed_nsym -i Ni111_2x2O.par -b Ni111_2x2O.bul`
 `-o Ni111_2x2O.res 1> Ni111_2x2O.out`
 
 `Ni111_2x2O.par` is usually created by the search program. It contains only the positions of the overlayer atoms that are optimised during the search. The IV curves are written to `Ni111_2x2O.res` (indicated by the ”-o” option). In addition, the LEED-IV program produces a large amounts of control output, which is written to ”stdout”. It is best to re-directed ”stdout” to a file using the ”`1>`” command (in bsh).

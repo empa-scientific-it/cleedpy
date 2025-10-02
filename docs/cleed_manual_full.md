@@ -524,7 +524,7 @@ $$\begin{equation}
 \left( \begin{array}{c}
 x_1 \\ y_1 \\ z_1 \\ \vdots  \\ z_{Na} \\ x_{ang} \\ y_{ang}
 \end{array} \right)
-= 
+=
 \left( \begin{array}{c}
 x_{1,0} \\ y_{1,0} \\ z_{1,0} \\ \vdots  \\ z_{Na,0} \\ x_{ang,0} \\ y_{ang,0}
 \end{array} \right)
@@ -1025,25 +1025,25 @@ The memory requirements of the list created by `mk_cg_coef` for a given value of
 #### Multiple scattering Matrix: Single Bravais Layer
 
   --------------------- --------------------------------------------------------------------------------
-  `(lmsbravl.c:)`       
+  `(lmsbravl.c:)`
   `int ms_bravl`        `( mat `$\ast$`p_Tpp, mat `$\ast$`p_Rpm,`
                         ` struct var_str `$\ast$` v_par, struct layer_str `$\ast$` layer,`
                         ` struct beam_str `$\ast$` beams) `
-  `(lmsbravlnd.c:)`     
+  `(lmsbravlnd.c:)`
   `int ms_bravl_nd`     `( mat `$\ast$`p_Tpp, mat `$\ast$`p_Tmm mat `$\ast$`p_Rpm, mat `$\ast$`p_Rmp,`
                         ` struct var_str `$\ast$` v_par, struct layer_str `$\ast$` layer,`
                         ` struct beam_str `$\ast$` beams) `
-  `(lmslsumii.c:)`      
+  `(lmslsumii.c:)`
   `mat ms_lsum_ii`      `( mat Llm, real k_r, real k_i, real `$\ast$`k_in, real `$\ast$`a,`
                         ` int l_max, real epsilon ) `
-  `(lmstmatii.c:)`      
+  `(lmstmatii.c:)`
   `mat ms_tmat_ii`      `( mat Tii, mat Llm, mat Tl, int l_max) `
-  `(lmstmatndii.c:)`    
+  `(lmstmatndii.c:)`
   `mat ms_tmat_nd_ii`   `( mat Tii, mat Llm, mat Tlm_in, int l_max) `
-  `(lmsymat.c:)`        
+  `(lmsymat.c:)`
   `mat ms_ymat`         `( mat Ymat, int l_max,`
                         ` struct beam_str `$\ast$`beams, int n_beams) `
-  `(lmsypy.c:)`         
+  `(lmsypy.c:)`
   `mat ms_yp_yxp`       `( mat Yxmat, mat Ymat) `
   `mat ms_yp_yxm`       `( mat Yxmat, mat Ymat) `
   `mat ms_yp_ym`        `( mat Ymmat, mat Ypmat) `
