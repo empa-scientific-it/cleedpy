@@ -18,8 +18,25 @@ if(APPLE AND "${CMAKE_C_COMPILER_ID}" STREQUAL "AppleClang")
     add_compile_options(-Wno-implicit-function-declaration)
 endif()
 
-# Set compiler and flags
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -O3 -march=native")
+# Set compiler optimization flags
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -O3")
+
+# Architecture-specific optimizations (optional)
+# By default, build portable binaries. Set CLEEDPY_ARCH_NATIVE=ON for -march=native
+# Or set CLEEDPY_ARCH_FLAGS to specify custom architecture flags
+if(CLEEDPY_ARCH_NATIVE)
+    message(STATUS "Building with -march=native (optimized for build machine)")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=native")
+elseif(DEFINED CLEEDPY_ARCH_FLAGS AND NOT CLEEDPY_ARCH_FLAGS STREQUAL "")
+    message(STATUS "Building with custom architecture flags: ${CLEEDPY_ARCH_FLAGS}")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${CLEEDPY_ARCH_FLAGS}")
+else()
+    # Portable build - no architecture-specific flags
+    message(STATUS "Building portable binary (no architecture-specific optimizations)")
+    message(STATUS "  - For AMD Rome (x86_64): set CLEEDPY_ARCH_FLAGS='-march=znver2' or '-march=x86-64-v3'")
+    message(STATUS "  - For Grace-Hopper (aarch64): set CLEEDPY_ARCH_FLAGS='-mcpu=neoverse-v2' or '-march=armv8.2-a'")
+    message(STATUS "  - For native build: set CLEEDPY_ARCH_NATIVE=ON")
+endif()
 
 # Only set the compiler if strictly required; by default, let CMake find the most suitable one
 #set(CMAKE_C_COMPILER "gcc-13")

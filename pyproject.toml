@@ -1,36 +1,35 @@
-[build-system]
-requires = ["setuptools>=61.2", "cmake>=3.5"]
-build-backend = "setuptools.build_meta"
-
-
 [project]
 name = "cleedpy"
-dynamic = ["version"]
 readme = "README.md"
-license = {file = "LICENSE"}
-classifiers = [
-    "Development Status :: 2 - Pre-Alpha",
-    "Intended Audience :: Science/Research",
-    "Programming Language :: C",
-    "Programming Language :: Python",
-    "License :: OSI Approved :: MIT License",
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
-]
-
 requires-python = ">=3.10"
-dependencies = [
-    "click",
-    "jinja2",
-    "matplotlib",
-    "numpy",
-    "pyyaml",
-    "scipy",
-    "pydantic",
-    "typer"
+license = { file = "LICENSE" }
+classifiers = [
+  "Development Status :: 2 - Pre-Alpha",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: C",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
 ]
+dependencies = [
+  "click",
+  "jinja2",
+  "matplotlib",
+  "numpy",
+  "pydantic",
+  "pyyaml",
+  "scipy",
+  "typer",
+]
+dynamic = ["version"]
+
+[project.scripts]
+cleedpy-leed = "cleedpy.cli.leed:cli"
+cleedpy-rfactor = "cleedpy.cli.rfactor:cli"
+cleedpy-search = "cleedpy.cli.search:cli"
 
 [project.optional-dependencies]
 dev = [
@@ -40,18 +39,42 @@ dev = [
   "pytest-cov==4.1.0",
 ]
 
-[project.scripts]
-cleedpy-rfactor = "cleedpy.cli.rfactor:cli"
-cleedpy-search = "cleedpy.cli.search:cli"
-cleedpy-leed = "cleedpy.cli.leed:cli"
+[build-system]
+requires = ["scikit-build-core>=0.10"]
+build-backend = "scikit_build_core.build"
 
-[tool.setuptools]
-include-package-data = true
-zip-safe = false
-license-files = ["LICENSE"]
+[tool.scikit-build]
+# CMake source directory (where CMakeLists.txt is located)
+cmake.source-dir = "cleedpy/cleed"
+# Minimum CMake version
+cmake.version = ">=3.15"
+# Build verbosity
+build.verbose = true
+# Wheel build configuration
+wheel.packages = ["cleedpy"]
+# Install compiled libraries into the cleedpy package
+install.components = ["cleed"]
 
-[tool.setuptools.packages]
-find = {namespaces = false}
+# Dynamic version from Python module
+[tool.scikit-build.metadata.version]
+provider = "scikit_build_core.metadata.regex"
+input = "cleedpy/version.py"
 
-[tool.setuptools.dynamic]
-version = {attr = "cleedpy.version.__version__"}
+# CMake configuration - make BLAS vendor configurable
+[tool.scikit-build.cmake.define]
+BLA_VENDOR = { env = "BLA_VENDOR", default = "All" }
+BLA_STATIC = { env = "BLA_STATIC", default = "OFF" }
+CLEEDPY_ARCH_NATIVE = { env = "CLEEDPY_ARCH_NATIVE", default = "OFF" }
+
+# Platform-specific overrides for architecture flags
+# Suitable for AMD Rome (Alps@Eiger)
+[[tool.scikit-build.overrides]]
+if.platform-system = "linux"
+if.platform-machine = "x86_64"
+cmake.define.CLEEDPY_ARCH_FLAGS = { env = "CLEEDPY_ARCH_FLAGS", default = "" }
+
+# Suitable for Grace-Hopper nodes (Alps@Daint)
+[[tool.scikit-build.overrides]]
+if.platform-system = "linux"
+if.platform-machine = "aarch64"
+cmake.define.CLEEDPY_ARCH_FLAGS = { env = "CLEEDPY_ARCH_FLAGS", default = "" }
