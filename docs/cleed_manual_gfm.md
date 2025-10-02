@@ -1,12 +1,12 @@
-
+   
 
 
 
 **An Introduction to CLEED**
 
-... and (almost) everything else
-you need to know about carrying out
-structural analysis by LEED
+... and (almost) everything else  
+you need to know about carrying out  
+structural analysis by LEED  
 
 **Georg Held**
 
@@ -18,7 +18,7 @@ structural analysis by LEED
 
 This manual is still very much work in progress. It is a compilation of notes, lectures, and instructions that I have written over the years and I have been adding and correcting whenever I find a little time. Some of the non-essential introductory chapters are still incomplete or missing. This is information that can be found in most textbooks that cover LEED. The description of the input files for the CLEED package, however, as well as the instructions for installation, should be complete and accurate. If you spot any errors or omissions, please let me know.
 
-
+   
 Georg Held (georg.held.@.diamond.ac.uk)
 
 # Introduction: History and Principles
@@ -29,19 +29,23 @@ Georg Held (georg.held.@.diamond.ac.uk)
 
 When Davisson and Germer reported in 1927 that the elastic scatting of low-energy electrons from well ordered surfaces leads to diffraction spots similar to those observed in X-ray diffraction , this was the first experimental proof of the wave nature of electrons. A few years before, in 1923, De Broglie had postulated that electrons have a wave length in Å of
 
-$$
+``` math
+\begin{equation}
 \lambda_e =  \frac{h}{m_e v} = \sqrt{\frac{150 \mbox{eV}}{E_{kin}}}
-$$
+\end{equation}
+```
 
 and a corresponding wave vector of the length
 
-$$
+``` math
+\begin{equation}
 k = \frac{2 \pi}{\lambda_e}
-$$
+\end{equation}
+```
 
-where $h$ is Planck’s constant, $m_e$ the electron mass, $v$ the velocity, and $E_{kin}$ the kinetic energy of the electron. Already Davisson and Germer realised that the diffraction of low-energy electrons (LEED) can be used to determine the structure of single crystal surfaces in analogy to X-ray diffraction if their kinetic energy is between 40 and 500 eV, i.e. their wave length ranges between 0.5 and 2 Å. Due to their small inelastic mean free path (IMFP) of typically less than 10 Å electrons in this energy range sample only the top-most atomic layers of a surface and are, therefore, better suited for the analysis of surface geometries than X-ray photons which have a much larger mean free path (typically a few $\mu$m). However, unlike for photon diffraction, multiple scattering plays an important role in the diffraction process of electrons at solid surfaces. Therefore, the analysis of LEED data with respect to the exact positions of atoms at the surface is somewhat more complicated and requires fully dynamical quantum mechanical scattering calculations.
+where $`h`$ is Planck’s constant, $`m_e`$ the electron mass, $`v`$ the velocity, and $`E_{kin}`$ the kinetic energy of the electron. Already Davisson and Germer realised that the diffraction of low-energy electrons (LEED) can be used to determine the structure of single crystal surfaces in analogy to X-ray diffraction if their kinetic energy is between 40 and 500 eV, i.e. their wave length ranges between 0.5 and 2 Å. Due to their small inelastic mean free path (IMFP) of typically less than 10 Å electrons in this energy range sample only the top-most atomic layers of a surface and are, therefore, better suited for the analysis of surface geometries than X-ray photons which have a much larger mean free path (typically a few $`\mu`$m). However, unlike for photon diffraction, multiple scattering plays an important role in the diffraction process of electrons at solid surfaces. Therefore, the analysis of LEED data with respect to the exact positions of atoms at the surface is somewhat more complicated and requires fully dynamical quantum mechanical scattering calculations.
 
-The use of LEED for surface analysis became important when large enough single crystals became available for surface studies. At first the technique was only used for qualitative characterisation of surface ordering and quantitative determination of the two-dimensional surface lattice parameters (e.g. superstructures, see below). The information about the positions of the atoms in the surface is hidden in the energy-dependence of the diffraction spot intensities, the so-called LEED I-V, or $I(E)$, curves. In the late 1960’s computer programs became available which could perform fully dynamical scattering calculations for simple surface geometries. The comparison of such theoretical I-V curves for a set of model geometries with experimental data allows the determination of the atomic positions within the surface by trial and error. With the immense growth of available computer power and speed since then, LEED I-V structure determination could be applied to a large number of more and more complex surface geometries. This has made LEED a standard technique of modern surface crystallography.
+The use of LEED for surface analysis became important when large enough single crystals became available for surface studies. At first the technique was only used for qualitative characterisation of surface ordering and quantitative determination of the two-dimensional surface lattice parameters (e.g. superstructures, see below). The information about the positions of the atoms in the surface is hidden in the energy-dependence of the diffraction spot intensities, the so-called LEED I-V, or $`I(E)`$, curves. In the late 1960’s computer programs became available which could perform fully dynamical scattering calculations for simple surface geometries. The comparison of such theoretical I-V curves for a set of model geometries with experimental data allows the determination of the atomic positions within the surface by trial and error. With the immense growth of available computer power and speed since then, LEED I-V structure determination could be applied to a large number of more and more complex surface geometries. This has made LEED a standard technique of modern surface crystallography.
 
 To date, the structure analysis by LEED I-V is the most accurate and reliable way of determining the atomic positions at surfaces. Especially the fact that LEED is sensitive to the atomic positions not only in the top-most layer but down to several layers below the surface makes it an ideal tool for studying spontaneous or adsorbate-induced surface reconstructions. General restrictions are that LEED usually requires ordered and conducting surfaces, otherwise charging would distort the LEED pattern. The time needed for calculating the I-V curves and the number of trial geometries are factors limiting the complexity of accessible surface structures on the computational side; the density of LEED spots on the fluorescent screen is an experimental factor limiting the size of unit cells that can be studied.
 
@@ -65,7 +69,7 @@ Initially, the name ”CLEED” was just a working title originating from the pr
 
 ### Surface Lattice
 
-Low-energy electrons do not penetrate into the crystal bulk far enough to experience its three-dimensional periodicity, therefore the diffraction pattern is determined by the two-dimensional surface periodicity described by the lattice vectors $\vec{a}_1$ and $\vec{a}_2$, which are parallel to the surface plane. A general lattice point within the surface plane is an integer multiple of these lattice vectors:
+Low-energy electrons do not penetrate into the crystal bulk far enough to experience its three-dimensional periodicity, therefore the diffraction pattern is determined by the two-dimensional surface periodicity described by the lattice vectors $`\vec{a}_1`$ and $`\vec{a}_2`$, which are parallel to the surface plane. A general lattice point within the surface plane is an integer multiple of these lattice vectors:
 
 ``` math
 \begin{equation}
@@ -75,13 +79,13 @@ Low-energy electrons do not penetrate into the crystal bulk far enough to experi
 
 Note, for every periodic lattice there is an infinite number of pairs of lattice vectors that fulfil the above condition and for many lattices the choice is not obvious. Usually the following conventions are used:
 
-- The angle $\gamma$ between $\vec{a}_1$ and $\vec{a}_2$ is between $90^\circ$ and $180^\circ$ and as close to $90^\circ$ as possible.
+- The angle $`\gamma`$ between $`\vec{a}_1`$ and $`\vec{a}_2`$ is between $`90^\circ`$ and $`180^\circ`$ and as close to $`90^\circ`$ as possible.
 
-- $|\vec{a}_1| \geq |\vec{a}_2 |$
+- $`|\vec{a}_1| \geq |\vec{a}_2 |`$
 
-- $\vec{a}_1$ and $\vec{a}_2$ form a right-handed system, i.e. going anticlockwise from $\vec{a}_1$ to $\vec{a}_2$ is a smaller angle than going clockwise (like the angle between thumb and index finger of the right hand when facing the palm)
+- $`\vec{a}_1`$ and $`\vec{a}_2`$ form a right-handed system, i.e. going anticlockwise from $`\vec{a}_1`$ to $`\vec{a}_2`$ is a smaller angle than going clockwise (like the angle between thumb and index finger of the right hand when facing the palm)
 
-The left-hand column of Figure [fig_int_LEED_patt] shows the conventional lattice vectors for the most common square, rectangular, and hexagonal lattices. The vectors $\vec{a}_1$ and $\vec{a}_2$ can be combined to form the lattice matrix:
+The left-hand column of Figure [fig_int_LEED_patt] shows the conventional lattice vectors for the most common square, rectangular, and hexagonal lattices. The vectors $`\vec{a}_1`$ and $`\vec{a}_2`$ can be combined to form the lattice matrix:
 ``` math
 \begin{equation}
 \cal A
@@ -96,19 +100,17 @@ a_{2x} & a_{2y}
 \end{array} \right)
 \end{equation}
 ```
-The determinante $\det {\cal A}  = \vec{a}_1 \times \vec{a}_2  =  a_{1x}a_{2y} - a_{1y}a_{2x}$ is equal to the area $A_A$ of the unit cell described by $\vec{a}_1$ and $\vec{a}_2$. $\det \cal A$ is positive if $(\vec{a}_1, \vec{a}_2)$ form a right-handed system.
+The determinante $`\det {\cal A}  = \vec{a}_1 \times \vec{a}_2  =  a_{1x}a_{2y} - a_{1y}a_{2x}`$ is equal to the area $`A_A`$ of the unit cell described by $`\vec{a}_1`$ and $`\vec{a}_2`$. $`\det \cal A`$ is positive if $`(\vec{a}_1, \vec{a}_2)`$ form a right-handed system.
 
-
-![](\1)
-![](\1)
-
-**Figure:**  Examples of LEED patterns for common surfaces: fcc{100}, fcc{110}, fcc{111}, fcc{100}-*p*(2 × 1).
-
-
+<figure id="fig_int_LEED_patt" data-latex-placement="hb">
+<img src="docs/Fig_LEED_Patt_1.jpg" style="height:30.0%" />
+<img src="docs/Fig_LEED_Patt_2.jpg" style="height:30.0%" />
+<figcaption> Examples of LEED patterns for common surfaces: fcc{100}, fcc{110}, fcc{111}, fcc{100}-<span class="math inline"><em>p</em>(2 × 1)</span>. </figcaption>
+</figure>
 
 ### Reciprocal Lattice
 
-The two-dimensional Bragg condition leads to the definition of reciprocal lattice vectors $\vec{a}_1^\ast$ and $\vec{a}_2^\ast$ which fulfil the following set of equations:
+The two-dimensional Bragg condition leads to the definition of reciprocal lattice vectors $`\vec{a}_1^\ast`$ and $`\vec{a}_2^\ast`$ which fulfil the following set of equations:
 ``` math
 \begin{equation}
 \begin{array}{lclcl}
@@ -125,7 +127,7 @@ The Bragg condition can be written as a matrix equation in a more compact form
 \label{eq_int_Bragg}
 \end{equation}
 ```
-by using the real and reciprocal lattice matrices $\cal A$ (see above) and $\cal A^\ast$.
+by using the real and reciprocal lattice matrices $`\cal A`$ (see above) and $`\cal A^\ast`$.
 ``` math
 \begin{equation}
 \cal A^\ast
@@ -141,7 +143,7 @@ a_{2x}^\ast & a_{2y}^\ast
 \end{equation}
 ```
 
-From Equation ([eq_int_Bragg]) we get the following expressions for $\cal{A}^\ast$ and, hence, for the reciprocal lattice vectors $\vec{a}_1^\ast$ and $\vec{a}_2^\ast$:
+From Equation ([eq_int_Bragg]) we get the following expressions for $`\cal{A}^\ast`$ and, hence, for the reciprocal lattice vectors $`\vec{a}_1^\ast`$ and $`\vec{a}_2^\ast`$:
 ``` math
 \begin{eqnarray}
 \cal{A}^\ast & = &
@@ -161,7 +163,7 @@ a_{2y} \\ -a_{2x}
 \end{eqnarray}
 ```
 
-These reciprocal lattice vectors have units of Å$^{-1}$ and are also parallel to the surface. In analogy to the real lattice vectors, they define the LEED pattern in $k$-space. Each diffraction spot corresponds to the sum of integer multiples of $\vec{a}_1^\ast$ and $\vec{a}_2^\ast$.
+These reciprocal lattice vectors have units of Å$`^{-1}`$ and are also parallel to the surface. In analogy to the real lattice vectors, they define the LEED pattern in $`k`$-space. Each diffraction spot corresponds to the sum of integer multiples of $`\vec{a}_1^\ast`$ and $`\vec{a}_2^\ast`$.
 
 ``` math
 \begin{equation}
@@ -169,7 +171,7 @@ These reciprocal lattice vectors have units of Å$^{-1}$ and are also parallel t
 \end{equation}
 ```
 
-The pair of integer numbers $(n_1,n_2)$ are used as indices to label the spot. The parallel component of the corresponding wave vector is:
+The pair of integer numbers $`(n_1,n_2)`$ are used as indices to label the spot. The parallel component of the corresponding wave vector is:
 
 ``` math
 \begin{equation}
@@ -177,7 +179,7 @@ The pair of integer numbers $(n_1,n_2)$ are used as indices to label the spot. T
 \end{equation}
 ```
 
-where $\vec{k}_{\parallel,0}$ is the parallel component of the wave vector, $\vec{k}_0$, of the incoming electron beam. The length of $\vec k$ is $|\vec k| = \sqrt{2 m_e E_{kin} / \hbar^2 }$ for both the incoming and elastically scattered electrons. The vertical component, $k_z$, of the electrons back-diffracted into spot $(n_1,n_2)$ is defined by energy conservation:
+where $`\vec{k}_{\parallel,0}`$ is the parallel component of the wave vector, $`\vec{k}_0`$, of the incoming electron beam. The length of $`\vec k`$ is $`|\vec k| = \sqrt{2 m_e E_{kin} / \hbar^2 }`$ for both the incoming and elastically scattered electrons. The vertical component, $`k_z`$, of the electrons back-diffracted into spot $`(n_1,n_2)`$ is defined by energy conservation:
 
 ``` math
 \begin{equation}
@@ -193,7 +195,7 @@ In many cases the periodicity of the surface lattice is larger than expected for
 
 #### Matrix Notation
 
-The lattice vectors $\vec{b}_1$ and $\vec{b}_2$ of such superstructures can be expressed as multiples of the $(1 \times 1)$ lattice vectors $\vec{a}_1$ and $\vec{a}_2$:
+The lattice vectors $`\vec{b}_1`$ and $`\vec{b}_2`$ of such superstructures can be expressed as multiples of the $`(1 \times 1)`$ lattice vectors $`\vec{a}_1`$ and $`\vec{a}_2`$:
 
 ``` math
 \begin{equation}
@@ -204,7 +206,7 @@ The lattice vectors $\vec{b}_1$ and $\vec{b}_2$ of such superstructures can be e
 \end{equation}
 ```
 
-where the numbers $m_{ij}$ are the coefficients of the superstructure matrix , which offers a straightforward way of characterising the superstructure.
+where the numbers $`m_{ij}`$ are the coefficients of the superstructure matrix , which offers a straightforward way of characterising the superstructure.
 ``` math
 \begin{eqnarray}
 \cal M &=&
@@ -216,21 +218,21 @@ where the numbers $m_{ij}$ are the coefficients of the superstructure matrix , w
 \end{eqnarray}
 ```
 
-The area of the superstructure unit cell, $A_B$, is given by
+The area of the superstructure unit cell, $`A_B`$, is given by
 ``` math
 \begin{equation}
 A_B = \left | \vec{b}_1 \times \vec{b}_2 \right | = \det {\cal B} = \det {\cal M} \cdot \det {\cal A}
     = \det {\cal M} \cdot A_A =
 \end{equation}
 ```
-where $A_A = \det \cal{A}$ is the area of the $(1 \times 1)$ unit cell (see above) and the determinante of the superstructure matrix is
+where $`A_A = \det \cal{A}`$ is the area of the $`(1 \times 1)`$ unit cell (see above) and the determinante of the superstructure matrix is
 ``` math
 \begin{equation}
 \det {\cal M} = (m_{11}m_{22} - m_{12}m_{21})
 \end{equation}
 ```
 
-The positions and indices of the additional LEED spots can be calculated directly from the Bragg condition analogue to Equation ([eq_int_Bragg]) when we use a matrix $\cal M^\ast$ which correlates the reciprocal vectors of the superstructure to those of the substrate:
+The positions and indices of the additional LEED spots can be calculated directly from the Bragg condition analogue to Equation ([eq_int_Bragg]) when we use a matrix $`\cal M^\ast`$ which correlates the reciprocal vectors of the superstructure to those of the substrate:
 ``` math
 \begin{equation}
 \cal B^\ast = \cal M^\ast \cdot \cal A^\ast
@@ -247,7 +249,7 @@ Then
 \label{eq_int_BraggB}
 \end{equation}
 ```
-Since ${\cal A}$ and ${\cal A}^\ast$ fulfil the Bragg condition already, we find that the matrix product ${\cal M}^\dagger {\cal M}^\ast$ must be unity, and hence
+Since $`{\cal A}`$ and $`{\cal A}^\ast`$ fulfil the Bragg condition already, we find that the matrix product $`{\cal M}^\dagger {\cal M}^\ast`$ must be unity, and hence
 ``` math
 \begin{equation}
 {\cal M}^\ast =
@@ -259,7 +261,7 @@ m_{22} & -m_{21} \\
 \end{array} \right)
 \end{equation}
 ```
-Re-substituting this result into Equation ([eq_int_Mrec]) we arrive at the following set of formulae for $\vec{b}_1^\ast$ and $\vec{b}_2^\ast$:
+Re-substituting this result into Equation ([eq_int_Mrec]) we arrive at the following set of formulae for $`\vec{b}_1^\ast`$ and $`\vec{b}_2^\ast`$:
 
 ``` math
 \begin{equation}
@@ -270,7 +272,7 @@ Re-substituting this result into Equation ([eq_int_Mrec]) we arrive at the foll
 \end{equation}
 ```
 
-The fractional indices of the superstructure spots are multiples of the pre-factors of $\vec{a}_1^\ast$ and $\vec{a}_2^\ast$ in the above equations. The area of the superstructure unit cell, A, in units of the $(1 \times 1)$ unit cell area can also easily be calculated from the determinante of the superstructure matrix:
+The fractional indices of the superstructure spots are multiples of the pre-factors of $`\vec{a}_1^\ast`$ and $`\vec{a}_2^\ast`$ in the above equations. The area of the superstructure unit cell, A, in units of the $`(1 \times 1)`$ unit cell area can also easily be calculated from the determinante of the superstructure matrix:
 
 ``` math
 \begin{equation}
@@ -280,7 +282,7 @@ A = (m_{11}m_{22} - m_{12}m_{21})
 
 #### Wood Notation
 
-An alternative, less general notation according to Wood specifies the lengths of the vectors $\vec{b}_1$ and $\vec{b}_2$ in units of $\vec{a}_1$ and $\vec{a}_2$ together with the rotation angle $\alpha$ between $\vec{b}_1$ and $\vec{a}_1$ (only specified if non-zero):
+An alternative, less general notation according to Wood specifies the lengths of the vectors $`\vec{b}_1`$ and $`\vec{b}_2`$ in units of $`\vec{a}_1`$ and $`\vec{a}_2`$ together with the rotation angle $`\alpha`$ between $`\vec{b}_1`$ and $`\vec{a}_1`$ (only specified if non-zero):
 
 ``` math
 \begin{equation}
@@ -288,22 +290,20 @@ p/c \left (  \frac{|b_1|}{|a_1|} \times \frac{|b_2|}{|a_2|}  \right ) R \alpha
 \end{equation}
 ```
 
-”p” indicates a ”primitive” and ”c” a ”centred” surface unit cell. Examples are ”$p(2 \times 2)$”, ”$p(\sqrt{3} \times \sqrt{3}) R 30^\circ$”, and ”$p(2 \times 2)$”. This notation is not applicable in all cases but it is more frequently used than the matrix notation because it is shorter. Figure [fig_int_LEED_patt] shows an example of a $p(2 \times 1)$ superstructure with the corresponding matrix and Wood notations. Other examples are shown in Figure [fig_int_LEED_domains]
+”p” indicates a ”primitive” and ”c” a ”centred” surface unit cell. Examples are ”$`p(2 \times 2)`$”, ”$`p(\sqrt{3} \times \sqrt{3}) R 30^\circ`$”, and ”$`p(2 \times 2)`$”. This notation is not applicable in all cases but it is more frequently used than the matrix notation because it is shorter. Figure [fig_int_LEED_patt] shows an example of a $`p(2 \times 1)`$ superstructure with the corresponding matrix and Wood notations. Other examples are shown in Figure [fig_int_LEED_domains]
 
 ### Domains
 
-
-![](\1)
-![](\1)
-![](\1)
-
-**Figure:**  Experimental LEED patterns formed by CO adsorbed on Ni{111} (left) and corresponding real-space unit cells (right): $p(\sqrt{3} \times \sqrt{3}) R30^\circ$ (top, only one domain) *c*(2 × 4) (middle, 3 rotational domains) and $p(\sqrt{7} \times \sqrt{7}) R19^\circ$ (bottom, 2 mirror domains) . Note that real space diagrams are rotated by about 30^∘ with respect to the crystal orientation of the experiment.
-
-
+<figure id="fig_int_LEED_domains" data-latex-placement="h">
+<img src="docs/Fig_int_Domains_r3xr3.jpg" style="height:30.0%" />
+<img src="docs/Fig_int_Domains_c2x4.jpg" style="height:30.0%" />
+<img src="docs/Fig_int_Domains_r7xr7.jpg" style="height:30.0%" />
+<figcaption> Experimental LEED patterns formed by CO adsorbed on Ni{111} (left) and corresponding real-space unit cells (right): <span class="math inline">$p(\sqrt{3} \times \sqrt{3}) R30^\circ$</span> (top, only one domain) <span class="math inline"><em>c</em>(2 × 4)</span> (middle, 3 rotational domains) and <span class="math inline">$p(\sqrt{7} \times \sqrt{7}) R19^\circ$</span> (bottom, 2 mirror domains) <span class="citation" data-cites="Held98a"></span>. Note that real space diagrams are rotated by about <span class="math inline">30<sup>∘</sup></span> with respect to the crystal orientation of the experiment. </figcaption>
+</figure>
 
 When the symmetry of the superstructure lattice is lower than the symmetry of the substrate and the adsorption sites one expects domains of different superstructure orientations to be present at the surface in equal amounts. These orientations are found by applying the missing symmetry operations to the superstructure lattice. As the electron beam of a conventional LEED system is orders of magnitude larger than the typical domain size (100 - 1000 Å), the observed LEED pattern is normally a superpositions of all rotational and/or mirror domains. Hence the LEED pattern usually shows the same symmetry as the substrate, even if the superlattice symmetry is lower. For examples see Figure [fig_int_LEED_domains]. Important exceptions are the superstructures of enantiopure chiral molecules, which themselves do not have any mirror symmetry. For these structures mirror domains are not observed since applying a mirror operation would turn the molecule into the opposite enantiomer. For the same enantiomer applying a mirror operation to the lattice would alter the adsorption site geometry of the molecule.
 
-Each domain is characterised by its own superstructure matrix. They are related by the transformation matrices of the corresponding symmetry operations $\cal T$.
+Each domain is characterised by its own superstructure matrix. They are related by the transformation matrices of the corresponding symmetry operations $`\cal T`$.
 ``` math
 \begin{equation}
 {\cal M}_{T} =
@@ -311,7 +311,7 @@ Each domain is characterised by its own superstructure matrix. They are related 
 \label{eq_int_dom}
 \end{equation}
 ```
-The matrices for common symmetry operations, rotation by an angle $\varphi$, ${\cal R}_{\varphi}$, and reflection with respect to the $x$ or $y$ axis, ${\cal S}_{x,y}$ are given below
+The matrices for common symmetry operations, rotation by an angle $`\varphi`$, $`{\cal R}_{\varphi}`$, and reflection with respect to the $`x`$ or $`y`$ axis, $`{\cal S}_{x,y}`$ are given below
 ``` math
 \begin{equation}
 {\cal R}_{\varphi} =
@@ -330,9 +330,9 @@ The matrices for common symmetry operations, rotation by an angle $\varphi$, ${\
 
 Because of the strong contribution of multiple scattering in low energy electron diffraction, a direct conversion of LEED-IV data into structural parameters by Fourier Transformation, similar to the Patterson function used in X-ray diffraction, is not reliable. Several attempts have been made of devising direct methods for the conversion of LEED data into atom coordinates but so far they do not deliver the same precision and as conventional ”trial and error” analysis.
 
-The latter is based on full dynamical (multiple) scattering calculations of the LEED intensities over a range of energies for trial surface geometries. These $I(E)$ or IV curves are compared with the experimental data, whereby the agreement is quantified through a reliability or $R$ factor. The trial geometries are optimised until a minimum of the $R$ factor is found.
+The latter is based on full dynamical (multiple) scattering calculations of the LEED intensities over a range of energies for trial surface geometries. These $`I(E)`$ or IV curves are compared with the experimental data, whereby the agreement is quantified through a reliability or $`R`$ factor. The trial geometries are optimised until a minimum of the $`R`$ factor is found.
 
-The following chapters will introduce the basic theories behind the intensity calculations, the definition of $R$ factors and the principles of some common search algorithms used in the CLEED package.
+The following chapters will introduce the basic theories behind the intensity calculations, the definition of $`R`$ factors and the principles of some common search algorithms used in the CLEED package.
 
 # Data Acquisition
 
@@ -342,34 +342,32 @@ A sufficiently large experimental data set of good quality is as essential for a
 
 ### LEED Optics
 
+<figure id="fig_LEED_opt" data-latex-placement="h">
+<img src="docs/Fig_LEED_Schem.jpg" style="width:80.0%" />
+<figcaption> Schematic diagram of a conventional LEED system. </figcaption>
+</figure>
 
-![](\1)
+The standard modern LEED optics is of the "rear view" type which is schematically shown in Figure [fig_LEED_opt]. The electron beam is emitted from a hot filament, accelerated by the potential $`V_0`$ and collimated by an array of electrostatic lenses (not shown in Figure [fig_LEED_opt]). The electron gun is behind the hemispherical fluorescent screen, which is made of glass and has a hole in the middle for the electrons to pass through. Typically, the electron beam has a current of around 1 $`\mu`$A and illuminates an area of 1 mm$`^2`$. The surface is in the centre of the hemisphere so that all back-diffracted electrons travel towards the LEED screen on radial trajectories. Before the electrons hit the screen they have to pass a retarding field energy analyser. It typically consists of four (or three) hemispherical grids concentric with the screen, each containing a central hole, through which the electron gun is inserted. The first grid (nearest to the sample) is connected to earth ground, as is the sample, to provide an essentially field-free region between the sample and the first grid. This minimises an undesirable electrostatic deflection of diffracted electrons. A suitable negative potential $`-(V_0 - \Delta V)`$ is applied to the second and third (only second) grid, the so-called suppressor grids, to allow only electrons to be transmitted to the fluorescent screen whose energy is within e?V of the elastically scattered electrons. The fourth (third) grid is usually grounded in order to reduce field penetration of the screen voltage to the suppressor grids. The screen voltage is of the order of 5-7 kV; it provides the electrons with enough energy to make the diffraction pattern visible on the fluorescent screen. Older designs have opaque screens, which only allow the observation from behind the sample, where the sample holder obstructs the view. All modern instruments have transparent fluorescent screens allowing the pattern to be observed through a view-port from behind the screen. With this design only the electron gun assembly (diameter $`< 15`$ mm) limits the view slightly. So-called MCP-LEED systems with position sensitive single or double-stack ”multi channel plate” (MCP) electron multipliers between the grids and the fluorescent screen have become commercially available in recent years for applications that require low incident electron currents, either to avoid beam damage (see below) or charging of insulating samples. These systems can be operated with electron currents as low as 1 nA. Several groups have also developed position sensitive electron counting devices, which use primary currents in the pA range . Such extremely low currents are, however, more imposed by the maximum count rates of the detectors, than buy the need of keeping the electron-induced damage within reasonable limits. Typical LEED systems have diameters of around 140 mm so that they fit into a 150 mm (ID) flange, which leads to a screen diameter of around 100 mm, but also smaller versions for 100 mm flanges are available.
 
-**Figure:**  Schematic diagram of a conventional LEED system.
+The standard way of recording LEED patterns is by using a video camera, either at standard video rate or with variable slow scan CCD systems. Still images are recorded for different kinetic energies, typically between 50 and $`> 300`$ eV in steps of 1 eV. The spot intensities are then extracted from these images using suitable image processing software (see Chapter [chap_exp_Proc]).
 
-
-
-The standard modern LEED optics is of the "rear view" type which is schematically shown in Figure [fig_LEED_opt]. The electron beam is emitted from a hot filament, accelerated by the potential $V_0$ and collimated by an array of electrostatic lenses (not shown in Figure [fig_LEED_opt]). The electron gun is behind the hemispherical fluorescent screen, which is made of glass and has a hole in the middle for the electrons to pass through. Typically, the electron beam has a current of around 1 $\mu$A and illuminates an area of 1 mm$^2$. The surface is in the centre of the hemisphere so that all back-diffracted electrons travel towards the LEED screen on radial trajectories. Before the electrons hit the screen they have to pass a retarding field energy analyser. It typically consists of four (or three) hemispherical grids concentric with the screen, each containing a central hole, through which the electron gun is inserted. The first grid (nearest to the sample) is connected to earth ground, as is the sample, to provide an essentially field-free region between the sample and the first grid. This minimises an undesirable electrostatic deflection of diffracted electrons. A suitable negative potential $-(V_0 - \Delta V)$ is applied to the second and third (only second) grid, the so-called suppressor grids, to allow only electrons to be transmitted to the fluorescent screen whose energy is within e?V of the elastically scattered electrons. The fourth (third) grid is usually grounded in order to reduce field penetration of the screen voltage to the suppressor grids. The screen voltage is of the order of 5-7 kV; it provides the electrons with enough energy to make the diffraction pattern visible on the fluorescent screen. Older designs have opaque screens, which only allow the observation from behind the sample, where the sample holder obstructs the view. All modern instruments have transparent fluorescent screens allowing the pattern to be observed through a view-port from behind the screen. With this design only the electron gun assembly (diameter $< 15$ mm) limits the view slightly. So-called MCP-LEED systems with position sensitive single or double-stack ”multi channel plate” (MCP) electron multipliers between the grids and the fluorescent screen have become commercially available in recent years for applications that require low incident electron currents, either to avoid beam damage (see below) or charging of insulating samples. These systems can be operated with electron currents as low as 1 nA. Several groups have also developed position sensitive electron counting devices, which use primary currents in the pA range . Such extremely low currents are, however, more imposed by the maximum count rates of the detectors, than buy the need of keeping the electron-induced damage within reasonable limits. Typical LEED systems have diameters of around 140 mm so that they fit into a 150 mm (ID) flange, which leads to a screen diameter of around 100 mm, but also smaller versions for 100 mm flanges are available.
-
-The standard way of recording LEED patterns is by using a video camera, either at standard video rate or with variable slow scan CCD systems. Still images are recorded for different kinetic energies, typically between 50 and $> 300$ eV in steps of 1 eV. The spot intensities are then extracted from these images using suitable image processing software (see Chapter [chap_exp_Proc]).
-
-The $k$-space resolution of LEED systems is characterised by the so-called transfer width. Features in the spot profiles of the LEED pattern (spot splitting, spot broadening) correspond to typical distances on the surface (step separation, island size). The largest resolvable length is the transfer width . Typical values are around 150 Å for conventional rear view LEED systems. Specialised spot profile analysis (SPA) LEED systems can achieve transfer widths up to 1000 Å .
+The $`k`$-space resolution of LEED systems is characterised by the so-called transfer width. Features in the spot profiles of the LEED pattern (spot splitting, spot broadening) correspond to typical distances on the surface (step separation, island size). The largest resolvable length is the transfer width . Typical values are around 150 Å for conventional rear view LEED systems. Specialised spot profile analysis (SPA) LEED systems can achieve transfer widths up to 1000 Å .
 
 ### Quantum efficiency of LEED detectors
 
-It is worthwhile to estimate the limits of video LEED systems in general as opposed to position-sensitive counting detectors. Let us assume the same retarding field optics and therefore the same transmission in front of both detector types. About every second electron arriving at the channel plates of a counting device will be detected . In a video LEED system the electron will hit the fluorescent screen and excite, on average, a number of photons $N_p$ which is proportional to a small power ($1.5 \leq n \leq 2$) of the applied acceleration voltage $V_{acc}$ :
+It is worthwhile to estimate the limits of video LEED systems in general as opposed to position-sensitive counting detectors. Let us assume the same retarding field optics and therefore the same transmission in front of both detector types. About every second electron arriving at the channel plates of a counting device will be detected . In a video LEED system the electron will hit the fluorescent screen and excite, on average, a number of photons $`N_p`$ which is proportional to a small power ($`1.5 \leq n \leq 2`$) of the applied acceleration voltage $`V_{acc}`$ :
 ``` math
 \begin{equation}
 N_p = \frac{e_{phos}}{V_0^n} \cdot V_{acc}^n
 \end{equation}
 ```
-$N_p$ is about 50 for a commerical LEED system with P-22G fluorescent coating and an acceleration voltage of 7 kV . For a MCP LEED system $N_p$ has to be multiplied with the MCP gain factor, typically $g_{MCP} = 10^4$ for a single and $10^7$ for a double MCP . Since the photons are emitted isotropically the fraction arriving at the camera lens and eventually recorded by the CCD array is determined by the acceptance angle $\Delta \Omega$ of the camera
+$`N_p`$ is about 50 for a commerical LEED system with P-22G fluorescent coating and an acceleration voltage of 7 kV . For a MCP LEED system $`N_p`$ has to be multiplied with the MCP gain factor, typically $`g_{MCP} = 10^4`$ for a single and $`10^7`$ for a double MCP . Since the photons are emitted isotropically the fraction arriving at the camera lens and eventually recorded by the CCD array is determined by the acceptance angle $`\Delta \Omega`$ of the camera
 ``` math
 \begin{equation}
 \Delta \Omega = \frac{\pi r_l^2}{d_l^2}
 \end{equation}
 ```
-($r_l$ is the effective radius of the lens aperture, $d_l$ the distance between screen and lens). For a typical system, as described in , with $r_l$ = f/2.4 = 10 mm and $d_l$ = 260 mm we calculate $\Delta \Omega = 4.6\times 10^{-3}$ sr). The overall optical transmission factor $t_{opt}$ of screen, view ports, filters and camera lens can be estimated to about 50%. A photon eventually arriving at the CCD will excite an electron with a probability $e_{ccd}$ of about 30% for the green light emitted from phosphors of standard LEED systems. Hence, the probability for an electron arriving at the LEED screen to cause an electron–hole pair in the CCD to be excited is:
+($`r_l`$ is the effective radius of the lens aperture, $`d_l`$ the distance between screen and lens). For a typical system, as described in , with $`r_l`$ = f/2.4 = 10 mm and $`d_l`$ = 260 mm we calculate $`\Delta \Omega = 4.6\times 10^{-3}`$ sr). The overall optical transmission factor $`t_{opt}`$ of screen, view ports, filters and camera lens can be estimated to about 50%. A photon eventually arriving at the CCD will excite an electron with a probability $`e_{ccd}`$ of about 30% for the green light emitted from phosphors of standard LEED systems. Hence, the probability for an electron arriving at the LEED screen to cause an electron–hole pair in the CCD to be excited is:
 ``` math
 \begin{equation}
 e_{tot} = e_{ccd} \cdot t_{opt} \cdot \frac{\Delta \Omega}{4\pi} \cdot N_p \cdot g_{MCP}
@@ -383,11 +381,11 @@ e_{tot} = \frac{e_{ccd} \cdot t_{opt} \cdot e_{phos}}{4} \cdot
 \label{eq_tot2}
 \end{equation}
 ```
-We then get a total efficiency of $e_{tot} = g_{MCP} \cdot 3 \times 10^{-3}$ for the system described in this paper. This marks the limit achievable using commercial LEED optics and camera components.
+We then get a total efficiency of $`e_{tot} = g_{MCP} \cdot 3 \times 10^{-3}`$ for the system described in this paper. This marks the limit achievable using commercial LEED optics and camera components.
 
-Equation ([eq_tot2]) shows that a single MCP system already leads to a total efficiency greater than one, i.e. every electron hitting the screen will be detected. But also with conventional LEED systems there is still great potential for increasing $e_{tot}$ by improving the optical system. Especially $\Delta \Omega$ can be dramatically increased by using a lens with larger aperture, which requires a larger focal length for practical reasons and therefore a larger CCD chip. A commercially available photographic lens with 55 mm focal length and a relative aperture of 1.2 could already increase $e_{tot}$ by a factor of about 20, at the expense of an about three times larger CCD. An even more dramatic improvement can be achieved by coupling the LEED screen and the CCD directly through fiber-optical system which is, however, not feasible with a conventional LEED system . A higher acceleration voltage $V_{acc}$ will also increase $e_{tot}$ about quadratically. 20 kV instead of the 7 kV used conventional LEED systems would therefore lead to a total efficiency about eight times higher. Together with a camera lens, as described before, a conversion factor of $e_{tot} = 20 \cdot 8 \cdot 3 \times 10^{-3} = 0.5$ could be achieved.
+Equation ([eq_tot2]) shows that a single MCP system already leads to a total efficiency greater than one, i.e. every electron hitting the screen will be detected. But also with conventional LEED systems there is still great potential for increasing $`e_{tot}`$ by improving the optical system. Especially $`\Delta \Omega`$ can be dramatically increased by using a lens with larger aperture, which requires a larger focal length for practical reasons and therefore a larger CCD chip. A commercially available photographic lens with 55 mm focal length and a relative aperture of 1.2 could already increase $`e_{tot}`$ by a factor of about 20, at the expense of an about three times larger CCD. An even more dramatic improvement can be achieved by coupling the LEED screen and the CCD directly through fiber-optical system which is, however, not feasible with a conventional LEED system . A higher acceleration voltage $`V_{acc}`$ will also increase $`e_{tot}`$ about quadratically. 20 kV instead of the 7 kV used conventional LEED systems would therefore lead to a total efficiency about eight times higher. Together with a camera lens, as described before, a conversion factor of $`e_{tot} = 20 \cdot 8 \cdot 3 \times 10^{-3} = 0.5`$ could be achieved.
 
-The above considerations show that commercial video LEED detectors, if operated under the right conditions, are effectively counting devices. This enables us to estimate the ideal operating conditions in terms of primary current, $I_p$. From LEED IV calculations we know that relative backscattered intensities for energies above 50 eV are between $I_{rel} = 10^{-6}$ and $10^{-3}$. For narrow diffraction spots this intensity is distributed over the area of the beam diameter, typically 1 mm$^2$. When a LEED screen with diameter 100 mm is imaged onto a 1 Mpixel CCD this corresponds to around $10 \times 10 = 100$ pixels per mm$^2$. hence, the current per pixel is
+The above considerations show that commercial video LEED detectors, if operated under the right conditions, are effectively counting devices. This enables us to estimate the ideal operating conditions in terms of primary current, $`I_p`$. From LEED IV calculations we know that relative backscattered intensities for energies above 50 eV are between $`I_{rel} = 10^{-6}`$ and $`10^{-3}`$. For narrow diffraction spots this intensity is distributed over the area of the beam diameter, typically 1 mm$`^2`$. When a LEED screen with diameter 100 mm is imaged onto a 1 Mpixel CCD this corresponds to around $`10 \times 10 = 100`$ pixels per mm$`^2`$. hence, the current per pixel is
 
 ``` math
 \begin{equation}
@@ -396,24 +394,24 @@ I_{pix} = I_{p} \cdot I_{rel} \cdot e_{tot} \cdot 10^{-2}
 \end{equation}
 ```
 
-For several reasons (surface contamination, settling times of LEED electronics, etc) the optimum data acquisition time is around 1-2 s per energy point. In order to reduce noise it is best to accumulate charge on a slow-scan CCD and read out only once per energy as opposed to reading out at video frequency and averaging several images in the data acquisition computer. The former procedure is limited by the fact that the maximum charge per pixel is limited to around $10^5$ e. Hence, the maximum primary current is limited by the fact that this charge should not be exceeded when irradiated for 1 s by photons from an intense spot, i.e. $I_{pix, max} = 10^5$ e s$^{-1}$.
+For several reasons (surface contamination, settling times of LEED electronics, etc) the optimum data acquisition time is around 1-2 s per energy point. In order to reduce noise it is best to accumulate charge on a slow-scan CCD and read out only once per energy as opposed to reading out at video frequency and averaging several images in the data acquisition computer. The former procedure is limited by the fact that the maximum charge per pixel is limited to around $`10^5`$ e. Hence, the maximum primary current is limited by the fact that this charge should not be exceeded when irradiated for 1 s by photons from an intense spot, i.e. $`I_{pix, max} = 10^5`$ e s$`^{-1}`$.
 ``` math
 \begin{equation}
 I_{p,max} = \frac{I_{pix, max} }{I_{rel,max} \cdot e_{tot}} \cdot 10^{2} = \frac{10^{10}}{e_{tot}} \mbox{ e s}^{-1}
 \label{eq_Ipmax}
 \end{equation}
 ```
-This primary current would lead to a signal of $10^2$ e s$^{-1}$ per pixel or $10^4$ e s$^{-1}$ per spot for weak intensities, i.e. enough for an acceptable signal-to-noise ratio. Thus, depending on $e_{tot}$ the optimum primary current is between around 1 and 500 nA.
+This primary current would lead to a signal of $`10^2`$ e s$`^{-1}`$ per pixel or $`10^4`$ e s$`^{-1}`$ per spot for weak intensities, i.e. enough for an acceptable signal-to-noise ratio. Thus, depending on $`e_{tot}`$ the optimum primary current is between around 1 and 500 nA.
 
 If charging of the sample is a problem lower currents and correspondingly longer acquisition times may be required.
 
 ### Beam damage
 
-Although LEED is considered a non-destructive method, electron-induced damage to the sample can be a problem, in particular when organic molecules are studied. As a rule of thumb, a conventional LEED system with a beam current of 1 $\mu$A and a spot cross section of 1 mm$^2$ leads to an exposure of the order of 1 electron per molecule and second. If I-V curves are recorded over an energy range of 250 eV in steps of 1 eV with a data collection time of 1 s per step this leads to a total exposure of 250 electrons per molecule. There are cases in the literature, however, where an exposure of the order of one electron per molecule can cause significant damage to a molecular layer . Beam damage can be reduced by using lower currents in the 1-100 nA range in connection with fast video-LEED systems and by scanning the sample during data acquisition. Short data acquisition times also minimise contamination effects from the residual gas. Such experimental set-ups enable detailed LEED studies of systems which are highly sensitive to beam damage and/or to contamination. Examples are ordered structures of water , benzene or rare gases on metal surfaces .
+Although LEED is considered a non-destructive method, electron-induced damage to the sample can be a problem, in particular when organic molecules are studied. As a rule of thumb, a conventional LEED system with a beam current of 1 $`\mu`$A and a spot cross section of 1 mm$`^2`$ leads to an exposure of the order of 1 electron per molecule and second. If I-V curves are recorded over an energy range of 250 eV in steps of 1 eV with a data collection time of 1 s per step this leads to a total exposure of 250 electrons per molecule. There are cases in the literature, however, where an exposure of the order of one electron per molecule can cause significant damage to a molecular layer . Beam damage can be reduced by using lower currents in the 1-100 nA range in connection with fast video-LEED systems and by scanning the sample during data acquisition. Short data acquisition times also minimise contamination effects from the residual gas. Such experimental set-ups enable detailed LEED studies of systems which are highly sensitive to beam damage and/or to contamination. Examples are ordered structures of water , benzene or rare gases on metal surfaces .
 
-The minimum beam currents required for video-LEED systems with MCP-intensified LEED screens (about 1 nA for substrate spots only, about 10-100 nA for weak superstructures) are significantly higher than beam currents used in counting devices (pA range). Even considering the much longer data acquisition times necessary for these systems the total electron doses are still smaller. However, such extreme conditions are imposed by the maximum count rates of their detectors, and are not needed in order to keep electron–induced damage within reasonable limits. One can test the stability of a particular adsorbate system against electron bombardment by simply recording the intensity of a superstructure beam versus electron dose (i.e. time of irradiation). As a typical example, the intensity of the ($\frac{1}{7},\frac{2}{7}$) beam of the $(\sqrt{7} \times \sqrt{7})$ R19$^\circ$ superstructure of benzene on Ru{0001} at an energy of 45 eV and a beam current of 130 nA stayed roughly constant with irradiation time for 10 minutes and decayed slowly afterwards; after 50 minutes of irradiation it had decreased by about 30%.
+The minimum beam currents required for video-LEED systems with MCP-intensified LEED screens (about 1 nA for substrate spots only, about 10-100 nA for weak superstructures) are significantly higher than beam currents used in counting devices (pA range). Even considering the much longer data acquisition times necessary for these systems the total electron doses are still smaller. However, such extreme conditions are imposed by the maximum count rates of their detectors, and are not needed in order to keep electron–induced damage within reasonable limits. One can test the stability of a particular adsorbate system against electron bombardment by simply recording the intensity of a superstructure beam versus electron dose (i.e. time of irradiation). As a typical example, the intensity of the ($`\frac{1}{7},\frac{2}{7}`$) beam of the $`(\sqrt{7} \times \sqrt{7})`$ R19$`^\circ`$ superstructure of benzene on Ru{0001} at an energy of 45 eV and a beam current of 130 nA stayed roughly constant with irradiation time for 10 minutes and decayed slowly afterwards; after 50 minutes of irradiation it had decreased by about 30%.
 
-The most beam-sensitive overlayer we have analysed up to now is $(\sqrt{3} \times \sqrt{3})$ R30$^\circ$ H$_2$O/Ru(001) , which is already degraded significantly by about 60 s of irradiation at 200 nA (intensity change of about 10%). In this case, data acquisition had to be split up into segments of 50 eV (steps of 1 eV, 1 s per energy point) in order to achieve reliable results. However, the IV curves of the majority of surface structures investigated in our laboratory so far could be collected in one run without compromising the quality of the data, since a full energy scan (30 eV - 400 eV) can be performed within a total exposure time which is well below the onset of significant sample degradation (e.g. 370 s for benzene on Ru(001) with 1 s irradiation per energy point and steps of 1 eV).
+The most beam-sensitive overlayer we have analysed up to now is $`(\sqrt{3} \times \sqrt{3})`$ R30$`^\circ`$ H$`_2`$O/Ru(001) , which is already degraded significantly by about 60 s of irradiation at 200 nA (intensity change of about 10%). In this case, data acquisition had to be split up into segments of 50 eV (steps of 1 eV, 1 s per energy point) in order to achieve reliable results. However, the IV curves of the majority of surface structures investigated in our laboratory so far could be collected in one run without compromising the quality of the data, since a full energy scan (30 eV - 400 eV) can be performed within a total exposure time which is well below the onset of significant sample degradation (e.g. 370 s for benzene on Ru(001) with 1 s irradiation per energy point and steps of 1 eV).
 
 ## Data Preparation
 
@@ -421,7 +419,7 @@ The raw data set is a series of still images recorded over the desired kinetic e
 
 ### Extraction of LEED-IV curves
 
-We have developed a computer program which allows to extract the IV curves of all beams simultaneously from the series of LEED images taken during the energy scan. The only input required are the superstructure matrix and the image positions and indices of at least three spots at an arbitrary energy. The fact that all data processing is done off-line on a workstation allows detailed analysis of the LEED pattern. Dense LEED patterns or large differences in the intensities of neighboring spots can be handled reliably within the data analysis program. Having the entire image information available at a relatively high spatial resolution (about 0.2$^\circ$/ per pixel for a $512 \times 512$ pixel image) also allows spot profile analysis to some extent , which is mainly limited by the Moiré pattern of the grids.
+We have developed a computer program which allows to extract the IV curves of all beams simultaneously from the series of LEED images taken during the energy scan. The only input required are the superstructure matrix and the image positions and indices of at least three spots at an arbitrary energy. The fact that all data processing is done off-line on a workstation allows detailed analysis of the LEED pattern. Dense LEED patterns or large differences in the intensities of neighboring spots can be handled reliably within the data analysis program. Having the entire image information available at a relatively high spatial resolution (about 0.2$`^\circ`$/ per pixel for a $`512 \times 512`$ pixel image) also allows spot profile analysis to some extent , which is mainly limited by the Moiré pattern of the grids.
 
 #### Determine Spot Position and Intensity
 
@@ -438,9 +436,9 @@ In order to eliminate minor distortions introduced by the electron and light opt
 \right .
 \end{equation}
 ```
-($\vec{x}_{i}$ are image coordinates, $r$ is the radius for the local search). This latter search is particularly important if spot profiles are split or otherwise distorted by long range order effects.
+($`\vec{x}_{i}`$ are image coordinates, $`r`$ is the radius for the local search). This latter search is particularly important if spot profiles are split or otherwise distorted by long range order effects.
 
-The intensity is then integrated over an elliptical or circular area - depending on the spot shape - centered at this final spot position $\vec{x}_{\vec{g},i}$. The half axes (or radii) of the integration areas, as well as the radii for the maximum searches, are kept constant with respect to the reciprocal lattice vectors (typically 5% to 10% of their lengths) and therefore scaled with 1/$\sqrt{E}$. This way the integration and search areas always cover the same section of $k_\parallel$ when the energy is varied. A lower limit for the radius can be defined to account for the finite spot size of the incoming electron beam. Because the background of stray light and diffusely scattered electrons cannot be expected to be uniform, the local background is determined separately for each spot from a ring of about equal area surrounding the integration area and subtracted from the intensity inside. Before background subtraction the signal–to–background ratio is evaluated; if it is below a certain value (typically 10%), the maximum searches for this particular spot are repeated within a smaller range to avoid being misled by tails of closeby intense spots. The calculated spot position is used if an intensity maximum cannot be found within this range. These provisions have proved to be absolutely necessary for the extraction of IV curves from very dense LEED patterns such as $p(\sqrt{7} \times \sqrt{7})$ or $p(2\sqrt{3} \times 2\sqrt{3})$ superstructures at higher energies (up to 400 eV). Also, this ensures that beams which are temporarily invisible due to total extinction can be followed very easily since other spots are used to determine the reciprocal lattice. Equally, the collection of diffuse IV curves at any $k_\parallel$–position (defined by an appropriate superstructure matrix) is straightforward since the reciprocal lattice is defined through the integral order beams (in this case, of course, the background subtraction must be omitted).
+The intensity is then integrated over an elliptical or circular area - depending on the spot shape - centered at this final spot position $`\vec{x}_{\vec{g},i}`$. The half axes (or radii) of the integration areas, as well as the radii for the maximum searches, are kept constant with respect to the reciprocal lattice vectors (typically 5% to 10% of their lengths) and therefore scaled with 1/$`\sqrt{E}`$. This way the integration and search areas always cover the same section of $`k_\parallel`$ when the energy is varied. A lower limit for the radius can be defined to account for the finite spot size of the incoming electron beam. Because the background of stray light and diffusely scattered electrons cannot be expected to be uniform, the local background is determined separately for each spot from a ring of about equal area surrounding the integration area and subtracted from the intensity inside. Before background subtraction the signal–to–background ratio is evaluated; if it is below a certain value (typically 10%), the maximum searches for this particular spot are repeated within a smaller range to avoid being misled by tails of closeby intense spots. The calculated spot position is used if an intensity maximum cannot be found within this range. These provisions have proved to be absolutely necessary for the extraction of IV curves from very dense LEED patterns such as $`p(\sqrt{7} \times \sqrt{7})`$ or $`p(2\sqrt{3} \times 2\sqrt{3})`$ superstructures at higher energies (up to 400 eV). Also, this ensures that beams which are temporarily invisible due to total extinction can be followed very easily since other spots are used to determine the reciprocal lattice. Equally, the collection of diffuse IV curves at any $`k_\parallel`$–position (defined by an appropriate superstructure matrix) is straightforward since the reciprocal lattice is defined through the integral order beams (in this case, of course, the background subtraction must be omitted).
 
 Finally the background–corrected integrated intensity is normalized with respect to the beam current at the relevant energy and the exposure time. The positions of the most intense spots are used to recalibrate the reciprocal lattice vectors and the position of the (0,0) beam (which is back–reflected into the electron gun for data collection at normal incidence) in order to calculate the spot positions for the next energy point. While the IV curves are extracted, the current image with the two integration areas for each spot (signal and background) is displayed on the terminal screen of the workstation in order to enable the user to monitor the data processing. Depending on the number of spots and the number of energy points (i.e. images), extracting a set of IV curves from the stored images takes between 15 min. and several hours on a DEC 5000 workstation.
 
@@ -464,14 +462,12 @@ In addition, a geometrical correction has to be included which accounts for the 
 \label{eq_xreal}
 \end{equation}
 ```
-($\vec{x}_{i,real}$ are the recorded image coordinates, $M$ is the magnification factor of the optical system, $r_s$ = 66 mm is the screen radius, $d_l$ = 260 mm the distance between screen and camera lens; see also Figure [fig_LEED_screen]).
+($`\vec{x}_{i,real}`$ are the recorded image coordinates, $`M`$ is the magnification factor of the optical system, $`r_s`$ = 66 mm is the screen radius, $`d_l`$ = 260 mm the distance between screen and camera lens; see also Figure [fig_LEED_screen]).
 
-
-![](\1)
-
-**Figure:** Distortion of the LEED pattern due to the finite distance *d*_*l* between camera lens and screen: For a very large distance *d*_*l* between screen and camera lens the curvature of the screen *r*_*s* can be ignored and the spot coordinates in the image plane *x⃗*_*i*, *i**d**e**a**l* are an undistorted map of the reciprocal lattice (i.e. uniformly proportional to the parallel components of the outgoing wave vectors). For finite distances the screen curvature leads to image coordinates *x⃗*_*i*, *r**e**a**l* that are shifted towards the (0,0) beam with respect to *x⃗*_*i*, *i**d**e**a**l*. The shift is bigger with increasing *k*_∥/*k* (see equation ([eq_xreal])).
-
-
+<figure id="fig_LEED_screen">
+<embed src="docs/Fig_LEED_Screen.eps" style="width:40.0%" />
+<figcaption>Distortion of the LEED pattern due to the finite distance <span class="math inline"><em>d</em><sub><em>l</em></sub></span> between camera lens and screen: For a very large distance <span class="math inline"><em>d</em><sub><em>l</em></sub></span> between screen and camera lens the curvature of the screen <span class="math inline"><em>r</em><sub><em>s</em></sub></span> can be ignored and the spot coordinates in the image plane <span class="math inline"><em>x⃗</em><sub><em>i</em>, <em>i</em><em>d</em><em>e</em><em>a</em><em>l</em></sub></span> are an undistorted map of the reciprocal lattice (i.e. uniformly proportional to the parallel components of the outgoing wave vectors). For finite distances the screen curvature leads to image coordinates <span class="math inline"><em>x⃗</em><sub><em>i</em>, <em>r</em><em>e</em><em>a</em><em>l</em></sub></span> that are shifted towards the (0,0) beam with respect to <span class="math inline"><em>x⃗</em><sub><em>i</em>, <em>i</em><em>d</em><em>e</em><em>a</em><em>l</em></sub></span>. The shift is bigger with increasing <span class="math inline"><em>k</em><sub>∥</sub>/<em>k</em></span> (see equation ([eq_xreal])). </figcaption>
+</figure>
 
 ### Smoothing of IV curves, Selection of energy range
 
@@ -513,17 +509,17 @@ The input information required from the user is kept as little as possible; the 
 
 ### General Considerations
 
-LEED Structure determination is based on comparing experimental IV curves with those calculated for a trial surface geometry. Ultimately, the structure determination is the process of searching for the model geometry with the best agreement. In order to be able to automatise the search procedure, one needs to quantify the level of agreement between two curves, which is done by ”reliability” or $R$ factors Due to several approximations made in the model calculations, the agreement will never be perfect. In particular, the absolute intensity of the back-scattered electron beams is not well reproduced by the LEED calculations. Different $R$ factors emphasize certain properties of the IV curves more than others. In order to make the right choice for a particular set of data, it is important to be aware of these criteria, which will be discussed in the following sections.
+LEED Structure determination is based on comparing experimental IV curves with those calculated for a trial surface geometry. Ultimately, the structure determination is the process of searching for the model geometry with the best agreement. In order to be able to automatise the search procedure, one needs to quantify the level of agreement between two curves, which is done by ”reliability” or $`R`$ factors Due to several approximations made in the model calculations, the agreement will never be perfect. In particular, the absolute intensity of the back-scattered electron beams is not well reproduced by the LEED calculations. Different $`R`$ factors emphasize certain properties of the IV curves more than others. In order to make the right choice for a particular set of data, it is important to be aware of these criteria, which will be discussed in the following sections.
 
 #### "Distance between two mathematical functions"
 
-The experimental and all calculated IV curves of a spot $\vec{g}$ (or simply $g$) can be described in mathematical terms as a set of positive limited functions of $E$ defined in the overlap interval $[E_{i},E_{f}]$.
+The experimental and all calculated IV curves of a spot $`\vec{g}`$ (or simply $`g`$) can be described in mathematical terms as a set of positive limited functions of $`E`$ defined in the overlap interval $`[E_{i},E_{f}]`$.
 ``` math
 \begin{equation}
 {\cal I}  = \{I_{g,x}(E): E \in [E_{i},E_{f}]\}\;,
 \end{equation}
 ```
-the index $x$ is either $e$ (experimental) or $t$ (theoretical). Mathematical topology enables calculating ”distances” between such functions by defining a metric, which essentially serve the purpose of an $R$ factor. The general properties of a metric are as follows: :
+the index $`x`$ is either $`e`$ (experimental) or $`t`$ (theoretical). Mathematical topology enables calculating ”distances” between such functions by defining a metric, which essentially serve the purpose of an $`R`$ factor. The general properties of a metric are as follows: :
 ``` math
 \begin{equation}
 \begin{array}{clr}
@@ -551,7 +547,7 @@ Note that only condition (iii), the ”triangle inequality”, enables us to tal
 
 #### Normalisation of R factors
 
-The final modification of the general definition of a metric to generate a suitable $R$ factor is introducing normalisation. In order to put meaning to the absolute values of $R$ factors, we add condition (ib) as follows:
+The final modification of the general definition of a metric to generate a suitable $`R`$ factor is introducing normalisation. In order to put meaning to the absolute values of $`R`$ factors, we add condition (ib) as follows:
 ``` math
 \begin{equation}
 \begin{array}{cl}
@@ -562,9 +558,9 @@ The final modification of the general definition of a metric to generate a suita
 \end{equation}
 ```
 
-(ib) can be achieved dividing an un-normalised metric by the value found for two un-correlated functions Through this final condition $R$ factors will mostly assume values between 0 and 1. $R$ factors greater than 1 correspond to ”anti-correlated” curves where maxima of one curve coincide mostly with minima of the other. The above conditions still allow a multitude of different R factor definitions but if they fulfil condition (ib) they should lead to similar values.
+(ib) can be achieved dividing an un-normalised metric by the value found for two un-correlated functions Through this final condition $`R`$ factors will mostly assume values between 0 and 1. $`R`$ factors greater than 1 correspond to ”anti-correlated” curves where maxima of one curve coincide mostly with minima of the other. The above conditions still allow a multitude of different R factor definitions but if they fulfil condition (ib) they should lead to similar values.
 
-The $R$ factor for a certain model geometry is the weighted average of all available pairs of IV curves:
+The $`R`$ factor for a certain model geometry is the weighted average of all available pairs of IV curves:
 ``` math
 \begin{equation}
 R_{avg} =  \frac{ \sum_{g}(E_{f}-E_{i})_{g} \cdot R[I_{g,e}(E),I_{g,t}(E)]}
@@ -573,11 +569,11 @@ R_{avg} =  \frac{ \sum_{g}(E_{f}-E_{i})_{g} \cdot R[I_{g,e}(E),I_{g,t}(E)]}
 \end{equation}
 ```
 
-There is a number of mathematical transformations that can be used to construct an $R$ factor metric. Some of them are used as standard $R$ factors for LEED, which will be discussed in the following sections. We also introduce a few new $R$ factors which could be used to emphasize additional curve properties. Not all of the standard $R$ factors comply with the triangle inequality (iii) and are therefore actually concave functions of a true metric. As a consequence, they lead to sharper contrast, which can speed up the search for minima.
+There is a number of mathematical transformations that can be used to construct an $`R`$ factor metric. Some of them are used as standard $`R`$ factors for LEED, which will be discussed in the following sections. We also introduce a few new $`R`$ factors which could be used to emphasize additional curve properties. Not all of the standard $`R`$ factors comply with the triangle inequality (iii) and are therefore actually concave functions of a true metric. As a consequence, they lead to sharper contrast, which can speed up the search for minima.
 
-### $R_1$ and $R_2$
+### $`R_1`$ and $`R_2`$
 
-### Pendry’s R factor $R_P$
+### Pendry’s R factor $`R_P`$
 
 Logarithmic derivatives have been suggested by Pendry as another way of mapping IV curves onto a subspace which is independent of scaling :
 
@@ -589,40 +585,38 @@ I(E) \rightarrow  L[I(E)] = \frac{\frac{\partial I_{x}(E)}{\partial E}}
 \end{equation}
 ```
 
-Since differentiation is a linear operation, the logarithmic derivative of a function $I(E)$ is the same as that of $a \cdot I(E)$. But also features of different intensities within the same curve have the same weight. For instance, a model IV curve which is composed of Lorentzian functions of equal width $2 V_{0i}$ but different intensities $a_{n}$
+Since differentiation is a linear operation, the logarithmic derivative of a function $`I(E)`$ is the same as that of $`a \cdot I(E)`$. But also features of different intensities within the same curve have the same weight. For instance, a model IV curve which is composed of Lorentzian functions of equal width $`2 V_{0i}`$ but different intensities $`a_{n}`$
 ``` math
 \begin{equation}
 I(E) = \sum_{n} \frac {a_{n}}{(E-E_{n})^{2} + V_{0i}^2},
 \label{eq_r_rp_modell}
 \end{equation}
 ```
-has a logarithmic derivative which is independent of the individual intensities $a_{n}$, provided the Lorentzians are well separated. The logarithmic derivative is:
+has a logarithmic derivative which is independent of the individual intensities $`a_{n}`$, provided the Lorentzians are well separated. The logarithmic derivative is:
 ``` math
 \begin{equation}
 L[I(E)] = \sum_{n} \frac {-2(E-E_{n})}{(E-E_{n})^{2} + V_{0i}^2}
 \end{equation}
 ```
 
-One drawback of the logarithmic derivative ([eq_r_rp_proj]) is that it has singularities at the points where I(E) passes through zero. Such singularities cannot be excluded completely, therefore Pendry suggested the so-called $Y$-function whose denominator $(1 + L^2 \cdot V_{0i}^2)$ avoids such singularities.
+One drawback of the logarithmic derivative ([eq_r_rp_proj]) is that it has singularities at the points where I(E) passes through zero. Such singularities cannot be excluded completely, therefore Pendry suggested the so-called $`Y`$-function whose denominator $`(1 + L^2 \cdot V_{0i}^2)`$ avoids such singularities.
 ``` math
 \begin{equation}
 Y(E) = \frac {L} {1 + L^2 \cdot V_{0i}^2}
 \label{eq_r_rp_Y}
 \end{equation}
 ```
-$V_{0i}$ should be equal to the imaginary part of the optical potential used in the IV calculations, typically around 4 eV. For Lorentzians of the form ([eq_r_rp_modell]) Y(E) oscillates between $\pm \frac{1}{2|V_{0i}|}$. These extrema occur at the positions $E_{n} \pm |V_{0i}|$ and are independent of the intensity of the IV curve. More generally, the maxima of Y(E) mark the rising slopes and the minima the falling slopes of the corresponding IV curve. $Y(E)$ passes through zero at the points where the IV curve has a maximum or minimum.
+$`V_{0i}`$ should be equal to the imaginary part of the optical potential used in the IV calculations, typically around 4 eV. For Lorentzians of the form ([eq_r_rp_modell]) Y(E) oscillates between $`\pm \frac{1}{2|V_{0i}|}`$. These extrema occur at the positions $`E_{n} \pm |V_{0i}|`$ and are independent of the intensity of the IV curve. More generally, the maxima of Y(E) mark the rising slopes and the minima the falling slopes of the corresponding IV curve. $`Y(E)`$ passes through zero at the points where the IV curve has a maximum or minimum.
 
+<figure id="fig_RFAC_IY" data-latex-placement="h">
+<embed src="docs/FIG_RU001_IV.eps" style="width:60.0%" />
+<embed src="docs/FIG_RU001_YR.eps" style="width:66.0%" />
+<figcaption> Top: Experimental (solid) and calculated (dotted) IV curve of the (1, 0) spot of the clean Ru{0001} surface. Bottom: corresponding <span class="math inline"><em>Y</em></span> functions. </figcaption>
+</figure>
 
-![](\1)
-![](\1)
+Figure [fig_RFAC_IY] shows experimental and calculated IV curves of the (1, 0) spot of the clean Ru{0001} surface (top) together with the corresponding $`Y`$ functions (bottom: $`V_{0i} = -6\mbox{ eV} \Rightarrow \max |Y(E)| = 0.83\mbox{ eV}^{-1}`$).
 
-**Figure:**  Top: Experimental (solid) and calculated (dotted) IV curve of the (1, 0) spot of the clean Ru{0001} surface. Bottom: corresponding *Y* functions.
-
-
-
-Figure [fig_RFAC_IY] shows experimental and calculated IV curves of the (1, 0) spot of the clean Ru{0001} surface (top) together with the corresponding $Y$ functions (bottom: $V_{0i} = -6\mbox{ eV} \Rightarrow \max |Y(E)| = 0.83\mbox{ eV}^{-1}$).
-
-Pendry’s $R$ factor, $R_{P}$, is defined as the normalised mean square deviation of the two functions $Y_{g,t}(E)$:
+Pendry’s $`R`$ factor, $`R_{P}`$, is defined as the normalised mean square deviation of the two functions $`Y_{g,t}(E)`$:
 ``` math
 \begin{equation}
 R_{P} = \frac{ \int _{E_i}^{E_f} (Y_{g,t} - Y_{g,e} ) ^2 }
@@ -631,7 +625,7 @@ R_{P} = \frac{ \int _{E_i}^{E_f} (Y_{g,t} - Y_{g,e} ) ^2 }
 \end{equation}
 ```
 
-For any pair of uncorrelated functions $Y_{g,t}$ and $Y_{g,e}$ the mean of their product is equal to the product of the means:
+For any pair of uncorrelated functions $`Y_{g,t}`$ and $`Y_{g,e}`$ the mean of their product is equal to the product of the means:
 ``` math
 \begin{equation}
 \langle Y_{g,t} \cdot Y_{g,e} \rangle =
@@ -639,22 +633,22 @@ For any pair of uncorrelated functions $Y_{g,t}$ and $Y_{g,e}$ the mean of their
 \label{eq_r_rp_unkorr}
 \end{equation}
 ```
-Since the $Y$ function oscillates around zero, their mean will be zero
+Since the $`Y`$ function oscillates around zero, their mean will be zero
 ``` math
 \begin{equation}
 \langle Y_{g,t} \rangle = \langle Y_{g,e} \rangle = 0 \; ,
 \end{equation}
 ```
-and the denominator in Equation ([eq_r_rp_def]) is equal to the mean square deviation of two un-correlated $Y$ functions:
+and the denominator in Equation ([eq_r_rp_def]) is equal to the mean square deviation of two un-correlated $`Y`$ functions:
 ``` math
 \begin{equation}
 \langle (Y_{g,t} - Y_{g,e} ) ^2 \rangle _{unkorr} =
 \langle Y_{g,t}^2 \rangle + \langle Y_{g,e}^2 \rangle.
 \end{equation}
 ```
-Hence $R_P = 1$ for uncorrelated IV curves, which fulfils the normalisation condition (ib).
+Hence $`R_P = 1`$ for uncorrelated IV curves, which fulfils the normalisation condition (ib).
 
-Due to the properties of the $Y$ function $R_P$ is particularly sensitive to differences in the peak positions between the two curves. Also, small features, e.g. shoulders and small peaks, have a much greater effect on $R_P$ than on $R_1$ or $R_2$. On the other hand, $R_P$ is less sensitive to difference in the absolute peak heights. Therefore non-linearities in the experiment and slow variations in the primary current have little effect. In the example of Figure [fig_RFAC_IY] there is a minimum and peak in the calculated curve between 60 eV and 80 eV, which makes a large contribution to the value of $R_P$, as can be seen from the large difference in the $Y$ function in this energy range. The relatively large differences in the peak heights at 90 eV and around 245 eV, however, have very little effect. As the $Y$ function is largely insensitive to the height of a peak it is essential to filter out small artificial structures due to experimental noise as much as possible. Otherwise they would be treated with similar weight as true peaks. The strong oscillations of the experimental $Y$ function in the region between 108 eV and 125 eV, where the intensity is essentially zero, demonstrates the effect of experimental noise very well. In order to avoid such artifacts, both the experimental and theoretical data are convoluted with a Lorentzian function of width $V_{0i}$ . Due to the attenuation of elastically scattered electrons features in the IV curves are expected to be at least $2 V_{0i}$ wide. Therefore, this procedure does not lead to a significant loss of information. It is applied in `crfac` also when calculating $R_1$ and $R_2$. Despite such smoothing, it is still not recommended to use $R_P$ for the comparison of IV curves where the intensity is close to zero over a large energy range. In such cases $R_1$ or $R_2$ usually perform better .
+Due to the properties of the $`Y`$ function $`R_P`$ is particularly sensitive to differences in the peak positions between the two curves. Also, small features, e.g. shoulders and small peaks, have a much greater effect on $`R_P`$ than on $`R_1`$ or $`R_2`$. On the other hand, $`R_P`$ is less sensitive to difference in the absolute peak heights. Therefore non-linearities in the experiment and slow variations in the primary current have little effect. In the example of Figure [fig_RFAC_IY] there is a minimum and peak in the calculated curve between 60 eV and 80 eV, which makes a large contribution to the value of $`R_P`$, as can be seen from the large difference in the $`Y`$ function in this energy range. The relatively large differences in the peak heights at 90 eV and around 245 eV, however, have very little effect. As the $`Y`$ function is largely insensitive to the height of a peak it is essential to filter out small artificial structures due to experimental noise as much as possible. Otherwise they would be treated with similar weight as true peaks. The strong oscillations of the experimental $`Y`$ function in the region between 108 eV and 125 eV, where the intensity is essentially zero, demonstrates the effect of experimental noise very well. In order to avoid such artifacts, both the experimental and theoretical data are convoluted with a Lorentzian function of width $`V_{0i}`$ . Due to the attenuation of elastically scattered electrons features in the IV curves are expected to be at least $`2 V_{0i}`$ wide. Therefore, this procedure does not lead to a significant loss of information. It is applied in `crfac` also when calculating $`R_1`$ and $`R_2`$. Despite such smoothing, it is still not recommended to use $`R_P`$ for the comparison of IV curves where the intensity is close to zero over a large energy range. In such cases $`R_1`$ or $`R_2`$ usually perform better .
 
 ## Structure Optimisation
 
@@ -664,14 +658,14 @@ LEED IV structural analysis is based on the ”trial and error” approach. IV c
 
 #### Data structure
 
-The search parameters are not necessarily identical with the Cartesian coordinates of the atoms. Iternally the program uses a matrix ${\cal P}$ which relates the set of search parameters $p_1$, $p_2$, $p_3$, …, $p_{Np}$ to the Cartesian coordinates $x_1$, $y_1$, $z_1$, …, $x_{Na}$, $y_{Na}$, $z_{Na}$ of the $N_a$ atoms included in the search and the angles of incidence, $\theta, \varphi$ (if the angles are optimised):
+The search parameters are not necessarily identical with the Cartesian coordinates of the atoms. Iternally the program uses a matrix $`{\cal P}`$ which relates the set of search parameters $`p_1`$, $`p_2`$, $`p_3`$, …, $`p_{Np}`$ to the Cartesian coordinates $`x_1`$, $`y_1`$, $`z_1`$, …, $`x_{Na}`$, $`y_{Na}`$, $`z_{Na}`$ of the $`N_a`$ atoms included in the search and the angles of incidence, $`\theta, \varphi`$ (if the angles are optimised):
 
 ``` math
 \begin{equation}
 \left( \begin{array}{c}
 x_1 \\ y_1 \\ z_1 \\ \vdots  \\ z_{Na} \\ x_{ang} \\ y_{ang}
 \end{array} \right)
-=
+= 
 \left( \begin{array}{c}
 x_{1,0} \\ y_{1,0} \\ z_{1,0} \\ \vdots  \\ z_{Na,0} \\ x_{ang,0} \\ y_{ang,0}
 \end{array} \right)
@@ -681,7 +675,7 @@ p_1 \\ p_2 \\ p_3 \\ \vdots \\ p_{Np} \\
 \end{array} \right)
 \end{equation}
 ```
-$N_a$ and $N_p$, respectively, are the numbers of atoms and search parameters. $x_{a,0}$, $y_{a,0}$, $z_{a,0}$, $\cdots$ are the coordinates of the start geometry. The $3N_a$ coordinate displacements of the atoms from their start values are defined by the $j$th row of ${\cal P}$:
+$`N_a`$ and $`N_p`$, respectively, are the numbers of atoms and search parameters. $`x_{a,0}`$, $`y_{a,0}`$, $`z_{a,0}`$, $`\cdots`$ are the coordinates of the start geometry. The $`3N_a`$ coordinate displacements of the atoms from their start values are defined by the $`j`$th row of $`{\cal P}`$:
 ``` math
 \begin{equation}
 \Delta x_i = \sum_{j=1}^{N_P} {\cal P}_{i,j} \cdot p_j
@@ -689,9 +683,9 @@ $N_a$ and $N_p$, respectively, are the numbers of atoms and search parameters. $
 ```
 the matrix can either be supplied directly via the input file (`spp: - x/y/z` parameter specifier, see Section [sec_CSEARCH_in]) or be generated by the program using the symmetry of the surface structure.
 
-If atoms are related through a rotation axis or a mirror plane perpendicular to the surface, their $z$ coordinates have to be identical. In addition, their lateral coordinates are linked such that there are only three search parameters linked to the entire group of symmetry-related atoms. Through the direct input of ${\cal P}$ more complicated symmetry operations can be realised, such as glide lines. Certain atoms can be optimised in $x,y,z$, while others are only optimised in $z$ or not at all; or groups of atoms can be kept as a rigid unit only optimising their centre of mass position.
+If atoms are related through a rotation axis or a mirror plane perpendicular to the surface, their $`z`$ coordinates have to be identical. In addition, their lateral coordinates are linked such that there are only three search parameters linked to the entire group of symmetry-related atoms. Through the direct input of $`{\cal P}`$ more complicated symmetry operations can be realised, such as glide lines. Certain atoms can be optimised in $`x,y,z`$, while others are only optimised in $`z`$ or not at all; or groups of atoms can be kept as a rigid unit only optimising their centre of mass position.
 
-Angles of incidence $\theta, \varphi$ are not optimised directly but through
+Angles of incidence $`\theta, \varphi`$ are not optimised directly but through
 ``` math
 \begin{equation}
 \begin{array}{rcl}
@@ -709,7 +703,7 @@ and
 \end{array}
 \end{equation}
 ```
-This way $\theta = 0^\circ$ can be used as start value, which would otherwise cause a degeneracy in $\varphi$. The surface geometry can be optimised using data sets recorded at different angles of incidence. Normally, the angles will have to be optimised together with the structural parameters. Each pair of incidence angles increases the number of search parameters by two.
+This way $`\theta = 0^\circ`$ can be used as start value, which would otherwise cause a degeneracy in $`\varphi`$. The surface geometry can be optimised using data sets recorded at different angles of incidence. Normally, the angles will have to be optimised together with the structural parameters. Each pair of incidence angles increases the number of search parameters by two.
 
 ### Search Algorithms
 
@@ -734,17 +728,17 @@ The general calling syntax of the LEED program is:
 
 The first argument, `-i <parameter file>`, specifying the parameter input file is the only mandatory. The file contains all the geometric and non–geometric parameters needed for the LEED calculations. A sample file is shown in Table [tab_prg_inp_par]. Alternatively the input can be split into two files, the parameter file and a bulk parameter file. The latter file (`-b <bulk parameter file>`) contains all the parameters which are not varied during the optimisation. Consequently, the search program has to produce only the parameter file containing the optimised atom positions of the overlayer in each iteration step of an automated search.
 
-`-o <results file>`
+`-o <results file>`  
 specifies the file name where the beam intensities will be written to. If this argument is not used, the results will be written to the file `leed.res`. Any existing files with the same name as the results file will be overwritten.
 
-`-r <storage file>` and `-w <storage file>`
+`-r <storage file>` and `-w <storage file>`  
 specify files where the bulk reflexion matrices can be read from (`-r`) or written to (`-w`). This feature can be used in order to save computer time. It is, however, only recomended for very time consuming bulk matrix calculations, i.e. when the bulk unit cells contain more than one atom.
 
 #### UNIX–Environment
 
 The program has been developed in a UNIX environment and uses a few UNIX specific features. The most important is the use of environment variables:
 
-
+<div class="description">
 
 `CLEED_PHASE`: directory where the files are stored which contain the energy dependent atomic phase shifts.
 
@@ -756,7 +750,7 @@ These variables have to be set using the export or setenv UNIX commands, respect
 
 #### Input of non-geometrical Parameters
 
-Table [tab_leed_inp_par] shows an example for a single parameter input file for a $p(\sqrt 3 \times \sqrt 3)$ H$_2$O / Ru(0001) overlayer structure.
+Table [tab_leed_inp_par] shows an example for a single parameter input file for a $`p(\sqrt 3 \times \sqrt 3)`$ H$`_2`$O / Ru(0001) overlayer structure.
 
 
 
@@ -801,13 +795,13 @@ Each parameter or set of parameters, respectively, is specified by two letters a
 
 The meaning and the syntax of the parameter specifiers is (`n`: integer number, `f`: floating point number `c`: character):
 
+<div class="description">
 
+`a1:`, `a2:`, `a3:` `f f f`  
+Lattice vectors of the three–dimensional bulk unit cell (x, y, z in Å). a1 and a2 are parallel to the surface plane, i.e. they define the two–dimensional $`(1\times 1)`$ unit cell. a3 must contain a component perpendicular to the surface. For the symmetrised program version a3 must not have any parallel components. In some cases (e.g. fcc lattice) a non–primitive bulk unit cell must be used in order to fulfill this condition.
 
-`a1:`, `a2:`, `a3:` `f f f`
-Lattice vectors of the three–dimensional bulk unit cell (x, y, z in Å). a1 and a2 are parallel to the surface plane, i.e. they define the two–dimensional $(1\times 1)$ unit cell. a3 must contain a component perpendicular to the surface. For the symmetrised program version a3 must not have any parallel components. In some cases (e.g. fcc lattice) a non–primitive bulk unit cell must be used in order to fulfill this condition.
-
-`m1:`, `m2:` `f f`
-Super structure matrix defining the relationship between the superstructure lattice vectors b1 and b2 and the $(1\times 1)$ lattice vectors a1 and a2:
+`m1:`, `m2:` `f f`  
+Super structure matrix defining the relationship between the superstructure lattice vectors b1 and b2 and the $`(1\times 1)`$ lattice vectors a1 and a2:
 ``` math
 \begin{array}{lcl}
 \vec b_1 &=& m1(1) \cdot \vec a_1 + m1(2) \cdot \vec a_2\\
@@ -815,21 +809,21 @@ Super structure matrix defining the relationship between the superstructure latt
 \end{array}
 ```
 
-`vr:` `f`
+`vr:` `f`  
 Real part of optical potential (in eV).
 
-`vi:` `f`
+`vi:` `f`  
 Imaginary part of optical potential (in eV).
 
-`po:` `<phasestring> f f f ccc f {f f} `
-Atom parameters in overlayer (super structure unit cell):
-`<phasestring>`: Name of phase shift file. It can either be specified by the full path (starting with a leading slash ’/’, as in `/home/CLEED/PHASE/Ru.phs`) or by the file name body (no leading ’/’, e.g. `O_H2O`) which will then be expanded into `CLEED_PHASE/<phasestring>.phs` by using the environment variable `CLEED_PHASE`. If `CLEED_PHASE = /home/CLEED/PHASE` in the current example, the input of `O_H2O` is equivalent to `/home/CLEED/PHASE/O_H2O.phs`.
-`f f f`: atom position x, y, z (in Å);
+`po:` `<phasestring> f f f ccc f {f f} `  
+Atom parameters in overlayer (super structure unit cell):  
+`<phasestring>`: Name of phase shift file. It can either be specified by the full path (starting with a leading slash ’/’, as in `/home/CLEED/PHASE/Ru.phs`) or by the file name body (no leading ’/’, e.g. `O_H2O`) which will then be expanded into `CLEED_PHASE/<phasestring>.phs` by using the environment variable `CLEED_PHASE`. If `CLEED_PHASE = /home/CLEED/PHASE` in the current example, the input of `O_H2O` is equivalent to `/home/CLEED/PHASE/O_H2O.phs`.  
+`f f f`: atom position x, y, z (in Å);  
 `ccc f {f f}`: three character specifier for input of vibrational displacements:
 
+<div class="description">
 
-
-`dmt f f f`: input of Debye temperature ($\Theta_D$ in K), temperature ($T$ in K), mass (in amu). From these values the isotropic radial root mean square displacement
+`dmt f f f`: input of Debye temperature ($`\Theta_D`$ in K), temperature ($`T`$ in K), mass (in amu). From these values the isotropic radial root mean square displacement
 ``` math
 \sqrt{<\Delta r^2>} = \frac{9}{2  m \; k_B \Theta_D } \cdot
                         \sqrt{\frac{1}{16} + \frac{T^2}{\Theta_D^2}}
@@ -841,43 +835,43 @@ will be calculated and used inside the program.
 \sqrt{<\Delta r^2>} = \sqrt{<\Delta x^2> + <\Delta y^2> + <\Delta z^2> }
 ```
 
-`dr3 f f f`: separate input of root mean square displacements along the coordinates $\sqrt{<\Delta x^2}>$, $<\sqrt{\Delta y^2}>$, and $<\sqrt{\Delta z^2}>$ in Å. From these values the average radial root mean square displacement $\sqrt{<\Delta r^2>}$ (see above) will be calculated and used as isotropic displacement inside the program, thus the inputs ”`dr1 0.0866`” and ”`dr3 0.05 0.05 0.05`” are equivalent.
+`dr3 f f f`: separate input of root mean square displacements along the coordinates $`\sqrt{<\Delta x^2}>`$, $`<\sqrt{\Delta y^2}>`$, and $`<\sqrt{\Delta z^2}>`$ in Å. From these values the average radial root mean square displacement $`\sqrt{<\Delta r^2>}`$ (see above) will be calculated and used as isotropic displacement inside the program, thus the inputs ”`dr1 0.0866`” and ”`dr3 0.05 0.05 0.05`” are equivalent.
 
-`nd3 f f f`: separate input of root mean square displacements along the coordinates $\sqrt{<\Delta x^2}>$, $<\sqrt{\Delta y^2}>$, and $<\sqrt{\Delta z^2}>$ in Å (Only non–symmetric version). The displacements are used in order to set up a non–diagonal atomic $t$–matrix which is used in the program.
+`nd3 f f f`: separate input of root mean square displacements along the coordinates $`\sqrt{<\Delta x^2}>`$, $`<\sqrt{\Delta y^2}>`$, and $`<\sqrt{\Delta z^2}>`$ in Å (Only non–symmetric version). The displacements are used in order to set up a non–diagonal atomic $`t`$–matrix which is used in the program.
 
 
 
-`pb:` `<phasestring> f f f ccc f {f f} `
-Atom parameters in bulk layers ($(1\times 1)$ unit cell); for syntax see `po:`.
+`pb:` `<phasestring> f f f ccc f {f f} `  
+Atom parameters in bulk layers ($`(1\times 1)`$ unit cell); for syntax see `po:`.
 
-`ei:` `f`
+`ei:` `f`  
 First energy in energy loop for which intensities are calculated (in eV).
 
-`ef:` `f`
+`ef:` `f`  
 Last energy in loop (in eV).
 
-`es:` `f`
+`es:` `f`  
 Energy step in loop (in eV).
 
-`it:` `f`
-Polar angle of incidence with respect to surface normal ($0^\circ \leq \vartheta < 90^\circ$ ).
+`it:` `f`  
+Polar angle of incidence with respect to surface normal ($`0^\circ \leq \vartheta < 90^\circ`$ ).
 
-`ip:` `f`
-Azimuthal angle of incidence with respect to x–axis ($0^\circ \leq \varphi < 360^\circ$).
+`ip:` `f`  
+Azimuthal angle of incidence with respect to x–axis ($`0^\circ \leq \varphi < 360^\circ`$).
 
-`ep:` `f`
+`ep:` `f`  
 Epsilon: criterion for convergence of lattice sums and layer doubling.
 
-`lm:` `n`
-Maximum angular momentum quantum number ($l_{max}$).
+`lm:` `n`  
+Maximum angular momentum quantum number ($`l_{max}`$).
 
 
 
-The number of overlayer atoms specified by `po:` must be exactly the same as the number of atoms within one two–dimensional overlayer unit cell given by the overlayer matrix. However, they can lie in different unit cells. The bulk atoms specified by `pb:` must be exactly those within the topmost three–dimensional bulk unit cell specified by `a1`, `a2`, and `a3`. All overlayer atoms must have larger $z$ coordinates than the top–most bulk atom. The program will produce unreliable results if the vertical distance between the top–most bulk atom and the bottom–most overlayer atom is shorter than `MIN_DIST` = 1.0 Å (Note, the value of `MIN_DIST` can be changed by editing the `leed_def.h` header file and re-compiling the program).
+The number of overlayer atoms specified by `po:` must be exactly the same as the number of atoms within one two–dimensional overlayer unit cell given by the overlayer matrix. However, they can lie in different unit cells. The bulk atoms specified by `pb:` must be exactly those within the topmost three–dimensional bulk unit cell specified by `a1`, `a2`, and `a3`. All overlayer atoms must have larger $`z`$ coordinates than the top–most bulk atom. The program will produce unreliable results if the vertical distance between the top–most bulk atom and the bottom–most overlayer atom is shorter than `MIN_DIST` = 1.0 Å (Note, the value of `MIN_DIST` can be changed by editing the `leed_def.h` header file and re-compiling the program).
 
 #### Separate bulk and overlayer parameter input
 
-If the parameter input is split into two files, all parameters except for the overlayer atom parameters are read from the bulk parameter input file specified by the `-b` option. The overlayer atom parameters (`po:`) are read from the parameter input file (option `-i`). The two files corresponding to the above example of $p(\sqrt 3 \times \sqrt 3)$ (H$_2$)O / Ru(0001) are shown in Tables [tab_leed_inp_bul] and [tab_leed_inp_ovl].
+If the parameter input is split into two files, all parameters except for the overlayer atom parameters are read from the bulk parameter input file specified by the `-b` option. The overlayer atom parameters (`po:`) are read from the parameter input file (option `-i`). The two files corresponding to the above example of $`p(\sqrt 3 \times \sqrt 3)`$ (H$`_2`$)O / Ru(0001) are shown in Tables [tab_leed_inp_bul] and [tab_leed_inp_ovl].
 
 
 
@@ -925,11 +919,11 @@ If the parameter input is split into two files, all parameters except for the ov
 
 This way of input is used within the automated search where only the optimised `po:` parameters are supplied by the search program whereas the unchanged parameters are read from a separate bulk file provided by the user.
 
-#### Surfaces with small inter-layer distances ($< 1$Å)
+#### Surfaces with small inter-layer distances ($`< 1`$Å)
 
 #### Phase shifts input
 
-The energy dependent atomic phase shifts $\delta_l(E)$ are read from the files specified in the atom parameter sets (`po:` and `pb:`). These files have the format as shown in Table [tab_leed_inp_phase]
+The energy dependent atomic phase shifts $`\delta_l(E)`$ are read from the files specified in the atom parameter sets (`po:` and `pb:`). These files have the format as shown in Table [tab_leed_inp_phase]
 
 
 
@@ -952,13 +946,13 @@ The energy dependent atomic phase shifts $\delta_l(E)$ are read from the files s
     20.0000
     -1.3499-3.1458-1.9223 2.6407 1.6212 1.0593 0.7166 0.4891 0.3382 0.2319
 
-The first line specifies the number of energy values and maximum angular momentum quantum number $l_{max}$ for which phase shifts are stored in the file. The rest of the first line is treated as comment and ignored by the program. The rest of the file consists of pairs of lines containing the energy value (in Hartree) in the first and the phase shifts $\delta_l$ (in the order $l$ = 0, 1, 2, ..., $l_{max}$) for this energy in the second line. The phase shifts are either separated by blanks or by ’–’ which is interpreted as sign of the following number. Inside the program the phase shifts are interpolated for each energy of the I–V curve or extrapolated, respectively, when the I–V curve surpasses the energy range of the input file. It is, however not extrapolated to energies below the lowest energy value in the input list.
+The first line specifies the number of energy values and maximum angular momentum quantum number $`l_{max}`$ for which phase shifts are stored in the file. The rest of the first line is treated as comment and ignored by the program. The rest of the file consists of pairs of lines containing the energy value (in Hartree) in the first and the phase shifts $`\delta_l`$ (in the order $`l`$ = 0, 1, 2, ..., $`l_{max}`$) for this energy in the second line. The phase shifts are either separated by blanks or by ’–’ which is interpreted as sign of the following number. Inside the program the phase shifts are interpolated for each energy of the I–V curve or extrapolated, respectively, when the I–V curve surpasses the energy range of the input file. It is, however not extrapolated to energies below the lowest energy value in the input list.
 
 ### Output file
 
 #### Results - IV curves
 
-Table [tab_leed_out_res] shows a sample output file for a $p(\sqrt 3 \times \sqrt 3)$ H$_2$O / Ru{0001} overlayer structure.
+Table [tab_leed_out_res] shows a sample output file for a $`p(\sqrt 3 \times \sqrt 3)`$ H$`_2`$O / Ru{0001} overlayer structure.
 
     # ####################################### #
     #            output from CLEED            #
@@ -999,7 +993,7 @@ Table [tab_leed_out_res] shows a sample output file for a $p(\sqrt 3 \times \sq
 
 The header of the file consits of lines beginning with ’`#`’. They contain information needed e.g. by the R factor program:
 
-
+<div class="description">
 
 `vn` program version.
 
@@ -1060,7 +1054,7 @@ diagonal matrices are stored as:
 \Im[M(m,m)] \rightarrow \mathtt{*(iel + m)}
 \end{equation}
 ```
-Note that the first element in the arrays `rel` and `iel` is never used, therefore these arrays have the length $[(n\cdot m + 1) \cdot \mathtt{sizeof(real)}]$ for a rectangular or square $n\times m$ matrix and $[(n + 1) \cdot \mathtt{sizeof(real)}]$ for a diagonal matrix.
+Note that the first element in the arrays `rel` and `iel` is never used, therefore these arrays have the length $`[(n\cdot m + 1) \cdot \mathtt{sizeof(real)}]`$ for a rectangular or square $`n\times m`$ matrix and $`[(n + 1) \cdot \mathtt{sizeof(real)}]`$ for a diagonal matrix.
 
 ##### Matrix operations
 
@@ -1076,7 +1070,7 @@ The first parameter of the function call (`storage`) is usually a matrix where t
 
 ##### Basic Matrix Operations
 
-The LEED-IV calculations spend most of the time ($> 90$%) multiplying or inverting large matrices with dimensions often greater than 1000.
+The LEED-IV calculations spend most of the time ($`> 90`$%) multiplying or inverting large matrices with dimensions often greater than 1000.
 
 **Matrix multiplication** is performed through the function
 
@@ -1094,7 +1088,7 @@ where `M1` and `M2` and the operands and `Mr` is the result. The function uses a
 ```
 with no optimisation other than discriminating between multiplication of real/complex and diagonal/non-diagonal.
 
-
+ 
 
 **Matrix Inversion** is performed by the function
 
@@ -1106,7 +1100,7 @@ with no optimisation other than discriminating between multiplication of real/co
 
 where `A` is the input matrix to be inverted and `A_1` the inverse (result). The function discriminates between real and complex and then uses ”LU decomposition” to perform the inversion (functions `c_ludcmp` and `c_luinv` in `matclu.c`, which are based on the algorithms described in ”Numerical Receipes” ). Matrix inversion is a key operation in, both layer doubling and the calculation of scattering matrices for composite layers (see Chapters [chap_the LEED] and [sec_CLEED_ms]). Several optimisations are used but they all ultimately call `matinv`.
 
-
+ 
 
 In a recent addition by Michael Fink (Univ. of Innsbruck) the core functionalities of `matmul` and `matinv` have been replaced by the corresponding **BLAS** (`*gemm`) and **LAPACK** (`*getrf and *getri`) functions. This speeds up the calculation very significantly, by a factor of more than 2 (depending on the type of structure) when a single processor is used and up to an order of magnitude if the local BLAS/LAPACK library can access multiple processors (e.g. cygwin).
 
@@ -1114,6 +1108,7 @@ In a recent addition by Michael Fink (Univ. of Innsbruck) the core functionaliti
 
 The matrix functions described in this section are mainly called by other ”high level” matrix functions in order to check, allocate, free, etc. memory space used to store a matrix. They are listed in table [tab_mat_bas].
 
+<div id="tab_mat_bas">
 
 |                                    |                            |             |
 |:-----------------------------------|:---------------------------|:------------|
@@ -1159,55 +1154,55 @@ Note that both functions also display the matrix dimensions which is particularl
 | `double blm(int l1, int m1, int l2, int m2, int l3, int m3)`   |
 | `double gaunt(int l1, int m1, int l2, int m2, int l3, int m3)` |
 
-All necessary Clebsh–Gordan coefficients (or Gaunt’s coefficients) up to $l_{max}$ are calculated once by the function `mk_cg_coef`. The coefficients are stored in a list and can be extracted from there by using the functions `cg`, `blm`, or `gaunt`. These functions read from the same list but have return different values:
+All necessary Clebsh–Gordan coefficients (or Gaunt’s coefficients) up to $`l_{max}`$ are calculated once by the function `mk_cg_coef`. The coefficients are stored in a list and can be extracted from there by using the functions `cg`, `blm`, or `gaunt`. These functions read from the same list but have return different values:
 
+<div class="description">
 
-
-`double cg(int l1, int m1, int l2, int m2, int l3, int m3)`
+`double cg(int l1, int m1, int l2, int m2, int l3, int m3)`  
 returns the value of the integral described in Slater’s book:
 ``` math
 (-1)^{m_2}
 \int Y_{l_1 m_1}(\Omega)  Y_{l_2 m_2}^\ast(\Omega)  Y_{l_3 m_3}(\Omega) d\Omega
 ```
-Allowed (non–zero) values:
-$0 \leq l_1     \leq 2 \cdot l_{max}, \;\; 0 \leq l_{2,3} \leq l_{max}$;
-$m_1 =  m_2 + m_3 \;\; \Leftrightarrow \;\; m_1 -  m_2 - m3 = 0$,
-$|l_2 - l_3| \leq l_1 \leq l_2 + l_3$;
-Transformations:
+Allowed (non–zero) values:  
+$`0 \leq l_1     \leq 2 \cdot l_{max}, \;\; 0 \leq l_{2,3} \leq l_{max}`$;  
+$`m_1 =  m_2 + m_3 \;\; \Leftrightarrow \;\; m_1 -  m_2 - m3 = 0`$,  
+$`|l_2 - l_3| \leq l_1 \leq l_2 + l_3`$;  
+Transformations:  
 $`cg(l_1, m_1, l_2, m_2, l_3, m_3) =
  cg(l_1, m_1, l_3, m_3, l_2, m_2) =
  cg(l_2, m_2, l_1, m_1, l_3,-m_3)`$
 
-`double blm(int l1, int m1, int l2, int m2, int l3, int m3)`
+`double blm(int l1, int m1, int l2, int m2, int l3, int m3)`  
 returns the value of the integral used in Pendry’s book:
 ``` math
 \int Y_{l_1 m_1}(\Omega)  Y_{l_2 m_2}(\Omega)  Y_{l_3 m_3}(\Omega) d\Omega
 ```
-Allowed (non–zero) values:
-$0 \leq l_2     \leq 2 \cdot l_{max}, \;\; 0 \leq l_{1,3} \leq l_{max}$;
-$m_1 +  m_2 + m_3 = 0$,
-$|l_1 - l_3| \leq l_2 \leq l_1 + l_3$;
-Transformations:
+Allowed (non–zero) values:  
+$`0 \leq l_2     \leq 2 \cdot l_{max}, \;\; 0 \leq l_{1,3} \leq l_{max}`$;  
+$`m_1 +  m_2 + m_3 = 0`$,  
+$`|l_1 - l_3| \leq l_2 \leq l_1 + l_3`$;  
+Transformations:  
 $`blm(l_1, m_1, l_2, m_2, l_3, m_3) =
  cg(l_2, -m_2, l_1, m_1, l_3, m_3)`$
 
-`double gaunt(int l1, int m1, int l2, int m2, int l3, int m3)`
+`double gaunt(int l1, int m1, int l2, int m2, int l3, int m3)`  
 returns Gaunt’s integral:
 ``` math
 (-1)^{m_3}
 \int Y_{l_1 m_1}(\Omega)  Y_{l_2 m_2}(\Omega)  Y_{l_3 m_3}^\ast(\Omega) d\Omega
 ```
-Allowed (non–zero) values:
-$0 \leq l_2     \leq 2 \cdot l_{max}, \;\; 0 \leq l_{1,3} \leq l_{max}$;
-$m_3 = m_1 + m_2 \;\; \Leftrightarrow \;\; m_1 + m_2 - m_3 = 0$,
-$|l_2 - l_3| \leq l_1 \leq l_2 + l_3$;
-Transformations:
+Allowed (non–zero) values:  
+$`0 \leq l_2     \leq 2 \cdot l_{max}, \;\; 0 \leq l_{1,3} \leq l_{max}`$;  
+$`m_3 = m_1 + m_2 \;\; \Leftrightarrow \;\; m_1 + m_2 - m_3 = 0`$,  
+$`|l_2 - l_3| \leq l_1 \leq l_2 + l_3`$;  
+Transformations:  
 $`gaunt(l_1, m_1, l_2, m_2, l_3, m_3) =
  cg(l_2, m_2, l_1, -m_1, l_3,m_3)`$
 
 
 
-The memory requirements of the list created by `mk_cg_coef` for a given value of $l_{max}$ are:
+The memory requirements of the list created by `mk_cg_coef` for a given value of $`l_{max}`$ are:
 ``` math
 (2 \cdot l_{max} + 1) (2 \cdot l_{max} + 2)/2 \cdot
 (l_{max} + 1)^2 (l_{max}/2 + 1) \cdot
@@ -1216,7 +1211,7 @@ The memory requirements of the list created by `mk_cg_coef` for a given value of
 
 
 
-| $l_{max}$ | memory (bytes) |
+| $`l_{max}`$ | memory (bytes) |
 |------------:|---------------:|
 |           6 |        142,688 |
 |           8 |        495,720 |
@@ -1254,15 +1249,15 @@ The memory requirements of the list created by `mk_cg_coef` for a given value of
 |  |  |
 |:---|:---|
 | `(lmsbravl.c:)` |  |
-| `int ms_bravl` | `( mat `$\ast$`p_Tpp, mat `$\ast$`p_Rpm,` |
-|  | ` struct var_str `$\ast$` v_par, struct layer_str `$\ast$` layer,` |
-|  | ` struct beam_str `$\ast$` beams) ` |
+| `int ms_bravl` | `( mat `$`\ast`$`p_Tpp, mat `$`\ast`$`p_Rpm,` |
+|  | ` struct var_str `$`\ast`$` v_par, struct layer_str `$`\ast`$` layer,` |
+|  | ` struct beam_str `$`\ast`$` beams) ` |
 | `(lmsbravlnd.c:)` |  |
-| `int ms_bravl_nd` | `( mat `$\ast$`p_Tpp, mat `$\ast$`p_Tmm mat `$\ast$`p_Rpm, mat `$\ast$`p_Rmp,` |
-|  | ` struct var_str `$\ast$` v_par, struct layer_str `$\ast$` layer,` |
-|  | ` struct beam_str `$\ast$` beams) ` |
+| `int ms_bravl_nd` | `( mat `$`\ast`$`p_Tpp, mat `$`\ast`$`p_Tmm mat `$`\ast`$`p_Rpm, mat `$`\ast`$`p_Rmp,` |
+|  | ` struct var_str `$`\ast`$` v_par, struct layer_str `$`\ast`$` layer,` |
+|  | ` struct beam_str `$`\ast`$` beams) ` |
 | `(lmslsumii.c:)` |  |
-| `mat ms_lsum_ii` | `( mat Llm, real k_r, real k_i, real `$\ast$`k_in, real `$\ast$`a,` |
+| `mat ms_lsum_ii` | `( mat Llm, real k_r, real k_i, real `$`\ast`$`k_in, real `$`\ast`$`a,` |
 |  | ` int l_max, real epsilon ) ` |
 | `(lmstmatii.c:)` |  |
 | `mat ms_tmat_ii` | `( mat Tii, mat Llm, mat Tl, int l_max) ` |
@@ -1270,7 +1265,7 @@ The memory requirements of the list created by `mk_cg_coef` for a given value of
 | `mat ms_tmat_nd_ii` | `( mat Tii, mat Llm, mat Tlm_in, int l_max) ` |
 | `(lmsymat.c:)` |  |
 | `mat ms_ymat` | `( mat Ymat, int l_max,` |
-|  | ` struct beam_str `$\ast$`beams, int n_beams) ` |
+|  | ` struct beam_str `$`\ast`$`beams, int n_beams) ` |
 | `(lmsypy.c:)` |  |
 | `mat ms_yp_yxp` | `( mat Yxmat, mat Ymat) ` |
 | `mat ms_yp_yxm` | `( mat Yxmat, mat Ymat) ` |
@@ -1285,7 +1280,7 @@ The function `ms_bravl` calculates the multiple scattering matrix for a single B
 \end{equation}
 ```
 
-The matrices $Y^{in}$ and $Y^{out}$ perform the transformation from the plane wave representation (used between the layers) into the spherical wave representation (used inside the layers). They are defined as:
+The matrices $`Y^{in}`$ and $`Y^{out}`$ perform the transformation from the plane wave representation (used between the layers) into the spherical wave representation (used inside the layers). They are defined as:
 ``` math
 \begin{equation}
  Y^{in\;\pm}_{lm,\vec k} = Y^\ast_{lm}(\vec k^{\pm})
@@ -1299,7 +1294,7 @@ computed by the functions `ms_ymat` and `ms_yp_ym` and
 ```
 computed by the functions `ms_yp_yxp` and `ms_yp_yxm`.
 
-The expression embraced by the $Y$ matrices describes the multiple scattering process inside the layer. $G$ is the propagator matrix
+The expression embraced by the $`Y`$ matrices describes the multiple scattering process inside the layer. $`G`$ is the propagator matrix
 ``` math
 \begin{equation}
 G_{l_1 m_1, l_2 m_2} = \sum _{l_3 m_3}
@@ -1308,7 +1303,7 @@ G_{l_1 m_1, l_2 m_2} = \sum _{l_3 m_3}
   L_{l_3 m_3}
 \end{equation}
 ```
-with $C_{l_1 m_1, l_3 m_3, l_2 m_2}$ being a Clebsh–Gordan–coefficient and $L_{l_3 m_3}$ the lattice sum:
+with $`C_{l_1 m_1, l_3 m_3, l_2 m_2}`$ being a Clebsh–Gordan–coefficient and $`L_{l_3 m_3}`$ the lattice sum:
 ``` math
 \begin{equation}
 L_{l_3 m_3} = (-1)^{m_3} 4 \pi \cdot Y_{l_3 m_3}(\cos \frac{\pi}{2}, 0) \cdot
@@ -1317,9 +1312,9 @@ L_{l_3 m_3} = (-1)^{m_3} 4 \pi \cdot Y_{l_3 m_3}(\cos \frac{\pi}{2}, 0) \cdot
        h^{(1)}_{l_3}(\kappa \cdot |\vec R_j|)
 \end{equation}
 ```
-computed in the function `ms_lsum_ii`. $\vec R_j$ is the position of the $j$th atom inside the layer; $h^{(1)}_{l_3}$ the Hankle function of the first kind, and $\kappa= \sqrt{2 E}$ the length of the wave vector.
+computed in the function `ms_lsum_ii`. $`\vec R_j`$ is the position of the $`j`$th atom inside the layer; $`h^{(1)}_{l_3}`$ the Hankle function of the first kind, and $`\kappa= \sqrt{2 E}`$ the length of the wave vector.
 
-$\tau$ is the atomic scattering matrix $t$ times $-\kappa$. The functions `ms_bravl` and `ms_bravl_sym` assume isotropic scatterers with a diagonal scattering matrix which only depends on $l$ and not on the $m$ quantum numbers.
+$`\tau`$ is the atomic scattering matrix $`t`$ times $`-\kappa`$. The functions `ms_bravl` and `ms_bravl_sym` assume isotropic scatterers with a diagonal scattering matrix which only depends on $`l`$ and not on the $`m`$ quantum numbers.
 ``` math
 \begin{equation}
  \tau_{l_1 m_1, l_2 m_2} =
@@ -1328,16 +1323,16 @@ $\tau$ is the atomic scattering matrix $t$ times $-\kappa$. The functions `ms_br
  \delta _{l_1 l_2} \delta _{m_1 m_2}
 \end{equation}
 ```
-The diagonality of $\tau$ is explicitly used in the function `ms_tmat_ii` called by `ms_bravl` and `ms_bravl_sym` which computes the matrix expression
+The diagonality of $`\tau`$ is explicitly used in the function `ms_tmat_ii` called by `ms_bravl` and `ms_bravl_sym` which computes the matrix expression
 ``` math
 \begin{equation}
  (1 - \tau \cdot G)^{-1} \tau
 \end{equation}
 ```
 
-The function `ms_tmat_nd_ii` and the calling function `ms_bravl_nd` treat the more general case of anisotropic scatterers (e.g. anisotropic thermal vibrations) with non–diagonal scattering matrices which can also depend on $m$ (see below).
+The function `ms_tmat_nd_ii` and the calling function `ms_bravl_nd` treat the more general case of anisotropic scatterers (e.g. anisotropic thermal vibrations) with non–diagonal scattering matrices which can also depend on $`m`$ (see below).
 
-Before performing any calculations, the function checks whether some quantities needed in the calculation can be reused from the last call of `ms_bravl`. In the nex steps the function calculate the lattice sum (if needed) by calling `ls_lsum_ii`, $(1 - t \cdot G)^{-1} t$ by calling `ls_tmat_ii`, and the transformation matrices $Y^\pm$ by calling `ms_ymat` first and then `ms_yp_yxp` and `ms_yp_yxm`, respectively. After multiplying the outgoing wavefunctions ($Y^+$) with $i 8 \pi / (|k| A k ^\prime _\perp)$, the reflection and transmission are put together.
+Before performing any calculations, the function checks whether some quantities needed in the calculation can be reused from the last call of `ms_bravl`. In the nex steps the function calculate the lattice sum (if needed) by calling `ls_lsum_ii`, $`(1 - t \cdot G)^{-1} t`$ by calling `ls_tmat_ii`, and the transformation matrices $`Y^\pm`$ by calling `ms_ymat` first and then `ms_yp_yxp` and `ms_yp_yxm`, respectively. After multiplying the outgoing wavefunctions ($`Y^+`$) with $`i 8 \pi / (|k| A k ^\prime _\perp)`$, the reflection and transmission are put together.
 
 #### Multiple scattering Matrix: Composite Layer
 
@@ -1349,23 +1344,19 @@ LEED calculations can be easily distributed over multiple processors by assignin
 
 The wrapper program `c_para` reads the input `*.bul` file for `cleed` and generates `n_para` copies,`*.bul.p1`, `*.bul.p2`, etc., each with a different sequence of energies, as illustrated in Figure [fig_cleed_para_eng]
 
+<figure id="fig_cleed_para_eng" data-latex-placement="h">
+<img src="docs/Fig_CPARA_Energies.jpg" style="width:80.0%" />
+<figcaption> Diagram showing the sequence of energies calculated if <code>c_para</code> is used. <span id="fig_cleed_para_eng" data-label="fig_cleed_para_eng"></span> </figcaption>
+</figure>
 
-![](\1)
-
-**Figure:**  Diagram showing the sequence of energies calculated if `c_para` is used.
-
-
-
-
-![](\1)
-
-**Figure:**  Diagram illustrating the call sequence of `cleed` from `c_para`.
-
-
+<figure id="fig_cleed_para_flow" data-latex-placement="h">
+<img src="docs/Fig_CPARA_FlowChart.jpg" style="width:50.0%" />
+<figcaption> Diagram illustrating the call sequence of <code>cleed</code> from <code>c_para</code>. <span id="fig_cleed_para_flow" data-label="fig_cleed_para_flow"></span> </figcaption>
+</figure>
 
 The program then launches `n_para` system calls executing `cleed` simultaneously, one call for each copy of `*.bul.p*` with identical `*.par` input files. After all `cleed` calls have finished, `c_para` reads all `*.res.p*` output files and combines the IV data into one result file, `*.res`, which contains the intensities for all energies in ascending order. This is illustrated in the flow chart of Figure  [fig_cleed_para_flow].
 
-
+ 
 
 The general calling syntax of `c_para` is compatible to `cleed`:
 
@@ -1389,7 +1380,7 @@ Tests show that significant savings in overall times can be achieved, albeit not
 
 #### Program description
 
-The R factor program performs the comparison of calculated and experimental IV curves. The agreement is quantified in terms of the R(eliability) factor. It offers the choice between four different R factors that can be used for the search: $R_1$, $R_2$ , $R_P$ , and $R_B$ . The output R factor value is the optimum achieved by shifting the energy axes of experimental and theoretical I–V curves with respect to each other. This shift acts as a correction for any non–optimum value of the optical potential, $V_{0r}$, in the LEED calculations, which need therefore not be optimized by the search program. In this way, one dimension is eliminated from the search parameter space on which the search program operates, hence reducing the number of LEED calculations to be performed. The assignment of experimental and theoretical I–V curves (or average of curves) for comparison, and of the relative weight that a particular I–V curve has in the overall R factor, is performed by the user prior to the search.
+The R factor program performs the comparison of calculated and experimental IV curves. The agreement is quantified in terms of the R(eliability) factor. It offers the choice between four different R factors that can be used for the search: $`R_1`$, $`R_2`$ , $`R_P`$ , and $`R_B`$ . The output R factor value is the optimum achieved by shifting the energy axes of experimental and theoretical I–V curves with respect to each other. This shift acts as a correction for any non–optimum value of the optical potential, $`V_{0r}`$, in the LEED calculations, which need therefore not be optimized by the search program. In this way, one dimension is eliminated from the search parameter space on which the search program operates, hence reducing the number of LEED calculations to be performed. The assignment of experimental and theoretical I–V curves (or average of curves) for comparison, and of the relative weight that a particular I–V curve has in the overall R factor, is performed by the user prior to the search.
 
 #### Syntax
 
@@ -1401,33 +1392,33 @@ The general calling syntax of the R factor program is:
 
 The options `-c <control file>` and `-t <theoretical file>` are mandatory for normal use of the program.
 
+<div class="description">
 
-
-`-a <ID flag>`
+`-a <ID flag>`  
 defines whether only the average R factor is calculated (argument `average`, default) or partial R factors for each subset of IV curves sharing a common ID number (argument `all`). Only the first two characters of the argument are significant.
 
-`-c <control file>`
+`-c <control file>`   
 specifies the control file which defines the correlation between experimental and theoretical IV curves. A sample control file is shown in Table [tab_rfac_ctr].
 
-`-h`
+`-h`  
 causes the program to show a short list of arguments.
 
-`-o <output file>`
+`-o <output file>`   
 specifies the output file where the R factor values are written to (default: standard output).
 
-`-r <R factor>`
-specifies the R factor to be calculated. Valid arguments are: `r1` ($R_1$), `r2` ($R_2$), `rb` ($R_{B1}$ and $R_{B2}$), and `rp` ($R_P$, default)
+`-r <R factor>`   
+specifies the R factor to be calculated. Valid arguments are: `r1` ($`R_1`$), `r2` ($`R_2`$), `rb` ($`R_{B1}`$ and $`R_{B2}`$), and `rp` ($`R_P`$, default)
 
-`-s <shift1,shift2,shift3>`
+`-s <shift1,shift2,shift3>`   
 defines the range (arguments `shift1` and `shift2`) and step width (`shift3`) of energy shifts between experimental and theoretical IV curves.
 
-`-t <theoretical file>`
+`-t <theoretical file>`   
 specifies the file containing the theoretical IV curves, i.e. the results file from the LEED program.
 
-`-v <optical potential>`
-specifies the value of the optical potential $V_{0i}$ used in the evaluation of Pendry’s R–factor (default: 4 eV).
+`-v <optical potential>`   
+specifies the value of the optical potential $`V_{0i}`$ used in the evaluation of Pendry’s R–factor (default: 4 eV).
 
-`-w <IV output file>`
+`-w <IV output file>`   
 causes the program to write all normalised IV curves as energy/intensity pairs to separate files so that they can be plotted. `<IV output file>` specifies the body of the file names to which the letters `e` (experimental) or `t` (theoretical) and the number of the pair of curves is added.
 
 
@@ -1436,7 +1427,7 @@ causes the program to write all normalised IV curves as energy/intensity pairs t
 
 The program has been developed in a UNIX environment and uses a few UNIX specific features. The most important is the use of environment variables:
 
-
+<div class="description">
 
 `RF_HELP_FILE`: file to be shown, when the `-h` option is chosen.
 
@@ -1448,7 +1439,7 @@ This variable has to be set using the `export` or `setenv` UNIX commands, respec
 
 #### Control file: assignment of experimental data
 
-The control file is used for the assignment of experimental data files to beams in the output from the IV calculation. Table [tab_rfac_ctr] shows an example R factor control file for a $p(1 \times 1)$ Er / Si(111) structure.
+The control file is used for the assignment of experimental data files to beams in the output from the IV calculation. Table [tab_rfac_ctr] shows an example R factor control file for a $`p(1 \times 1)`$ Er / Si(111) structure.
 
     #  Si(111)-Er (1x1)
     #  (control file for R factor program CRFAC)
@@ -1484,11 +1475,11 @@ Each line defines the correlation of one pair of theoretical and experimental IV
 
     ef=<expt. file>:ti=<index list>:id=<ID number>:wt=<weight>
 
-
+<div class="description">
 
 `<expt. file>` contains one experimental IV curve in a two-column format (see below for details)
 
-`<index list>` is a list of indices of beams to be averaged and compared with the experimental IV curve. The two indices of each beam are in round brackets and can be preceeded by a weighting factor followed by $\ast$. Different beams are connected through `+`. The general form is:
+`<index list>` is a list of indices of beams to be averaged and compared with the experimental IV curve. The two indices of each beam are in round brackets and can be preceeded by a weighting factor followed by $`\ast`$. Different beams are connected through `+`. The general form is:
 
     {<weight>}*(<index_1>,<index_2>){+{<weight>}*(<ind_1>,<ind_2>)}
 
@@ -1502,7 +1493,7 @@ Each line defines the correlation of one pair of theoretical and experimental IV
 
 The input file containing the calculated IV curves (specified by the `-t` option in the command line) is expected to have the same format at the output files from `cleed`.
 
-
+ 
 
 The input files containing the experimental IV curves are specified in the control file (see above and Table [tab_rfac_ctr]). They are ASCII files with two columns, for energies (in eV) and intensities (arb. units), respectively. For an example, see Table [tab_rfac_exp]. Lines starting with `#` at any point within the file are ignored and can be used for comments. Both experimental and theoretical IV curves must have equal intervals between the energy points, however these intervals do not have to be the same for calculated and experimental curves.
 
@@ -1528,7 +1519,7 @@ A typical output line is shown below:
 
     0.318127 0.185645 3.00 928.50           #  Rp  RR  shift  range
 
-The first value is the actual R factor, followed by Pendry’s $RR$ factor defining the statistical error. The third number is the energy shift between the experimental and theoretical IV curves, the last value is the total overlaqp (in eV) between experimental and theoretical IV curves. These values are followed by a comment specifying them.
+The first value is the actual R factor, followed by Pendry’s $`RR`$ factor defining the statistical error. The third number is the energy shift between the experimental and theoretical IV curves, the last value is the total overlaqp (in eV) between experimental and theoretical IV curves. These values are followed by a comment specifying them.
 
 ## CSEARCH
 
@@ -1538,7 +1529,7 @@ The first value is the actual R factor, followed by Pendry’s $RR$ factor defin
 
 ##### Automatic assignment of search parameters to coordinates
 
-The name of the parameter input file should have the format `<project>.inp`. Through this the name of the project is defined and `csearch` will also need to be supplied with input files called `<project>.bul` (additional input for `cleed`) and `<project>.ctr` (additional input for `crfac`). Table [tab_search_inp1] shows an example input file for a $p(1 \times 1)$ Er / Si(111) overlayer structure.
+The name of the parameter input file should have the format `<project>.inp`. Through this the name of the project is defined and `csearch` will also need to be supplied with input files called `<project>.bul` (additional input for `cleed`) and `<project>.ctr` (additional input for `crfac`). Table [tab_search_inp1] shows an example input file for a $`p(1 \times 1)`$ Er / Si(111) overlayer structure.
 
     # input file for SEARCH
     #  Si(111)-Er (1x1)
@@ -1576,13 +1567,13 @@ The name of the parameter input file should have the format `<project>.inp`. Thr
 
 Each parameter or set of parameters, respectively, is specified by two letters and a colon at the beginning of a line. There can only be one parameter specifier per line. Comments can either be indicated by a leading ”`#`” or by ”`c:`”. In the first case the comment is ignored by the LEED program, in the latter case it is stored by the program and written to the output file. (The meaning and the syntax of the parameter specifiers is `n`: integer number, `f`: floating point number `c`: character):
 
+<div class="description">
 
+`a1:`, `a2:` `f f f`  
+Lattice vectors of the two–dimensional $`(1\times 1)`$ unit cell (x, y, z in Å). a1 and a2 have to be parallel to the surface plane. Note `a1:` and `a2:` can also be specified in the `<project>.bul` input file. If they are found in both, the input from `<project>.inp` overwrites the input from `<project>.bul`.
 
-`a1:`, `a2:` `f f f`
-Lattice vectors of the two–dimensional $(1\times 1)$ unit cell (x, y, z in Å). a1 and a2 have to be parallel to the surface plane. Note `a1:` and `a2:` can also be specified in the `<project>.bul` input file. If they are found in both, the input from `<project>.inp` overwrites the input from `<project>.bul`.
-
-`m1:`, `m2:` `f f`
-Super structure matrix defining the relationship between the superstructure lattice vectors b1 and b2 and the $(1\times 1)$ lattice vectors a1 and a2:
+`m1:`, `m2:` `f f`  
+Super structure matrix defining the relationship between the superstructure lattice vectors b1 and b2 and the $`(1\times 1)`$ lattice vectors a1 and a2:
 ``` math
 \begin{array}{lcl}
 \vec b_1 &=& m1(1) \cdot \vec a_1 + m1(2) \cdot \vec a_2\\
@@ -1591,51 +1582,51 @@ Super structure matrix defining the relationship between the superstructure latt
 ```
 Note `m1:` and `m2:` can also be specified in the `<project>.bul` input file. If they are found in both, the input from `<project>.inp` overwrites the input from `<project>.bul`.
 
-`po:` `<phasestring> f f f ccc f {f f} `
+`po:` `<phasestring> f f f ccc f {f f} `  
 Atom parameters in overlayer (super structure unit cell): same syntax as for the LEED program, see chapter [sec_leed_inp].
 
-`rm:` `<phasestring> f`
+`rm:` `<phasestring> f`  
 Minimum radius of atoms specified by `<phasestring>`. If the distance between two atoms is smaller than the sum of their miniumum radii, an additional number is added to the actual R factor in order to repell the search from this un–physical geometry.
 
-`zr:` `f f`
-$z$–range. The atoms are forced to stay within this range of $z$ coordinates. If an atom exceeds this range, an additional number is added to the actual R factor in order to repell the search from this un–physical geometry.
+`zr:` `f f`  
+$`z`$–range. The atoms are forced to stay within this range of $`z`$ coordinates. If an atom exceeds this range, an additional number is added to the actual R factor in order to repell the search from this un–physical geometry.
 
-`sz:` `n`
+`sz:` `n`  
 Variation of vertical parameters (1) or vertical and lateral parameters (0) in agreement with the specified symmetry.
 
-`sr:` `n f f`
+`sr:` `n f f`  
 Rotational symmetry: degree (n–fold axis), position of axis (x, y in Å).
 
-`sa:` `n`
+`sa:` `n`  
 Switch angle search on (1)/off (0).
 
-`it:` `f`
+`it:` `f`  
 Polar angle of incidence (start value). Only used if `sa: 1`;will overwrite `it:` parameter in `*.bul` file. Note `it:` can also be specified in the `<project>.bul` input file. If it is found in both, the input from `<project>.inp` overwrites the input from `<project>.bul`.
 
-`ip:` `f`
+`ip:` `f`  
 Azimuthal angle of incidence (start value). will overwrite `ip:` parameter in `*.bul` file. Note `it:` can also be specified in the `<project>.bul` input file. If it is found in both, the input from `<project>.inp` overwrites the input from `<project>.bul`.
 
 
 
 ##### Manual assignment of search parameters to coordinates
 
-The above notation only allows imposing relatively simple symmetry constraints and these have to be imposed on all optimised atoms in the same way, for instance `sz:` does not allow to specify a subgroup of atoms to be optimised in $x,y,z$ only and another subgroup in $z$ only.
+The above notation only allows imposing relatively simple symmetry constraints and these have to be imposed on all optimised atoms in the same way, for instance `sz:` does not allow to specify a subgroup of atoms to be optimised in $`x,y,z`$ only and another subgroup in $`z`$ only.
 
 A much more flexible way of introducing constraints to the search is shown in Table [tab_search_inp2]. Here two additional types of parameter specifiers are used:
 
+<div class="description">
 
-
-`spn:` `n`
+`spn:` `n`  
 defines the number of parameters to be optimised in the search. The relationship between the parameters and the coordinates is defined through the parameters following `spp: - <x/y/z>`. `spn:` must be specified before the list of atoms.
 
-`spp: - <x/y/z>` `f f f .... ` (number of parameters defined by `spn:`
+`spp: - <x/y/z>` `f f f .... ` (number of parameters defined by `spn:`  
 defines the relationship between the search parameters being optimised and the coordinates of the last atom defined in the input file.
 
 
 
 Note, if `spn:` and `spp:` are used, `sz:` `sr` will be ignored.
 
-Within `csearch` the relationship between search parameters and coordinates is defined by a matrix ${\cal P}$:
+Within `csearch` the relationship between search parameters and coordinates is defined by a matrix $`{\cal P}`$:
 ``` math
 \begin{equation}
 \left( \begin{array}{c}
@@ -1648,13 +1639,13 @@ p_1 \\ p_2 \\ p_3 \\ \vdots \\ p_{Np} \\
 \end{equation}
 ```
 
-$N_a$ and $N_P$ are the numbers of atoms and search parameters, $p_i$, as defined by `spn` and the list of atoms in the input file, respectively. The positions of the $N_a$ atoms are defined by $3N_a$ coordinates; hence the $[3(i-1)+1]$th row of ${\cal P}$ defines the dependence on the search parameters of the $x$ coordinate of the $i$th atom through:
+$`N_a`$ and $`N_P`$ are the numbers of atoms and search parameters, $`p_i`$, as defined by `spn` and the list of atoms in the input file, respectively. The positions of the $`N_a`$ atoms are defined by $`3N_a`$ coordinates; hence the $`[3(i-1)+1]`$th row of $`{\cal P}`$ defines the dependence on the search parameters of the $`x`$ coordinate of the $`i`$th atom through:
 ``` math
 \begin{equation}
 x_i = \sum_{j=1}^{N_P} {\cal P}_{i,j} \cdot p_j
 \end{equation}
 ```
-this row is defined through the line of numbers following the `spp: - x` parameter specifier after the first atom. Using this approach one can specify a subgroup of atoms to be optimised in $x,y,z$ (e.g. the top 4 layers of Cu atoms in Table  [tab_search_inp2]) and another subgroup in $z$ only (e.g. the 5th and 6th layer of Cu atoms in Table  [tab_search_inp2]). Note that if `spp: - <x/y/z>` is not defined for an atom, this coordinate will not be optimised, i.e this is equivalent to a line of only zeros after `spp: - <x/y/z>`. The atoms in layer 7 to 16 are not optimised. In addition, more complicated symmetry operations, such as glide lines, can be realised, or groups of atoms can be kept as a rigid unit only optimising their centre of mass position.
+this row is defined through the line of numbers following the `spp: - x` parameter specifier after the first atom. Using this approach one can specify a subgroup of atoms to be optimised in $`x,y,z`$ (e.g. the top 4 layers of Cu atoms in Table  [tab_search_inp2]) and another subgroup in $`z`$ only (e.g. the 5th and 6th layer of Cu atoms in Table  [tab_search_inp2]). Note that if `spp: - <x/y/z>` is not defined for an atom, this coordinate will not be optimised, i.e this is equivalent to a line of only zeros after `spp: - <x/y/z>`. The atoms in layer 7 to 16 are not optimised. In addition, more complicated symmetry operations, such as glide lines, can be realised, or groups of atoms can be kept as a rigid unit only optimising their centre of mass position.
 
     # Cu{531} - geometry input file for the LEED program.
     a1:       5.7116618       0.000        0.0000
@@ -1738,13 +1729,13 @@ As explained in section [chap_CSEARCH_GEN], the input files for `csearch` do no
 
 The environment variable `CDOM_LEED` specifies the program which is used to calculate the IV curves for a single domain, i.e. `cleed_nsym` (See also Table [tab_csearch_env]). The only extra input required for `c_dom`, in addition to the input for `cleed_nsym`, is the symmetry of the substrate. More precisely, we need to specify the rotation and mirror symmetry operations that generate new domains on the surface. These are specified through `dr:` and `dm:` in `<project>.bul`.
 
+<div class="description">
 
-
-`dr:` `n`
+`dr:` `n`  
 Degree of rotational symmetry. `n` can have the values 1, 2, 3, 4, or 6. Any other value will generate an error message. The default value is 1 (if no rotation symmetry is specified).
 
-`dm:` `c/cc`
-Mirror plane. The character string following `dm:` can either be `n` (no mirror plane), `x` (mirror plane along the $x$-axis), `y` (mirror plane along the $y$-axis), or `xy` (mirror plane $45^\circ$ from the the $x$-axis). The default value is `n` (no mirror plane)
+`dm:` `c/cc`  
+Mirror plane. The character string following `dm:` can either be `n` (no mirror plane), `x` (mirror plane along the $`x`$-axis), `y` (mirror plane along the $`y`$-axis), or `xy` (mirror plane $`45^\circ`$ from the the $`x`$-axis). The default value is `n` (no mirror plane)
 
 
 
@@ -1752,7 +1743,7 @@ Mirror plane. The character string following `dm:` can either be `n` (no mirror 
 
 `c_dom` generates a number of intermediate output files:
 
-
+<div class="description">
 
 `<project>.bul.d1`, `<project>.bul.d2`, ... (one for each domain),
 
@@ -1774,13 +1765,13 @@ The environment variable `CAOI_LEED` specifies the program which is used to calc
 
 Additional information that needs to be specified in the `<project>.bul` and/or `<project>.inp` files are the number of incidence angles and first guesses. This is done through `sa:` and `itp:`
 
+<div class="description">
 
-
-`sa:` `n`
+`sa:` `n`  
 The number of angles of incidence for which data sets are used in the analysis.
 
-`itp:` ` n f f`
-An integer number associated with each data set (1, 2, up to the number specified through `sa:`) taken at certain angle of incidence; the polar angle $\theta$ (with respect to the surface normal) and the azimuthal angle $\varphi$ (with respect to the $x$-axis) of this set.
+`itp:` ` n f f`  
+An integer number associated with each data set (1, 2, up to the number specified through `sa:`) taken at certain angle of incidence; the polar angle $`\theta`$ (with respect to the surface normal) and the azimuthal angle $`\varphi`$ (with respect to the $`x`$-axis) of this set.
 
 
 
@@ -1815,7 +1806,7 @@ In order to compile the programs use the following steps in each of the three di
 
 - Edit to Makefile to update `MYPRG` and `CCOMP`.
 
-- Delete all object ($\ast$.o) files.
+- Delete all object ($`\ast`$.o) files.
 
 - Run `make`; this should produce executables called `testrfac`, `test_search`, and `test_nsym`, respectively without any error messages. Warning messages may appear depending on the compiler.
 
@@ -1835,7 +1826,7 @@ A set of sample input files for Er/Si{111} (no expt. IV curves), Benzene on Ru{0
 
 Detailed descriptions of the file formats can be found in this manual (Sections [sec_leed_inp], [sec_rfac_io], [sec_search_io], but modifying the sample input files are probably the best way to start a new search. All other files are created by the programs during the search. The search can be monitored through the `*.log` file; at each point of the search the current best fit geometries and IV curves can be found in `*.rmin`, `*.pmin`, and `*.bmin` (for a description see the manual).
 
-The phase shift input is described in Section [sec_leed_inp]. It must have the same format as for the VanHove/Tong programs with a first line added that contains the number of energies and $l_{max}$. For each type of atoms there must be a separate phase shift file in the directory `.../CLEED_DIS/PHASE`, called `<atom>.phs`. The directory is passed to the LEED program through the environment variable `CLEED_PHASE`. Before starting the search at least 3 environment variables have to be set:
+The phase shift input is described in Section [sec_leed_inp]. It must have the same format as for the VanHove/Tong programs with a first line added that contains the number of energies and $`l_{max}`$. For each type of atoms there must be a separate phase shift file in the directory `.../CLEED_DIS/PHASE`, called `<atom>.phs`. The directory is passed to the LEED program through the environment variable `CLEED_PHASE`. Before starting the search at least 3 environment variables have to be set:
 
 - `CLEED_PHASE`: name of the phase shift directory (used by `cleed_nsym`).
 
@@ -1860,7 +1851,7 @@ We use the example given in `CLEED_DIS/EXAMPLES/NIO`. The directory contains all
 
 The LEED-IV program can be called from outside the search by
 
-`...CLEED_DIS/BIN/cleed_nsym -i Ni111_2x2O.par -b Ni111_2x2O.bul`
+`...CLEED_DIS/BIN/cleed_nsym -i Ni111_2x2O.par -b Ni111_2x2O.bul`  
 `-o Ni111_2x2O.res 1> Ni111_2x2O.out`
 
 `Ni111_2x2O.par` is usually created by the search program. It contains only the positions of the overlayer atoms that are optimised during the search. The IV curves are written to `Ni111_2x2O.res` (indicated by the ”-o” option). In addition, the LEED-IV program produces a large amounts of control output, which is written to ”stdout”. It is best to re-directed ”stdout” to a file using the ”`1>`” command (in bsh).
@@ -1873,9 +1864,9 @@ Once the user is satisfied that all parts of the IV calculation run smoothly, th
 
 `nohup .../CLEED_DIS/BIN/csearch -i Ni111_2x2O.inp 1> out 2> err & `
 
-In the above example each iteration takes about 90-100s (2.4 GHz Linux PC), the final R factor after convergence should be around 0.1322 and it takes around 183 iteration to get there from the start geometry specified in `Ni111_2x2O.inp` (see $\ast$.log file, which is also included). The example in NICU leads to an R factor of 0.0633 after 63 iterations (around 15 s cpu time per iteration).
+In the above example each iteration takes about 90-100s (2.4 GHz Linux PC), the final R factor after convergence should be around 0.1322 and it takes around 183 iteration to get there from the start geometry specified in `Ni111_2x2O.inp` (see $`\ast`$.log file, which is also included). The example in NICU leads to an R factor of 0.0633 after 63 iterations (around 15 s cpu time per iteration).
 
-All information necessary to restart the search at the current position is stored in `*.ver`.If the search stops for any reason, e.g. because it has reached the limit of iterations (currently 2000), it can be restarted by:
+All information necessary to restart the search at the current position is stored in $`\ast`$`.ver`.If the search stops for any reason, e.g. because it has reached the limit of iterations (currently 2000), it can be restarted by:
 
 `nohup  /CLEED_DIS/BIN/csearch -i Ni111_2x2O.inp -v Ni111_2x2O.ver 1> out 2> err &`
 
@@ -1898,7 +1889,7 @@ The program `ftsmooth` performs a Fourier transformation of the original data. T
 
 ##### Parameters
 
-
+<div class="description">
 
 `-m s` smooth; `-m n`: no smooth.
 
@@ -1910,7 +1901,7 @@ The program `ftsmooth` performs a Fourier transformation of the original data. T
 
 #### Three-Point Smoothing
 
-The program `smooth` performs a three-point smooth of the original data: $I_{sm}(i) = \frac{1}{4} [I(i-1) + 2 \cdot I(i) + I(i+1]$. The energy values of the output spectrum are the same as in the input spectrum.
+The program `smooth` performs a three-point smooth of the original data: $`I_{sm}(i) = \frac{1}{4} [I(i-1) + 2 \cdot I(i) + I(i+1]`$. The energy values of the output spectrum are the same as in the input spectrum.
 
 ##### Command line
 
@@ -1926,7 +1917,7 @@ The program `pattern` prints the LEED pattern for a given superstructure specifi
 
 ##### Parameters
 
-
+<div class="description">
 
 `-i <input>`: specify input file name.
 
@@ -1944,7 +1935,7 @@ The program `pattern` prints the LEED pattern for a given superstructure specifi
 
 ##### Format of input file
 
-An Example of an input file or two Domains of a $p(\sqrt{7} \times \sqrt{7}) R19^\circ$ structure on a hexagonal surface is given in Table [tab_OTHER_patt]:
+An Example of an input file or two Domains of a $`p(\sqrt{7} \times \sqrt{7}) R19^\circ`$ structure on a hexagonal surface is given in Table [tab_OTHER_patt]:
 
     c 2 Domains of (3 2 / -2 1) = (r7 x r7)
     1.0  1.732    (a1  <lattice vector>)
@@ -1964,7 +1955,7 @@ An Example of an input file or two Domains of a $p(\sqrt{7} \times \sqrt{7}) R19
 
 The matrix of the first domain has to be specified like this. The following domains can be specified by symmetry operations:
 
-
+<div class="description">
 
 `R<phi>`: rotation of previous matrix by `<phi>` degrees
 
@@ -1986,7 +1977,7 @@ The program `latt` produces an output file in XYZ format which contains the atom
 
 ##### Parameters
 
-
+<div class="description">
 
 `-i <input>`: input of file containing basis vectors for a general lattice. If an input file is specified, the options `-a, -c, -t, -n` are ignored.
 
