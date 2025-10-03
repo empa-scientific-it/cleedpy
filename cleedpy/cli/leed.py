@@ -66,7 +66,10 @@ def print_cleed_results(result, output_file):
 
 def leed(
     parameters_file: str = typer.Option(  # noqa: B008
-        "leed.inp", "--input", "-i", help="Input file with parameters"
+        "leed.yaml",
+        "--input",
+        "-i",
+        help="Input file with parameters. Accepts .yaml or .inp",
     ),
     phase_path: str = typer.Option(  # noqa: B008
         "PHASE", "--phase", "-p", help="Phase path"

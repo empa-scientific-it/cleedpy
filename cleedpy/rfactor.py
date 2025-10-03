@@ -1,6 +1,12 @@
 import numpy as np
 from scipy.interpolate import CubicSpline
 
+from . import config
+
+GEO_PREFACTOR = (
+    5.0  # To scale the geometrical rfactor to be comparable with the iv rfactor.
+)
+
 
 def lorentzian_smoothing(curve, vi=4.0):
     """
@@ -180,6 +186,8 @@ def compute_rfactor(experimental_iv, theoretical_iv, shift=0.0, rfactor_type="r2
         "pendry": rp_factor,
     }
 
+    delta_e = []  # To store the energy range of each curve.
+
     # Looping over the pairs of experimental and theoretical curves corresponding to the same index.
     for exp_curve, theo_curve in split_in_pairs(experimental_iv, theoretical_iv):
         if len(exp_curve) < 1 or len(theo_curve) < 1:
@@ -215,6 +223,33 @@ def compute_rfactor(experimental_iv, theoretical_iv, shift=0.0, rfactor_type="r2
             np.column_stack([common_x, theo_spline]),
         )
 
-        r_tot += r
+        delta_e.append(common_x[-1] - common_x[0])
+        r_tot += r * (common_x[-1] - common_x[0])
 
-    return r_tot
+    return r_tot / sum(delta_e)
+
+
+def compute_geometrical_rfactor(config: config.InputParameters):
+    """Compute R-factor for a given geometry configuration"""
+
+    structure = config.get_ase_structure()
+    distance_matrix = structure.get_all_distances(mic=True)
+
+    # Create a matrix of minimum allowed distances based on atomic radii.
+    atomic_radii = np.array(
+        [config.minimum_radius[atom] for atom in structure.get_chemical_symbols()]
+    )
+    min_distance_matrix = atomic_radii[:, None] + atomic_radii[None, :]
+
+    # Prepare a mask to set the diagonal and lower triangular to False
+    # to avoid self-comparison and double counting.
+    mask = np.triu(np.ones(distance_matrix.shape, dtype=bool), k=1)
+
+    # Check for overlaps
+    overlap_matrix = (distance_matrix < min_distance_matrix) & mask
+
+    # Sum distances that overlap.
+    total_overlap = (
+        (min_distance_matrix - distance_matrix) * overlap_matrix * GEO_PREFACTOR
+    )
+    return np.sum(total_overlap**2)
