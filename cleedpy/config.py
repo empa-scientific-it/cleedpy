@@ -109,7 +109,7 @@ class Position(BaseModel):
 
     # Allow initialization from list/tuple
     @model_validator(mode="before")
-    def from_list(self, v):
+    def from_list(cls, v):  # noqa: N805
         if isinstance(v, (list, tuple)):
             if len(v) != 3:
                 msg = "Position must have exactly 3 values"
