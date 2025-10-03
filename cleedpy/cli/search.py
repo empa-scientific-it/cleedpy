@@ -4,10 +4,10 @@ import numpy as np
 import typer
 from scipy import optimize
 
+from .. import rfactor
 from ..config import OLD_FORMAT_TEMPLATE, load_parameters
 from ..interface.cleed import call_cleed
 from ..physics import constants
-from ..rfactor import compute_rfactor
 
 
 def link_parameters_to_x_init(parameters) -> np.ndarray:
@@ -15,7 +15,7 @@ def link_parameters_to_x_init(parameters) -> np.ndarray:
 
     x_init = []
     for atom in parameters.overlayers:
-        x_init.extend(atom.position)
+        x_init.extend([atom.position.z])
 
     return np.array(x_init)
 
@@ -67,14 +67,22 @@ def run_search(
     else:
         message = f"Input file {parameters_file} has unsupported format, only .yml/.yaml are supported."
         raise ValueError(message)
+
+    # Some useful variables.
     iteration = 0
+    largest_rfactor = 1.0
 
     def f(x):
-        nonlocal iteration
+        nonlocal iteration, largest_rfactor
 
         # Get x and update parameters
         for i, atom in enumerate(config.overlayers):
-            atom.position = x[i * 3 : (i + 1) * 3]
+            atom.position.z = x[i]
+
+        geometrical_r = rfactor.compute_geometrical_rfactor(config)
+
+        if geometrical_r > 1.0:
+            return geometrical_r + largest_rfactor
 
         old_format = OLD_FORMAT_TEMPLATE.render(**config.model_dump())
         with open(current_parameters_file, "w") as f:
@@ -93,19 +101,47 @@ def run_search(
         )
 
         exp_iv = np.loadtxt("experimental.txt")
-        r = compute_rfactor(
+
+        optimize_shift_iteration = 0
+
+        def for_shift_optimization(shift):
+            nonlocal optimize_shift_iteration
+            optimize_shift_iteration += 1
+            r = rfactor.compute_rfactor(
+                theoretical_iv=np.array(theor_iv),
+                experimental_iv=exp_iv,
+                shift=shift,
+                rfactor_type="pendry",
+            )
+            with open("search.log", "a") as f:
+                f.write(
+                    f"Shift optimization iteration {optimize_shift_iteration}: Shift={shift} Rfactor={r}\n"
+                )
+
+            return r
+
+        res = optimize.minimize_scalar(
+            for_shift_optimization, bounds=(-10, 10), method="bounded"
+        )
+        with open("search.log", "a") as f:
+            f.write(f"Optimal shift found: {res.x} with Rfactor={res.fun}\n")
+        iv_r = rfactor.compute_rfactor(
             theoretical_iv=np.array(theor_iv),
             experimental_iv=exp_iv,
             rfactor_type="pendry",
+            shift=res.x,
         )
 
+        largest_rfactor = max(iv_r, largest_rfactor)
+
         with open("search.log", "a") as f:
-            f.write(f"Iteration {iteration}: Rfactor={r}\n")
-        return r
+            f.write(f"Iteration {iteration}: Rfactor={iv_r}\n")
+
+        return iv_r + geometrical_r
 
     x_init = link_parameters_to_x_init(config)
 
-    result = optimize.minimize(f, x_init, method="Nelder-Mead", tol=1e-7)
+    result = optimize.minimize(f, x_init, method="Nelder-Mead", tol=5e-4)
     print("Optimization result:", result.x)
 
 
