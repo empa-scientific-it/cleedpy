@@ -2,21 +2,18 @@
 
 
 
-**An Introduction to CLEED**
+# An Introduction to CLEEDpy
 
 ... and (almost) everything else
 you need to know about carrying out
 structural analysis by LEED
 
-**Georg Held**
-
-**2025-10-02**
 
 
 
 ## Preface
 
-This manual is still very much work in progress. It is a compilation of notes, lectures, and instructions that I have written over the years and I have been adding and correcting whenever I find a little time. Some of the non-essential introductory chapters are still incomplete or missing. This is information that can be found in most textbooks that cover LEED. The description of the input files for the CLEED package, however, as well as the instructions for installation, should be complete and accurate. If you spot any errors or omissions, please let me know.
+This manual is still very much work in progress. It is a compilation of notes, lectures, and instructions that were written over the years. Some of the non-essential introductory chapters are still incomplete or missing. This is information that can be found in most textbooks that cover LEED. The description of the input files for the CLEED package, however, as well as the instructions for installation, should be complete and accurate. If you spot any errors or omissions, please let us know.
 
 
 Georg Held (georg.held.@.diamond.ac.uk)
@@ -47,7 +44,7 @@ To date, the structure analysis by LEED I-V is the most accurate and reliable wa
 
 Since LEED theory was initially developed for close packed clean metal surfaces, these are the most reliably determined surface structures with theory-experiment agreement comparable to that between two experimental sets of I-V curvesand error bars for the atomic coordinates as small as 0.01 Å. A good overview over state-of-the-art LEED structure determinations of clean metal surfaces and further references are found in two recent articles by Heinz et al. . For more open adsorbate covered and/or reconstructed surfaces certain approximations used in the standard programs are less accurate which leads to higher RP factor values. For simple superstructures of mono-atomic adsorbates or small molecules on metal the agreement is usually not as good and worse for large molecules, which often adsorb in complex superstructures and semiconductor surfaces. Since the error margins scale with the agreement between experimental data and theoretical calculations, the accuracy of atomic coordinates is these latter cases is smaller with error bars up to 0.1 Å. A review of structure determinations of molecular adsorbates was published by Over ; the structure determination of semiconductor surfaces was reviewed by Kahn . In general the accuracy is higher for coordinates perpendicular to the surface than for lateral coordinates. For further details about the history, experimental setup, and theoretical approaches of LEED refer to the books by Pendry, , Van Hove and Tong , Van Hove, Weinberg and Chan , and Clarke . This chapter relies extensively on these books.
 
-### CLEED package
+### CLEEDpy package
 
 The CLEED project was started by G. Held in 1994 when working in D. A. King’s group in Cambridge, UK, out of a certain degree of frustration. Then all available LEED codes were FORTRAN based, which did at the time not allow dynamical memory allocation, and, hence, the codes had to be edited and re-compiled for every new surface structure. The aim was to provide a more user-friendly program package that can handle most single crystal surface structures without the necessity of re-compiling and would determine most non-geometrical parameters, such as the beams to be used in the calculation, matrix size, distribution of atoms into layers, etc., automatically, thus reducing the input to - more or less - only the surface geometry.
 
@@ -60,6 +57,8 @@ It was decided to write the code from scratch, based on the well-established lay
 - C compilers are an intrinsic part of any Linux distribution and, thus, freely available on every PC workstation.
 
 Initially, the name ”CLEED” was just a working title originating from the programming language used. Later it was decided to that ”C” should stand for Cambridge, however major contributions to the package were added since by W. Braun in Erlangen, Germany, (1998 - 2001), P. de Andres and M. Blanco-Rey in Madrid, Spain, (2000 - 2005) and Z. V. Zheleva in Reading, UK, (2007 - 2011).
+
+In 2023 the CLEEDpy project started in collaboration with Aliaksadr Yakutovich, EMPA, Zürich, with the aim of making the package more user friendly and link it with already existing modelling codes.
 
 ## LEED pattern
 
@@ -96,12 +95,14 @@ a_{2x} & a_{2y}
 \end{array} \right)
 \end{equation}
 ```
-The determinante $\det {\cal A}  = \vec{a}_1 \times \vec{a}_2  =  a_{1x}a_{2y} - a_{1y}a_{2x}$ is equal to the area $A_A$ of the unit cell described by $\vec{a}_1$ and $\vec{a}_2$. $\det \cal A$ is positive if $(\vec{a}_1, \vec{a}_2)$ form a right-handed system.
+The determinante $\det { A}  = \vec{a}_1 \times \vec{a}_2 = a_{1x}a_{2y} - a_{1y}a_{2x}$ is equal to the area $A_A$ of the unit cell described by $\vec{a}_1$ and $\vec{a}_2$. $\det \cal A$ is positive if $(\vec{a}_1, \vec{a}_2)$ form a right-handed system.
 
 
 ![](\1)
 ![](\1)
 
+![LEED_Patt_1](images/Fig_LEED_Patt_1.jpg)
+![LEED_Patt_2](images/Fig_LEED_Patt_2.jpg)
 **Figure:**  Examples of LEED patterns for common surfaces: fcc{100}, fcc{110}, fcc{111}, fcc{100}-*p*(2 × 1).
 
 
@@ -1916,123 +1917,6 @@ The program `smooth` performs a three-point smooth of the original data: $I_{sm}
 
     smooth <input> <output>
 
-### LEED Pattern (patt)
-
-The program `pattern` prints the LEED pattern for a given superstructure specified in the input file. The output file is in EPS format.
-
-##### Command line
-
-    pattern -i <input> -o <output> -ni -rs <spot size> -rg <spot size>
-
-##### Parameters
-
-
-
-`-i <input>`: specify input file name.
-
-`-o <output>`: specify output file name.
-
-`-ni` (no argument): do not print spot indices.
-
-`-ns` (no argument): do not use different symbols for superstructure spots.
-
-`-rs <spot size>`: spot size of SS spots in points (PS units).
-
-`-rg <spot size>`: spot size of GS spots in points (PS units).
-
-
-
-##### Format of input file
-
-An Example of an input file or two Domains of a $p(\sqrt{7} \times \sqrt{7}) R19^\circ$ structure on a hexagonal surface is given in Table [tab_OTHER_patt]:
-
-    c 2 Domains of (3 2 / -2 1) = (r7 x r7)
-    1.0  1.732    (a1  <lattice vector>)
-    1.0 -1.732    (a2  <lattice vector>)
-    1.5           (radius <Radius = longest rec. lattice vector * radius>)
-    2             (number of domains)
-    #M1
-      3   2  M1   (<first domain>)
-     -2   1  M1
-    #M2
-    Sy            (<second domain: mirror image of first domain w/r y-axis>)
-
-”`#`” specifies a comment which does not appear in the plot. ”`c`” specifies a comment which appears as title of plot. There two different ways of specifying the superstructure matrix. First by specifying the actual matrix:
-
-    m11 m12  (actual matrix)
-    m21 m22
-
-The matrix of the first domain has to be specified like this. The following domains can be specified by symmetry operations:
-
-
-
-`R<phi>`: rotation of previous matrix by `<phi>` degrees
-
-`Sx`: mirror previous matrix w/r x-axis
-
-`Sy`: mirror previous matrix w/r y-axis
-
-
-
-### Surface Coordinates (latt)
-
-The program `latt` produces an output file in XYZ format which contains the atom coordinates for a given surface.
-
-##### Command line
-
-    latt -h <h> -k <k> -l <l> -a <latt const. a> -c <latt const. c>
-         -n <name of atom> -t <lattice type>
-         -i <input of basis vectors> -o <output> (default is stdout)
-
-##### Parameters
-
-
-
-`-i <input>`: input of file containing basis vectors for a general lattice. If an input file is specified, the options `-a, -c, -t, -n` are ignored.
-
-`-o <output>`: specify output file name (default is ”stdout”). Two output files are created, the file with the name specified by -o contains the XYZ data, another file with the extra extension ”`.inf`” contains additional information.
-
-`-h <h> -k <k> -l <l>`: Miller indices.
-
-`-a <latt const. a> `: lattice constant for cubic lattices.
-
-`-c <latt const. c>`: lattice constant c for hcp lattice.
-
-`-n <name of atom>`: name of atoms.
-
-`-t <lattice type>`: lattice type; implemented types are: `fcc, bcc, hcp, dia`.
-
-
-
-##### Format of input file
-
-Table [tab_OTHER_latt] shows the input file for hexagonal ice.
-
-    # Hexagonal ice
-    a1:     2.3469     -4.0650     0.0000
-    a2:     2.3469      4.0650     0.0000
-    a3:     0.0000      0.0000     7.3600
-    #
-    pb:  O  0.0000      0.0000     0.0000
-    pb:  H  0.8660     -0.5000    -0.3580
-    pb:  H  0.0000      0.0000     1.0000
-    #
-    pb:  O  0.0000     +2.7100    -0.9706
-    pb:  H  0.8660     +3.2100    -0.6107
-    pb:  H  0.0000     +1.7100    -0.6107
-    #
-    pb:  O  0.0000     +2.7100    -3.6806
-    pb:  H  0.8660     +3.2000    -4.0386
-    pb:  H  0.0000     +2.7100    -2.6806
-    #
-    pb:  O  0.0000      0.0000    -4.6500
-    pb:  H  0.8660     -0.5000    -4.2920
-    pb:  H  0.0000     +1.0000    -4.2920
-    #
-    il: 20.
-    nl: 2
-
-`il` and `nl` specify the number of unit cells in lateral and vertical direction, respectively.
 
 ### Calculation of Phase Shifts
 
