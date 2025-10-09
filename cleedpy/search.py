@@ -88,9 +88,6 @@ class CleedSearchCoordinator:
 
     def set_params(self, x: np.typing.ArrayLike) -> None:
         """Set the parameters in the configuration object."""
-        if self.config is None:
-            msg = "Configuration object is not connected."
-            raise ValueError(msg)
 
         for i, value in enumerate(x):
             path = self.correspondence[i].split(".")
