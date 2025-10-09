@@ -1,5 +1,3 @@
-from pathlib import Path
-
 import numpy as np
 from scipy import optimize
 
@@ -30,8 +28,8 @@ class CleedSearchCoordinator:
     def __init__(
         self,
         config: config.InputParameters,
-        phase_path: Path,
-        experimental_iv_file: Path,
+        phase_path: str,
+        experimental_iv_file: str,
     ) -> None:
         self.config = config
         self.phase_path = phase_path
@@ -149,7 +147,6 @@ class CleedSearchCoordinator:
 
     def function_to_minimize_shift(self, shift: float) -> float:
         """Function to minimize the shift between theoretical and experimental IV curves."""
-        self.optimize_shift_iteration += 1
         r = rfactor.compute_rfactor(
             theoretical_iv=self.theoretical_iv,
             experimental_iv=self.experimental_iv,
