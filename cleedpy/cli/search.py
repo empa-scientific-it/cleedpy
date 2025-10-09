@@ -17,6 +17,23 @@ def link_parameters_to_x_init(parameters) -> np.ndarray:
     return np.array(x_init)
 
 
+def parse_atoms_to_optimize(value: str | None) -> set[str] | None:
+    """Parse the atoms to optimize from a string."""
+    if value is None:
+        return None
+
+    indices = []
+    parts = value.split(",")
+    for part in parts:
+        if "-" in part:
+            start, end = part.split("-")
+            indices.extend(range(int(start) - 1, int(end)))  # Convert to 0-based index
+        else:
+            indices.append(int(part) - 1)  # Convert to 0-based index
+
+    return set(indices)
+
+
 def run_search(
     parameters_file: str = typer.Option(  # noqa: B008
         "leed.yaml",
@@ -30,20 +47,26 @@ def run_search(
     output_file: str = typer.Option(  # noqa: B008
         "leed.out", "--output", "-o", help="Output file"
     ),  # noqa: B008
-    optimize_overlayer_atoms: str = typer.Option(  # noqa: B008
+    optimization_axes: str = typer.Option(  # noqa: B008
         "xyz",
-        "--optimize-overlayer-atoms",
+        "--optimization-axes",
         "-a",
-        help="Which overlayer atom coordinates to optimize. Options: x, y, z, or any combination of them, e.g. 'xy', 'yz', 'xyz'",
+        help="Which coordinate axes to optimize. Options: x, y, z, or combinations like 'xy', 'yz', 'xyz'.",
     ),
     optimize_shift: bool = typer.Option(  # noqa: B008
         True,
         "--optimize-shift/--no-optimize-shift",
-        "-s/-S",
         help="Whether to optimize the overall shift of the IV curves",
     ),
-):
+    atoms_to_optimize: str = typer.Option(  # noqa: B008
+        None,
+        "--atoms-to-optimize",
+        "-A",
+        help="Which overlayer (!) atoms to optimize, e.g. '1-20,24-30'. The indexing starts from 1.",
+    ),
+) -> None:
     """Command line interface for the search tool"""
+
     parameters_file = Path(parameters_file)
     if parameters_file.suffix in [".yml", ".yaml"]:
         config = load_parameters(parameters_file)
@@ -56,8 +79,18 @@ def run_search(
         f.write(old_format)
 
     searcher = search.CleedSearchCoordinator(config=config, phase_path=phase_path)
+
+    # Prepare what to optimize.
+    atoms_to_optimize = parse_atoms_to_optimize(atoms_to_optimize)
+    if atoms_to_optimize is None:  # If None, optimize all atoms
+        atoms_to_optimize = set(range(len(config.overlayers)))
+    atoms_and_axes = [
+        optimization_axes if i in atoms_to_optimize else ""
+        for i in range(len(config.overlayers))
+    ]
+
     searcher.set_search_parameters(
-        overlayer_atoms=optimize_overlayer_atoms, optimize_shift=optimize_shift
+        overlayer_atoms=atoms_and_axes, optimize_shift=optimize_shift
     )
     searcher.start_optimization(method="Nelder-Mead")
 
