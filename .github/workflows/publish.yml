@@ -1,0 +1,45 @@
+---
+name: Publish on PyPI
+
+on:
+  push:
+    tags:
+      # After vMajor.Minor.Patch _anything_ is allowed (without "/") !
+      - v[0-9]+.[0-9]+.[0-9]+*
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    if: github.repository == 'empa-scientific-it/cleedpy'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install build dependencies
+        run: |
+          pip install --upgrade pip
+          pip install build twine
+
+      - name: Build package with scikit-build-core
+        run: |
+          python -m build
+
+      - name: Publish to PyPI
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
+        run: |
+          twine upload dist/*
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v0.1.14
+        with:
+          files: |
+            dist/*
+          generate_release_notes: true
