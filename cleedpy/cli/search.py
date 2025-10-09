@@ -74,7 +74,6 @@ def run_search(
 ) -> None:
     """Command line interface for the search tool"""
 
-    parameters_file = Path(parameters_file)
     if parameters_file.suffix in [".yml", ".yaml"]:
         config = load_parameters(parameters_file)
     else:

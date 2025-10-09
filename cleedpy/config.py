@@ -177,7 +177,7 @@ class InputParameters(BaseModel):
         positions = []
         symbols = []
 
-        # Bulk atoms
+        # Bulk atoms.
         for bulk_atom in self.bulk_layers:
             symbols.append(bulk_atom.phase_file)
             positions.append(
