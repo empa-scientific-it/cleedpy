@@ -70,7 +70,7 @@ class CleedSearchCoordinator:
     ) -> None:
         """Set the search parameters."""
 
-        if type(overlayer_atoms) is str:
+        if isinstance(overlayer_atoms, str):
             overlayer_atoms = [overlayer_atoms] * len(self.config.overlayers)
 
         for i, atom in enumerate(self.config.overlayers):
@@ -128,7 +128,6 @@ class CleedSearchCoordinator:
         self.theoretical_iv = cleed_result_to_iv(result)
 
         # Optimize the shift if requested.
-        self.optimize_shift_iteration = 0
         if self.optimize_shift:
             shift_opt_result = optimize.minimize_scalar(
                 self.function_to_minimize_shift,
