@@ -1,20 +1,9 @@
 from pathlib import Path
 
-import numpy as np
 import typer
 
 from .. import search
 from ..config import OLD_FORMAT_TEMPLATE, load_parameters
-
-
-def link_parameters_to_x_init(parameters) -> np.ndarray:
-    """Link the parameters to the x_init array for the optimization."""
-
-    x_init = []
-    for atom in parameters.overlayers:
-        x_init.extend([atom.position.z])
-
-    return np.array(x_init)
 
 
 def parse_atoms_to_optimize(value: str | None) -> set[str] | None:
