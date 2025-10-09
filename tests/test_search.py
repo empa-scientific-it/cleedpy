@@ -25,10 +25,12 @@ def test_init(monkeypatch):
 
     # Mock the numpy.loadtxt function to avoid file I/O during tests
     monkeypatch.setattr("numpy.loadtxt", lambda x: np.array([[1, 2, 3, 4, 5]]))
-    csc = search.CleedSearchCoordinator()
+    csc = search.CleedSearchCoordinator(
+        "dummy_config", "dummy_phase_path", "dummy_experimental_iv_file"
+    )
 
-    assert csc.config is None
-    assert csc.phase_path is None
+    assert csc.config == "dummy_config"
+    assert csc.phase_path == "dummy_phase_path"
     assert csc.iteration == 0
     assert csc.current_rfactor == 0.0
     assert csc.x == []
@@ -45,11 +47,11 @@ def test_set_search_parameters(monkeypatch, dummy_config):
     # Mock the numpy.loadtxt function to avoid file I/O during tests
     monkeypatch.setattr("numpy.loadtxt", lambda x: np.array([[1, 2, 3, 4, 5]]))
 
-    with pytest.raises(ValueError, match="Configuration object is not connected."):
-        csc_no_config = search.CleedSearchCoordinator()
-        csc_no_config.set_search_parameters()
-
-    csc = search.CleedSearchCoordinator(config=dummy_config)
+    csc = search.CleedSearchCoordinator(
+        config=dummy_config,
+        phase_path="dummy_phase_path",
+        experimental_iv_file="dummy_experimental_iv_file",
+    )
     csc.set_search_parameters(overlayer_atoms="xyz")
     assert len(csc.x) == 6  # 2 overlayers * 3 coordinates each
     assert len(csc.correspondence) == 6
@@ -63,14 +65,22 @@ def test_set_search_parameters(monkeypatch, dummy_config):
     ]
     assert csc.optimize_shift is True
 
-    csc = search.CleedSearchCoordinator(config=dummy_config)
+    csc = search.CleedSearchCoordinator(
+        config=dummy_config,
+        phase_path="dummy_phase_path",
+        experimental_iv_file="dummy_experimental_iv_file",
+    )
     csc.set_search_parameters(overlayer_atoms=["x", "y"], optimize_shift=False)
     assert len(csc.x) == 2  # 2 overlayers * 1 coordinate each
     assert len(csc.correspondence) == 2
     assert csc.correspondence == ["overlayers.0.position.x", "overlayers.1.position.y"]
     assert csc.optimize_shift is False
 
-    csc = search.CleedSearchCoordinator(config=dummy_config)
+    csc = search.CleedSearchCoordinator(
+        config=dummy_config,
+        phase_path="dummy_phase_path",
+        experimental_iv_file="dummy_experimental_iv_file",
+    )
     csc.set_search_parameters(overlayer_atoms=["xy", "xz"])
     assert len(csc.x) == 4  # 2 overlayers * 2 coordinates each
     assert len(csc.correspondence) == 4
@@ -88,7 +98,11 @@ def test_set_params(monkeypatch, dummy_config):
     # Mock the numpy.loadtxt function to avoid file I/O during tests
     monkeypatch.setattr("numpy.loadtxt", lambda x: np.array([[1, 2, 3, 4, 5]]))
 
-    csc = search.CleedSearchCoordinator(config=dummy_config)
+    csc = search.CleedSearchCoordinator(
+        config=dummy_config,
+        phase_path="dummy_phase_path",
+        experimental_iv_file="dummy_experimental_iv_file",
+    )
     csc.set_search_parameters(overlayer_atoms="xyz")
     new_values = np.array([10.0, 20.0, 30.0, 40.0, 50.0, 60.0])
     csc.set_params(new_values)

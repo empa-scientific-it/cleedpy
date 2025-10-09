@@ -70,10 +70,6 @@ class CleedSearchCoordinator:
     ) -> None:
         """Set the search parameters."""
 
-        if self.config is None:
-            msg = "Configuration object is not connected."
-            raise ValueError(msg)
-
         if type(overlayer_atoms) is str:
             overlayer_atoms = [overlayer_atoms] * len(self.config.overlayers)
 
