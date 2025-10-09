@@ -35,18 +35,36 @@ def parse_atoms_to_optimize(value: str | None) -> set[str] | None:
 
 
 def run_search(
-    parameters_file: str = typer.Option(  # noqa: B008
+    parameters_file: Path = typer.Option(  # noqa: B008
         "leed.yaml",
         "--input",
         "-i",
+        file_okay=True,
+        dir_okay=False,
+        readable=True,
+        exists=True,
         help="Input file with parameters. Accepts ONLY .yaml",
     ),
-    phase_path: str = typer.Option(  # noqa: B008
-        "PHASE", "--phase", "-p", help="Phase path"
+    phase_path: Path = typer.Option(  # noqa: B008
+        "PHASE",
+        "--phase",
+        "-p",
+        file_okay=False,
+        dir_okay=True,
+        readable=True,
+        exists=True,
+        help="Directory with phase shifts.",
     ),
-    output_file: str = typer.Option(  # noqa: B008
-        "leed.out", "--output", "-o", help="Output file"
-    ),  # noqa: B008
+    experimental_iv: Path = typer.Option(  # noqa: B008
+        "experimental.txt",
+        "--experimental-iv",
+        "-e",
+        file_okay=True,
+        dir_okay=False,
+        readable=True,
+        exists=True,
+        help="File with experimental IV curves",
+    ),
     optimization_axes: str = typer.Option(  # noqa: B008
         "xyz",
         "--optimization-axes",
@@ -78,7 +96,11 @@ def run_search(
     with open("initial_parameters.inp", "w") as f:
         f.write(old_format)
 
-    searcher = search.CleedSearchCoordinator(config=config, phase_path=phase_path)
+    searcher = search.CleedSearchCoordinator(
+        config=config,
+        phase_path=str(phase_path),
+        experimental_iv_file=str(experimental_iv),
+    )
 
     # Prepare what to optimize.
     atoms_to_optimize = parse_atoms_to_optimize(atoms_to_optimize)

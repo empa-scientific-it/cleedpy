@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import numpy as np
 from scipy import optimize
 
@@ -27,14 +29,15 @@ def cleed_result_to_iv(result) -> np.ndarray:
 class CleedSearchCoordinator:
     def __init__(
         self,
-        config: config.InputParameters | None = None,
-        phase_path: str | None = None,
+        config: config.InputParameters,
+        phase_path: Path,
+        experimental_iv_file: Path,
     ) -> None:
         self.config = config
         self.phase_path = phase_path
         self.iteration = 0
         self.current_rfactor = 0.0
-        self.experimental_iv = np.loadtxt("experimental.txt")
+        self.experimental_iv = np.loadtxt(experimental_iv_file)
         self.x = []
         self.correspondence = []
         self.optimize_shift = True
