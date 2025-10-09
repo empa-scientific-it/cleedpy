@@ -30,12 +30,14 @@ class CleedSearchCoordinator:
         config: config.InputParameters,
         phase_path: str,
         experimental_iv_file: str,
+        optimization_history_file: str = "optimization_history.log",
     ) -> None:
         self.config = config
         self.phase_path = phase_path
         self.iteration = 0
         self.current_rfactor = 0.0
         self.experimental_iv = np.loadtxt(experimental_iv_file)
+        self.optimization_history_file = optimization_history_file
         self.x = []
         self.correspondence = []
         self.optimize_shift = True
@@ -58,7 +60,7 @@ class CleedSearchCoordinator:
     def print_things_to_file(self, intermediate_result):
         """Print the current parameters and R-factor to a file."""
 
-        with open("optimization_history.log", "a") as fobj:
+        with open(self.optimization_history_file, "a") as fobj:
             fobj.write(f"Iteration {self.iteration} ")
             fobj.write(f"Shift: {self.optimal_shift} ")
             fobj.write(f"R-factor: {self.current_rfactor}\n")

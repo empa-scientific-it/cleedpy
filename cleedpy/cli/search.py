@@ -32,7 +32,7 @@ def run_search(
         dir_okay=False,
         readable=True,
         exists=True,
-        help="Input file with parameters. Accepts ONLY .yaml",
+        help="Input file with parameters. Accepts ONLY `.yaml`.",
     ),
     phase_path: Path = typer.Option(  # noqa: B008
         "PHASE",
@@ -52,7 +52,16 @@ def run_search(
         dir_okay=False,
         readable=True,
         exists=True,
-        help="File with experimental IV curves",
+        help="File with experimental IV curves.",
+    ),
+    optimization_history: Path = typer.Option(  # noqa: B008
+        "optimization_history.log",
+        "--optimization-history",
+        "-o",
+        file_okay=True,
+        dir_okay=False,
+        writable=True,
+        help="File to store optimization history.",
     ),
     optimization_axes: str = typer.Option(  # noqa: B008
         "xyz",
@@ -63,7 +72,7 @@ def run_search(
     optimize_shift: bool = typer.Option(  # noqa: B008
         True,
         "--optimize-shift/--no-optimize-shift",
-        help="Whether to optimize the overall shift of the IV curves",
+        help="Whether to optimize the overall shift of the IV curves.",
     ),
     atoms_to_optimize: str = typer.Option(  # noqa: B008
         None,
@@ -72,7 +81,7 @@ def run_search(
         help="Which overlayer (!) atoms to optimize, e.g. '1-20,24-30'. The indexing starts from 1.",
     ),
 ) -> None:
-    """Command line interface for the search tool"""
+    """Command line interface for the search tool."""
 
     if parameters_file.suffix in [".yml", ".yaml"]:
         config = load_parameters(parameters_file)
@@ -88,6 +97,7 @@ def run_search(
         config=config,
         phase_path=str(phase_path),
         experimental_iv_file=str(experimental_iv),
+        optimization_history_file=str(optimization_history),
     )
 
     # Prepare what to optimize.
