@@ -1,10 +1,13 @@
 from pathlib import Path
 from typing import Any, Literal, NamedTuple
 
+import ase
+import ase.build
 import jinja2
+import numpy as np
 import yaml
-from numpy.typing import ArrayLike
-from pydantic import BaseModel
+from numpy import typing as np_typing
+from pydantic import BaseModel, model_validator
 
 OLD_FORMAT_TEMPLATE = jinja2.Template(
     """
@@ -15,10 +18,10 @@ a3: {{ "%10.4f"|format(unit_cell.a3[0]) }} {{ "%10.4f"|format(unit_cell.a3[1]) }
 m1: {{ "%4.1f"|format(superstructure_matrix.m1[0]) }} {{ "%4.1f"|format(superstructure_matrix.m1[1]) }}
 m2: {{ "%4.1f"|format(superstructure_matrix.m2[0]) }} {{ "%4.1f"|format(superstructure_matrix.m2[1]) }}
 {% for ov in overlayers -%}
-po: {{ "%-6s"|format(ov.phase_file) }} {{ "%10.4f"|format(ov.position[0]) }} {{ "%10.4f"|format(ov.position[1]) }} {{ "%10.4f"|format(ov.position[2]) }} {{ ov.vibrational_displacement[0] }} {{ "%6.3f"|format(ov.vibrational_displacement[1]) }} {{ "%6.3f"|format(ov.vibrational_displacement[2]) }} {{ "%6.3f"|format(ov.vibrational_displacement[3]) }}
+po: {{ "%-6s"|format(ov.phase_file) }} {{ "%10.4f"|format(ov.position.x) }} {{ "%10.4f"|format(ov.position.y) }} {{ "%10.4f"|format(ov.position.z) }} {{ ov.vibrational_displacement[0] }} {{ "%6.3f"|format(ov.vibrational_displacement[1]) }} {{ "%6.3f"|format(ov.vibrational_displacement[2]) }} {{ "%6.3f"|format(ov.vibrational_displacement[3]) }}
 {% endfor -%}
-{% for r in minimum_radius -%}
-rm: {{ "%-6s"|format(r.name) }} {{ "%5.2f"|format(r.radius) }}
+{% for atom, r in minimum_radius.items() -%}
+rm: {{ "%-6s"|format(atom) }} {{ "%5.2f"|format(r) }}
 {% endfor -%}
 zr: {{ "%4.2f"|format(1.60) }}  {{ "%4.2f"|format(7.00) }}   {# <- if zr is fixed, or make a variable if needed #}
 sz: 1
@@ -26,7 +29,7 @@ sr: 3 0.0 0.0
 vr: {{ "%8.2f"|format(optical_potential[0]) }}
 vi: {{ "%8.2f"|format(optical_potential[1]) }}
 {% for bl in bulk_layers -%}
-pb: {{ "%-6s"|format(bl.phase_file) }} {{ "%10.4f"|format(bl.position[0]) }} {{ "%+10.4f"|format(bl.position[1]) }} {{ "%+10.4f"|format(bl.position[2]) }} {{ bl.vibrational_displacement[0] }} {{ "%6.3f"|format(bl.vibrational_displacement[1]) }} {{ "%6.3f"|format(bl.vibrational_displacement[2]) }} {{ "%6.3f"|format(bl.vibrational_displacement[3]) }}
+pb: {{ "%-6s"|format(bl.phase_file) }} {{ "%10.4f"|format(bl.position.x) }} {{ "%+10.4f"|format(bl.position.y) }} {{ "%+10.4f"|format(bl.position.z) }} {{ bl.vibrational_displacement[0] }} {{ "%6.3f"|format(bl.vibrational_displacement[1]) }} {{ "%6.3f"|format(bl.vibrational_displacement[2]) }} {{ "%6.3f"|format(bl.vibrational_displacement[3]) }}
 {% endfor -%}
 ei: {{ "%6.1f"|format(energy_range.initial) }}
 ef: {{ "%6.1f"|format(energy_range.final) }}
@@ -99,29 +102,39 @@ VibrationalDisplacementParametersVariant = (
 )
 
 
-class Position(NamedTuple):
+class Position(BaseModel):
     x: float
     y: float
     z: float
 
+    # Allow initialization from list/tuple
+    @model_validator(mode="before")
+    def from_list(cls, v):  # noqa: N805
+        if isinstance(v, (list, tuple)):
+            if len(v) != 3:
+                msg = "Position must have exactly 3 values"
+                raise ValueError(msg)
+            return {"x": v[0], "y": v[1], "z": v[2]}
+        return v
 
-class OptimiziationRangeParameters(NamedTuple):
+
+class OptimizationRangeParameters(NamedTuple):
     initial: float
     start: float
     end: float
 
 
 class PositionOptimizationParameters(BaseModel):
-    x: OptimiziationRangeParameters
-    y: OptimiziationRangeParameters
-    z: OptimiziationRangeParameters
+    x: OptimizationRangeParameters
+    y: OptimizationRangeParameters
+    z: OptimizationRangeParameters
 
 
 class AtomParametersStructured(BaseModel):
     """Atom parameters for overlayers"""
 
     phase_file: str | Path
-    position: PositionOptimizationParameters | Position
+    position: Position
     vibrational_displacement: VibrationalDisplacementParametersVariant
 
 
@@ -140,13 +153,6 @@ class EnergyRangeParameters(BaseModel):
     step: float
 
 
-class MinimumAtomRadius(BaseModel):
-    """Minimum atom radius for search. This is used to avoid atoms overlapping."""
-
-    name: str
-    radius: float
-
-
 class InputParameters(BaseModel):
     """Non geometrical parameters for bulk calculations"""
 
@@ -155,7 +161,7 @@ class InputParameters(BaseModel):
     superstructure_matrix: SuperstructureMatrix
     overlayers: list[AtomParametersVariants]
     bulk_layers: list[AtomParametersVariants]
-    minimum_radius: list[MinimumAtomRadius]
+    minimum_radius: dict[str, float]
     optical_potential: tuple[float, float] = (8, 4)
     energy_range: EnergyRangeParameters
     polar_incidence_angle: float = 0
@@ -163,6 +169,45 @@ class InputParameters(BaseModel):
     epsilon: float = 1e-2
     maximum_angular_momentum: int = 8
     sample_temperature: float = 300.0
+
+    def get_ase_structure(self) -> "ase.Atoms":
+        """Get the ASE structure from the input parameters"""
+        from ase import Atoms
+
+        positions = []
+        symbols = []
+
+        # Bulk atoms.
+        for bulk_atom in self.bulk_layers:
+            symbols.append(bulk_atom.phase_file)
+            positions.append(
+                [bulk_atom.position.x, bulk_atom.position.y, bulk_atom.position.z]
+            )
+        cell = np.array([self.unit_cell.a1, self.unit_cell.a2, self.unit_cell.a3])
+        bulk_atoms = Atoms(
+            symbols=symbols, positions=positions, cell=cell, pbc=[True, True, False]
+        )
+
+        transform_matrix = np.array(
+            [
+                [self.superstructure_matrix.m1[0], self.superstructure_matrix.m2[0], 0],
+                [self.superstructure_matrix.m1[1], self.superstructure_matrix.m2[1], 0],
+                [0, 0, 1],
+            ]
+        )
+
+        atoms = ase.build.make_supercell(bulk_atoms, transform_matrix)
+
+        # Overlayer atoms.
+        for overlayer in self.overlayers:
+            overlayer_position = np.array(
+                [overlayer.position.x, overlayer.position.y, overlayer.position.z]
+            )
+            atoms += ase.Atom(
+                symbol=overlayer.phase_file,
+                position=overlayer_position,
+            )
+        return atoms
 
 
 class SearchRadiusParameters(NamedTuple):
@@ -197,7 +242,7 @@ class SearchParameters(BaseModel):
     def model_post_init(self, __context: Any) -> None:
         return super().model_post_init(__context)
 
-    def get_iv_curve(self) -> ArrayLike:
+    def get_iv_curve(self) -> np_typing.ArrayLike:
         """Get the IV curve from the experimental data"""
 
 

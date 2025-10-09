@@ -15,6 +15,7 @@ classifiers = [
   "Programming Language :: Python :: 3.12",
 ]
 dependencies = [
+  "ase",
   "click",
   "jinja2",
   "matplotlib",
