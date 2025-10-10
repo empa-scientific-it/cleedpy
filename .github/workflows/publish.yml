@@ -9,31 +9,32 @@ on: [pull_request]
 
 jobs:
 
-  build:
-    name: Build wheels
-    runs-on: ubuntu-latest
+  # build:
+  #   name: Build wheels
+  #   runs-on: ubuntu-latest
 
-    steps:
-      - name: Install C dependencies
-        run: sudo apt-get install -y libopenblas-dev
+  #   steps:
+  #     - name: Install C dependencies
+  #       run: sudo apt-get install -y libopenblas-dev
 
-      - name: Checkout code
-        uses: actions/checkout@v4
+  #     - name: Checkout code
+  #       uses: actions/checkout@v4
 
-      - name: Build wheels using cibuildwheel
-        uses: pypa/cibuildwheel@v3.2
-        # Install blas inside the image
-        env:
-          CIBW_BEFORE_ALL_LINUX: yum install -y openblas-devel
-      - name: Upload wheels
-        uses: actions/upload-artifact@v4
-        with:
-          name: release-wheel-ubuntu
-          path: ./wheelhouse/*.whl
+  #     - name: Build wheels using cibuildwheel
+  #       uses: pypa/cibuildwheel@v3.2
+  #       # Install blas inside the image
+  #       env:
+  #         CIBW_BEFORE_ALL_LINUX: yum install -y openblas-devel
+  #     - name: Upload wheels
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: release-wheel-ubuntu
+  #         path: ./wheelhouse/*.whl
 
   build_sdist:
     name: Build source distribution
     runs-on: ubuntu-latest
+    if: github.repository == 'empa-scientific-it/cleedpy'
 
     steps:
       - name: Checkout code
@@ -56,39 +57,22 @@ jobs:
           name: release-sdist
           path: dist/*.tar.gz
 
-  # publish:
-  #   runs-on: ubuntu-latest
-  #   if: github.repository == 'empa-scientific-it/cleedpy'
+  publish:
+    runs-on: ubuntu-latest
+    if: github.repository == 'empa-scientific-it/cleedpy'
+    needs: [build_sdist]
+    steps:
 
+      - uses: actions/download-artifact@v5
+        name: Download source distribution
+        with:
+          pattern: release-*
+          path: ./dist
+          merge-multiple: true
 
-
-  #     - name: Checkout code
-  #       uses: actions/checkout@v4
-
-  #     - name: Set up Python
-  #       uses: actions/setup-python@v5
-  #       with:
-  #         python-version: '3.11'
-
-  #     - name: Install build dependencies
-  #       run: |
-  #         pip install -e .[dev]
-  #         pip install build twine
-
-  #     - name: Build package with scikit-build-core
-  #       run: |
-  #         python -m build
-
-  #     - name: Publish to PyPI
-  #       env:
-  #         TWINE_USERNAME: __token__
-  #         TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
-  #       run: |
-  #         twine upload dist/*
-
-  #     - name: Create GitHub release
-  #       uses: softprops/action-gh-release@v0.1.14
-  #       with:
-  #         files: |
-  #           dist/*
-  #         generate_release_notes: true
+      # - name: Publish to PyPI
+      #   uses: pypa/gh-action-pypi-publish@v1.13
+      #   with:
+      #     user: __token__
+      #     password: ${{ secrets.PYPI_TOKEN }}
+      #     packages_dir: ./dist
