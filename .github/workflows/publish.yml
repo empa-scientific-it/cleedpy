@@ -38,10 +38,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.11'
 
@@ -59,6 +59,7 @@ jobs:
 
   publish:
     runs-on: ubuntu-latest
+    name: Publish to GitHub and PyPI
     if: github.repository == 'empa-scientific-it/cleedpy'
     needs: [build_sdist]
     steps:
