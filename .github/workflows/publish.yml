@@ -8,41 +8,80 @@ on:
       - v[0-9]+.[0-9]+.[0-9]+*
 
 jobs:
-  publish:
+
+  # build:
+  #   name: Build wheels
+  #   runs-on: ubuntu-latest
+
+  #   steps:
+  #     - name: Install C dependencies
+  #       run: sudo apt-get install -y libopenblas-dev
+
+  #     - name: Checkout code
+  #       uses: actions/checkout@v4
+
+  #     - name: Build wheels using cibuildwheel
+  #       uses: pypa/cibuildwheel@v3.2
+  #       # Install blas inside the image
+  #       env:
+  #         CIBW_BEFORE_ALL_LINUX: yum install -y openblas-devel
+  #     - name: Upload wheels
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: release-wheel-ubuntu
+  #         path: ./wheelhouse/*.whl
+
+  build_sdist:
+    name: Build source distribution
     runs-on: ubuntu-latest
     if: github.repository == 'empa-scientific-it/cleedpy'
 
     steps:
-      - name: Install C dependencies
-        run: sudo apt-get install -y libopenblas-dev
-
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.11'
 
       - name: Install build dependencies
-        run: |
-          pip install --upgrade pip
-          pip install build twine
+        run: python -m pip install --upgrade build
 
-      - name: Build package with scikit-build-core
-        run: |
-          python -m build
+      - name: Build source distribution
+        run: python -m build --sdist --outdir dist
+
+      - name: Upload source distribution
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-sdist
+          path: dist/*.tar.gz
+
+  publish:
+    runs-on: ubuntu-latest
+    name: Publish to GitHub and PyPI
+    if: github.repository == 'empa-scientific-it/cleedpy'
+    needs: [build_sdist]
+    steps:
+
+      - uses: actions/download-artifact@v5
+        name: Download source distribution
+        with:
+          pattern: release-*
+          path: ./dist
+          merge-multiple: true
 
       - name: Publish to PyPI
-        env:
-          TWINE_USERNAME: __token__
-          TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
-        run: |
-          twine upload dist/*
-
-      - name: Create GitHub release
-        uses: softprops/action-gh-release@v0.1.14
+        uses: pypa/gh-action-pypi-publish@v1.13
         with:
-          files: |
-            dist/*
-          generate_release_notes: true
+          user: __token__
+          password: ${{ secrets.PYPI_TOKEN }}
+          packages_dir: ./dist
+
+      - uses: softprops/action-gh-release@v2.4
+        name: Create release
+        if: startsWith(github.ref, 'refs/tags/v')
+        with:
+            files: |
+                dist/*
+            generate_release_notes: true
