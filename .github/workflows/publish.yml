@@ -13,6 +13,9 @@ jobs:
     if: github.repository == 'empa-scientific-it/cleedpy'
 
     steps:
+      - name: Install C dependencies
+        run: sudo apt-get install -y libopenblas-dev
+
       - name: Checkout code
         uses: actions/checkout@v4
 
