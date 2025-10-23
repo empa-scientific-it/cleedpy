@@ -10,8 +10,8 @@ from cleedpy.physics.constants import HART
 @pytest.mark.parametrize(
     "folder",
     [
-        "../../examples/cleedpy_example_intermediate/",
-        "../../examples/ni111_2x2O/",
+        "../../examples/ni111_cu_leed/",
+        "../../examples/ni111_2x2O_leed/",
     ],
 )
 def test_leed(folder):
