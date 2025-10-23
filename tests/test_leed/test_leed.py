@@ -19,7 +19,7 @@ def test_leed(folder):
 
     script_dir = Path(__file__).resolve().parent
     parameter_file = script_dir / folder / "leed.inp"
-    phase_shift = script_dir / folder / "PHASE"
+    phase_shift = script_dir / "../../examples/data/PHASE"
     result = call_cleed(str(parameter_file), str(parameter_file), str(phase_shift))
 
     # Read beams.txt file using numpy. The file contains 3 colums: 1st beam index (float), 2nd beam index (float), and beam set (int)
