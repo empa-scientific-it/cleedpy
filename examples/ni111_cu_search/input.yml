@@ -8,32 +8,30 @@ superstructure_matrix:
   m2: [0, 1.0]
 
 overlayers:
-  - phase_file: "Cu_BVH"
+  - phase_file: "Cu"
     position: [0.0000, -0.0000, 6.0900]
     vibrational_displacement: [dr3, 0.032, 0.032, 0.032]
-  - phase_file: "Ni_BVH"
+  - phase_file: "Ni"
     position: [1.2450, -0.7188, 4.0600]
     vibrational_displacement: [dr3, 0.025, 0.025, 0.025]
-  - phase_file: "Ni_BVH"
+  - phase_file: "Ni"
     position: [1.2450, 0.7188, 2.0300]
     vibrational_displacement: [dr3, 0.025, 0.025, 0.025]
 
 bulk_layers:
-  - phase_file: "Ni_BVH"
+  - phase_file: "Ni"
     position: [0.0000, 0.0000,  0.0000]
     vibrational_displacement: [dr3, 0.025, 0.025, 0.025]
-  - phase_file: "Ni_BVH"
+  - phase_file: "Ni"
     position: [1.2450, -0.7188, -2.0330]
     vibrational_displacement: [dr3, 0.025, 0.025, 0.025]
-  - phase_file: "Ni_BVH"
+  - phase_file: "Ni"
     position: [1.2450, 0.7188, -4.0660]
     vibrational_displacement: [dr3, 0.025, 0.025, 0.025]
 
 minimum_radius:
-  - name: Ni_BVH
-    radius: 0.9
-  - name: Cu_BVH
-    radius: 0.9
+  Ni: 0.9
+  Cu: 0.9
 
 optical_potential: [-8.00, 4.0]
 energy_range:
