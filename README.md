@@ -19,6 +19,7 @@ Each program can be called with the `cleedpy-` prefix, e.g. `cleedpy-rfactor`:
 ```bash
 cleedpy-rfactor --config config.yaml
 ```
+For example runs please see the [examples folder](https://github.com/empa-scientific-it/cleedpy/tree/main/examples).
 
 ## Documentation
 
