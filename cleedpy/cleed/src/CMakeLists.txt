@@ -15,10 +15,26 @@ add_library(cleed SHARED ${CLEED_SRC})
 # Link libmat
 target_link_libraries(cleed mat m dl)
 
+# This is needed to tell the linker where to find `libmat`
+# `libcleed` depends on it and setting RPATH allows us
+# to resolve the correct path at runtime
+# @loader_path and $ORIGIN point to the folder of the currently loaded shared library
+if(APPLE)
+    set_target_properties(cleed PROPERTIES
+        INSTALL_RPATH "@loader_path"
+        BUILD_WITH_INSTALL_RPATH TRUE
+    )
+elseif(UNIX)
+    set_target_properties(cleed PROPERTIES
+        INSTALL_RPATH "$ORIGIN"
+        BUILD_WITH_INSTALL_RPATH TRUE
+    )
+endif()
+
 # Install the cleed library into the Python package
-# scikit-build-core will place this in the wheel at cleedpy/cleed/lib/
+# Use SKBUILD_PROJECT_NAME variable provided by scikit-build-core
 install(TARGETS cleed
-    LIBRARY DESTINATION cleed/lib
-    RUNTIME DESTINATION cleed/bin
+    LIBRARY DESTINATION ${SKBUILD_PROJECT_NAME}
+    RUNTIME DESTINATION ${SKBUILD_PROJECT_NAME}
     COMPONENT cleed
 )
