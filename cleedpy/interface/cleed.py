@@ -214,8 +214,12 @@ def generate_crystal_structure(inp: AtomParametersVariants) -> Crystal:
 
 
 def get_cleed_lib() -> CDLL:
-    lib_path = pl.Path(__file__).parent.parent
+    """Load the cleed shared library.
 
+    Tries multiple locations to support both installed and development scenarios:
+    1. Installed location: cleedpy/*.dylib (in site-packages)
+    2. Development location: cleedpy/cleed/lib/*.dylib (in source tree)
+    """
     lib_exts = {
         "Windows": ".dll",
         "Darwin": ".dylib",
@@ -223,15 +227,41 @@ def get_cleed_lib() -> CDLL:
     }
 
     try:
-        cleed_lib = (
-            (lib_path / "libcleed").with_suffix(lib_exts[platform.system()]).as_posix()
-        )
+        ext = lib_exts[platform.system()]
     except KeyError as err:
         raise ValueError(
             f"Platform {platform.system()} not supported by cleedpy"
         ) from err
 
-    return cdll.LoadLibrary(cleed_lib)
+    # Get the cleedpy package directory
+    package_dir = pl.Path(__file__).parent.parent
+
+    # Try installed location first (for normal uv/pip install)
+    installed_path = package_dir
+
+    # Try development location second (for editable install or running from source)
+    dev_path = package_dir / "cleed" / "lib"
+
+    # Try loading from each location
+    for path in [installed_path, dev_path]:
+        lib_path = (path / "libcleed").with_suffix(ext)
+        if lib_path.exists():
+            try:
+                return cdll.LoadLibrary(str(lib_path))
+            except OSError:
+                # Library exists but failed to load (e.g., missing dependencies)
+                # Try the next location
+                continue
+
+    # Neither location worked
+    raise FileNotFoundError(
+        (
+            "Could not find or load libcleed library. Tried:\n"
+            + f"  - {installed_path} (installed)\n"
+            + f"  - {dev_path} (development)\n"
+            + "Make sure the package is properly built."
+        )
+    )
 
 
 def call_cleed(parameters_file, bulk_file, phase_path):
