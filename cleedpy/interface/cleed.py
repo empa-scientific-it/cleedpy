@@ -214,7 +214,7 @@ def generate_crystal_structure(inp: AtomParametersVariants) -> Crystal:
 
 
 def get_cleed_lib() -> CDLL:
-    lib_path = pl.Path(__file__).parent.parent / "cleed" / "lib"
+    lib_path = pl.Path(__file__).parent.parent
 
     lib_exts = {
         "Windows": ".dll",

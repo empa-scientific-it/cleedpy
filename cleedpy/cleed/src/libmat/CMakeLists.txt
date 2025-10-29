@@ -69,7 +69,7 @@ message(STATUS "BLAS libraries: ${BLAS_LIBRARIES}")
 
 # Install the mat library into the Python package
 install(TARGETS mat
-    LIBRARY DESTINATION cleed/lib
-    RUNTIME DESTINATION cleed/bin
+    LIBRARY DESTINATION ${SKBUILD_PROJECT_NAME}
+    RUNTIME DESTINATION ${SKBUILD_PROJECT_NAME}
     COMPONENT cleed
 )
