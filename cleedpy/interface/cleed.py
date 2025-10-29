@@ -255,10 +255,10 @@ def get_cleed_lib() -> CDLL:
 
     # Neither location worked
     raise FileNotFoundError(
-            "Could not find or load libcleed library. Tried:\n"
-            + f"  - {installed_path} (installed)\n"
-            + f"  - {dev_path} (development)\n"
-            + "Make sure the package is properly built."
+        "Could not find or load libcleed library. Tried:\n"
+        + f"  - {installed_path} (installed)\n"
+        + f"  - {dev_path} (development)\n"
+        + "Make sure the package is properly built."
     )
 
 
