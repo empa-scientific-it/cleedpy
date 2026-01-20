@@ -29,12 +29,14 @@ jobs:
 
       - name: Set up vcpkg
         if: runner.os == 'Windows'
-        uses: microsoft/setup-vcpkg@v1
+        run: |
+          git clone https://github.com/microsoft/vcpkg.git C:\vcpkg
+          C:\vcpkg\bootstrap-vcpkg.bat
 
-      - name: Install OpenBLAS via vcpkg
+      - name: Install OpenBLAS (vcpkg)
         if: runner.os == 'Windows'
         run: |
-          vcpkg install openblas:x64-windows
+          C:\vcpkg\vcpkg.exe install openblas:x64-windows
 
       - name: Build wheels using cibuildwheel
         uses: pypa/cibuildwheel@v3.2
