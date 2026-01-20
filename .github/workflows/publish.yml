@@ -41,9 +41,8 @@ jobs:
           CIBW_BEFORE_ALL_MACOS: |
             brew install openblas
 
-          # ---------- Windows ----------
-          CIBW_BEFORE_ALL_WINDOWS: |
-            choco install -y openblas
+          # Windows: DO NOT install system BLAS
+          CIBW_BEFORE_BUILD_WINDOWS: python -m pip install numpy
 
       - name: Upload wheels
         uses: actions/upload-artifact@v4
