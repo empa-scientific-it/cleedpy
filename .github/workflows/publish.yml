@@ -44,6 +44,9 @@ jobs:
           # Windows: DO NOT install system BLAS
           CIBW_BEFORE_BUILD_WINDOWS: python -m pip install numpy
 
+          CIBW_CMAKE_ARGS_WINDOWS: >
+            -DBLAS_LIBRARIES=openblas
+
       - name: Upload wheels
         uses: actions/upload-artifact@v4
         with:
