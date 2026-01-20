@@ -32,7 +32,17 @@ jobs:
         uses: pypa/cibuildwheel@v3.2
         # Install blas inside the image
         env:
-          CIBW_BEFORE_ALL_LINUX: yum install -y openblas-devel
+          # ---------- Linux (manylinux) ----------
+          CIBW_BEFORE_ALL_LINUX: |
+            yum install -y openblas-devel
+
+          # ---------- macOS ----------
+          CIBW_BEFORE_ALL_MACOS: |
+            brew install openblas
+
+          # ---------- Windows ----------
+          CIBW_BEFORE_ALL_WINDOWS: |
+            choco install -y openblas
 
       - name: Upload wheels
         uses: actions/upload-artifact@v4
