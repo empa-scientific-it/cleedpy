@@ -17,7 +17,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [macos-latest]
+        os: [macos-latest, ubuntu-latest]
 
     steps:
       - name: Checkout code
@@ -34,7 +34,7 @@ jobs:
         env:
           # ---------- Linux (manylinux) ----------
           CIBW_BEFORE_ALL_LINUX: |
-            dfn install -y openblas-devel
+            dnf install -y openblas-devel
 
           # ---------- macOS ----------
           CIBW_BEFORE_ALL_MACOS: |
