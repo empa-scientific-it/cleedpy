@@ -27,6 +27,15 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Set up vcpkg
+        if: runner.os == 'Windows'
+        uses: microsoft/setup-vcpkg@v1
+
+      - name: Install OpenBLAS via vcpkg
+        if: runner.os == 'Windows'
+        run: |
+          vcpkg install openblas:x64-windows
+
       - name: Build wheels using cibuildwheel
         uses: pypa/cibuildwheel@v3.2
         # Install blas inside the image
@@ -41,7 +50,7 @@ jobs:
           CIBW_BEFORE_ALL_MACOS: |
             brew install openblas
 
-          # Windows: DO NOT install system BLAS
+          # ---------- Windows ----------
           CIBW_BEFORE_BUILD_WINDOWS: python -m pip install numpy
 
       - name: Upload wheels
