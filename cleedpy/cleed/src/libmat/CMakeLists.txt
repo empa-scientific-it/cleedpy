@@ -22,10 +22,8 @@ file(GLOB LIBMAT_SOURCES "mat*.c")
 # Define the library from the collected source files
 add_library(mat SHARED ${LIBMAT_SOURCES})
 
-
 # Find BLAS using CMake's built-in FindBLAS module
 # This works with OpenBLAS, MKL, FlexiBLAS, ATLAS, Accelerate (macOS), and others
-
 find_package(BLAS REQUIRED)
 
 # FindBLAS does NOT provide include directories, so we need to find them manually

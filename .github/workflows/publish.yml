@@ -16,27 +16,19 @@ jobs:
 
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
+        os: [macos-latest, ubuntu-latest]
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      # - name: Set up vcpkg
+      #   if: runner.os == 'Windows'
+      #   run: |
+      #     git clone https://github.com/microsoft/vcpkg.git C:\vcpkg
+      #     C:\vcpkg\bootstrap-vcpkg.bat
 
-      - name: Set up Python
-        uses: actions/setup-python@v6
-        with:
-          python-version: '3.11'
-
-      - name: Set up vcpkg
-        if: runner.os == 'Windows'
-        run: |
-          git clone https://github.com/microsoft/vcpkg.git C:\vcpkg
-          C:\vcpkg\bootstrap-vcpkg.bat
-
-      - name: Install OpenBLAS (vcpkg)
-        if: runner.os == 'Windows'
-        run: |
-          C:\vcpkg\vcpkg.exe install openblas:x64-windows
+      # - name: Install OpenBLAS (vcpkg)
+      #   if: runner.os == 'Windows'
+      #   run: |
+      #     C:\vcpkg\vcpkg.exe install openblas:x64-windows
 
       - name: Build wheels using cibuildwheel
         uses: pypa/cibuildwheel@v3.2
@@ -45,15 +37,11 @@ jobs:
           CIBW_SKIP: "*-musllinux_*"
 
           # ---------- Linux (manylinux) ----------
-          CIBW_BEFORE_ALL_LINUX: |
+          CIBW_BEFORE_ALL_LINUX:
             dnf install -y openblas-devel
 
           # ---------- macOS ----------
-          CIBW_BEFORE_ALL_MACOS: |
-            brew install openblas
-
-          # ---------- Windows ----------
-          CIBW_CMAKE_ARGS_WINDOWS: -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake
+          CIBW_BEFORE_ALL_MACOS: brew install openblas
 
       - name: Upload wheels
         uses: actions/upload-artifact@v4
