@@ -26,10 +26,18 @@ add_library(mat SHARED ${LIBMAT_SOURCES})
 # Find BLAS using CMake's built-in FindBLAS module
 # This works with OpenBLAS, MKL, FlexiBLAS, ATLAS, Accelerate (macOS), and others
 if (WIN32)
-    # On Windows, link BLAS from NumPy installation
-    find_package(Python COMPONENTS Interpreter Development REQUIRED)
-    find_package(NumPy REQUIRED)
-    set(BLAS_LIBRARIES ${NumPy_BLAS_LIBRARIES})
+    find_package(Python REQUIRED COMPONENTS Interpreter Development.Module)
+
+    execute_process(
+    COMMAND "${Python_EXECUTABLE}" - <<EOF
+    import numpy, sys
+    print(numpy.get_include())
+    EOF
+    OUTPUT_VARIABLE NUMPY_INCLUDE_DIR
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+
+    include_directories(${NUMPY_INCLUDE_DIR})
 else()
     find_package(BLAS REQUIRED)
 endif()
