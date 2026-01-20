@@ -53,7 +53,7 @@ jobs:
             brew install openblas
 
           # ---------- Windows ----------
-          CIBW_BEFORE_BUILD_WINDOWS: python -m pip install numpy
+          CIBW_CMAKE_ARGS_WINDOWS: -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake
 
       - name: Upload wheels
         uses: actions/upload-artifact@v4

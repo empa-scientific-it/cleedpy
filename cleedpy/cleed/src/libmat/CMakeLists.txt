@@ -25,22 +25,8 @@ add_library(mat SHARED ${LIBMAT_SOURCES})
 
 # Find BLAS using CMake's built-in FindBLAS module
 # This works with OpenBLAS, MKL, FlexiBLAS, ATLAS, Accelerate (macOS), and others
-if (WIN32)
-    find_package(Python REQUIRED COMPONENTS Interpreter Development.Module)
 
-    execute_process(
-    COMMAND "${Python_EXECUTABLE}" - <<EOF
-    import numpy, sys
-    print(numpy.get_include())
-    EOF
-    OUTPUT_VARIABLE NUMPY_INCLUDE_DIR
-    OUTPUT_STRIP_TRAILING_WHITESPACE
-    )
-
-    include_directories(${NUMPY_INCLUDE_DIR})
-else()
-    find_package(BLAS REQUIRED)
-endif()
+find_package(BLAS REQUIRED)
 
 # FindBLAS does NOT provide include directories, so we need to find them manually
 # Search for cblas.h in common locations
