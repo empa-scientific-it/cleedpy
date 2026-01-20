@@ -34,7 +34,7 @@ jobs:
         env:
           # ---------- Linux (manylinux) ----------
           CIBW_BEFORE_ALL_LINUX: |
-            yum install -y openblas-devel
+            dfn install -y openblas-devel
 
           # ---------- macOS ----------
           CIBW_BEFORE_ALL_MACOS: |
@@ -42,7 +42,7 @@ jobs:
 
           # ---------- Windows ----------
           CIBW_BEFORE_ALL_WINDOWS: |
-            choco install -y openblas
+            choco install -y openblas-win
 
       - name: Upload wheels
         uses: actions/upload-artifact@v4
