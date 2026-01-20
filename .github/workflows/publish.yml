@@ -6,33 +6,60 @@ on:
     tags:
       # After vMajor.Minor.Patch _anything_ is allowed (without "/") !
       - v[0-9]+.[0-9]+.[0-9]+*
+  pull_request:
 
 jobs:
 
-  # build:
-  #   name: Build wheels
-  #   runs-on: ubuntu-latest
+  build:
+    name: Build wheels (CI)
+    runs-on: ${{ matrix.os }}
 
-  #   steps:
-  #     - name: Install C dependencies
-  #       run: sudo apt-get install -y libopenblas-dev
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest]
 
-  #     - name: Checkout code
-  #       uses: actions/checkout@v4
+    steps:
 
-  #     - name: Build wheels using cibuildwheel
-  #       uses: pypa/cibuildwheel@v3.2
-  #       # Install blas inside the image
-  #       env:
-  #         CIBW_BEFORE_ALL_LINUX: yum install -y openblas-devel
-  #     - name: Upload wheels
-  #       uses: actions/upload-artifact@v4
-  #       with:
-  #         name: release-wheel-ubuntu
-  #         path: ./wheelhouse/*.whl
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+
+      # - name: Set up vcpkg
+      #   if: runner.os == 'Windows'
+      #   run: |
+      #     git clone https://github.com/microsoft/vcpkg.git C:\vcpkg
+      #     C:\vcpkg\bootstrap-vcpkg.bat
+
+      # - name: Install OpenBLAS (vcpkg)
+      #   if: runner.os == 'Windows'
+      #   run: |
+      #     C:\vcpkg\vcpkg.exe install openblas:x64-windows
+
+      - name: Build wheels using cibuildwheel
+        uses: pypa/cibuildwheel@v3.2
+        # Install blas inside the image
+        env:
+          CIBW_SKIP: "*-musllinux_*"
+
+          # ---------- Linux (manylinux) ----------
+          CIBW_BEFORE_ALL_LINUX:
+            dnf install -y openblas-devel
+
+          # ---------- macOS ----------
+          CIBW_BEFORE_ALL_MACOS: brew install openblas
+
+      - name: Upload wheels
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-wheel-${{ matrix.os }}
+          path: ./wheelhouse/*.whl
 
   build_sdist:
-    name: Build source distribution
+    name: Build source distribution (CI)
     runs-on: ubuntu-latest
     if: github.repository == 'empa-scientific-it/cleedpy'
 
@@ -59,9 +86,9 @@ jobs:
 
   publish:
     runs-on: ubuntu-latest
-    name: Publish to GitHub and PyPI
-    if: github.repository == 'empa-scientific-it/cleedpy'
-    needs: [build_sdist]
+    name: Publish to GitHub and PyPI (release only)
+    if: github.repository == 'empa-scientific-it/cleedpy' && (startsWith(github.ref, 'refs/tags/v'))
+    needs: [build, build_sdist]
     steps:
 
       - uses: actions/download-artifact@v5
