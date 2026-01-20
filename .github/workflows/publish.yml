@@ -32,6 +32,8 @@ jobs:
         uses: pypa/cibuildwheel@v3.2
         # Install blas inside the image
         env:
+          CIBW_SKIP: "*-musllinux_*"
+
           # ---------- Linux (manylinux) ----------
           CIBW_BEFORE_ALL_LINUX: |
             dnf install -y openblas-devel
