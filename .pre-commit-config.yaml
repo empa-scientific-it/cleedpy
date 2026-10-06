@@ -12,18 +12,18 @@ repos:
           - id: check-added-large-files
 
     - repo: https://github.com/pycqa/isort
-      rev: 7.0.0
+      rev: 9.0.2
       hooks:
           - id: isort
             args: [--profile, black, --filter-files]
 
     - repo: https://github.com/PyCQA/autoflake
-      rev: v2.3.1
+      rev: v2.4.0
       hooks:
           - id: autoflake
 
     - repo: https://github.com/psf/black-pre-commit-mirror
-      rev: 25.12.0
+      rev: 26.10.0
       hooks:
           - id: black
             language_version: python3
@@ -35,7 +35,7 @@ repos:
             args: [--py310-plus]
 
     - repo: https://github.com/PyCQA/flake8
-      rev: 7.3.0
+      rev: 7.4.1
       hooks:
           - id: flake8
             args: [--count, --show-source, --statistics]
