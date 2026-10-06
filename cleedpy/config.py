@@ -9,8 +9,7 @@ import yaml
 from numpy import typing as np_typing
 from pydantic import BaseModel, model_validator
 
-OLD_FORMAT_TEMPLATE = jinja2.Template(
-    """
+OLD_FORMAT_TEMPLATE = jinja2.Template("""
 c: {{ system_name }}
 a1: {{ "%10.4f"|format(unit_cell.a1[0]) }} {{ "%10.4f"|format(unit_cell.a1[1]) }} {{ "%10.4f"|format(unit_cell.a1[2]) }}
 a2: {{ "%10.4f"|format(unit_cell.a2[0]) }} {{ "%10.4f"|format(unit_cell.a2[1]) }} {{ "%10.4f"|format(unit_cell.a2[2]) }}
@@ -38,8 +37,7 @@ it: {{ "%4.1f"|format(polar_incidence_angle) }}
 ip: {{ "%4.1f"|format(azimuthal_incidence_angle) }}
 ep: {{ "%9.1e"|format(epsilon) }}
 lm: {{ maximum_angular_momentum }}
-"""
-)
+""")
 
 
 class UnitCellParameters(BaseModel):

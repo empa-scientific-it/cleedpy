@@ -20,11 +20,9 @@ def leed_bak(inptut_file: Path):
         f"Optical potential: {bulk_parameters.vr} eV (Vr), {bulk_parameters.vi} eV (Vi)"
     )
     print(f"Temperature: {bulk_parameters.temp} K")
-    print(
-        f"""Bulk 2-dim. unit cell: {bulk_parameters.a[0]}
+    print(f"""Bulk 2-dim. unit cell: {bulk_parameters.a[0]}
     {bulk_parameters.a[1]*BOHR_TO_ANGSTROM} {bulk_parameters.a[3]*BOHR_TO_ANGSTROM}
-    {bulk_parameters.a[2]*BOHR_TO_ANGSTROM} {bulk_parameters.a[4]*BOHR_TO_ANGSTROM}"""
-    )
+    {bulk_parameters.a[2]*BOHR_TO_ANGSTROM} {bulk_parameters.a[4]*BOHR_TO_ANGSTROM}""")
 
 
 CLEED_OUT_HEADER = f"""# ####################################### #
